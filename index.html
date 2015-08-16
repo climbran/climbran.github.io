@@ -149,8 +149,8 @@
 </header>
     <div class="article-content">
         
-        <p>领域模型分为4类:<br><br>失血模型<br><br>贫血模型 service –&gt; dao –&gt; entity <br><br>充血模型 service –&gt; entity &lt;–&gt; dao <br><br>胀血模型<br></p>
-<p>简单来说，失血模型就是纯数据POJO，业务逻辑完全与entity分离；<br>贫血模型domain object中含有与持久化无关的逻辑，不依赖于dao层；充血模型把domain object和business object合二为一，service层不依赖dao层，而entity层与dao层形成双向依赖；胀血模型直接取消service层，只剩下entity层与dao层。</p>
+        <p>领域模型(domain object)分为4类:<br><br>失血模型<br><br>贫血模型 service –&gt; dao –&gt; entity <br><br>充血模型 service –&gt; entity &lt;–&gt; dao <br><br>胀血模型<br></p>
+<p>简单来说，失血模型就是纯数据POJO，业务逻辑完全与entity分离；贫血模型domain object中含有与持久化无关的逻辑，不依赖于dao层；充血模型把domain object和business object合二为一，service层不依赖dao层，而entity层与dao层形成双向依赖；胀血模型直接取消service层，只剩下entity层与dao层。</p>
 <p>由于今年才开始做web开发，之前对各种模型完全没有了解，项目中的模型是由自己瞎摸索出来的。现在总结来看，应该属于贫血模型，但是把大量service层的业务逻辑推到controller层实现，这种方式前期开发相当迅速，但是后期发现严重影响代码重用，不同controller里存在大量重复代码，导致需求更改时需要修改多个controller，影响项目维护。</p>
 <p>我感觉目前使用的模型适合小项目的快速开发，但对于大点的项目还是传统的贫血模型更合适。</p>
 <p>附：不同模型的优缺点<br><br>一、贫血模型<br><br>优点：<br><br>1、各层单向依赖，结构清楚，易于实现和维护<br><br>2、设计简单易行，底层模型非常稳定<br><br>3、非常适合于软件外包和大规模软件团队的协作。每个编程个体只需要负责单一职责的小对象模块编写，不会互相影响。<br><br>缺点：<br><br>1、domain object的部分比较紧密依赖的持久化domain logic被分离到Service层，显得不够OO<br><br>2、Service层过于厚重<br><br>3、可复用的颗粒度比较 小，代码量膨胀的很厉害，最重要的是业务逻辑的描述能力比较差，一个稍微复杂的业务逻辑，就需要太多类和太多代码去表达<br><br>4、对象协作依赖于外部容器的组装，因此裸写代码是不可能的了，必须借助于外部的IoC容器。<br></p>
@@ -171,6 +171,78 @@
   <div class="article-tags">
   
   <span></span> <a href="/tags/web/">web</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/05/17/15081703/" title="Spring MVC中文乱码问题" itemprop="url">Spring MVC中文乱码问题</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="climbran" target="_blank" itemprop="author">climbran</a>
+		
+  <p class="article-time">
+    <time datetime="2015-05-17T05:26:27.000Z" itemprop="datePublished"> 发表于 2015-05-17</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>Spring MVC请求时经常出现中文乱码，查看配置文件，web.xml中已配置：</p>
+<pre>
+<xmp><filter>  
+    <filter-name>CharacterEncodingFilter</filter-name>  
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>  
+    <init-param>  
+        <param-name>encoding</param-name>  
+        <param-value>utf-8</param-value>  
+    </init-param>
+</filter> 
+<filter-mapping>  
+    <filter-name>CharacterEncodingFilter</filter-name>  
+    <url-pattern>/*</url-pattern>  
+</filter-mapping>
+</xmp></pre>
+度娘后发现该配置只对post请求有效，对于get请求还要对tomcat的service.xml进行配置，具体配置如下：
+<pre><xmp><connector connectiontimeout="20000" port="8080" protocol="HTTP/1.1" redirectport="8443" usebodyencodingforuri="true"></connector></xmp></pre>
+上面配置对ajax的get请求无效，如果要同时对ajax请求有效则改为
+<pre><xmp><connector connectiontimeout="20000" port="8080" protocol="HTTP/1.1" redirectport="8443" uriencoding="UTF-8"></connector></xmp></pre>
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Spring-MVC/">Spring MVC</a><a href="/tags/tomcat/">tomcat</a>
   </div>
 
 </div>
@@ -263,15 +335,19 @@
 		<ul class="clearfix">
 		
 			
+				<li><a href="/tags/tomcat/" title="tomcat">tomcat<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/mac-os/" title="mac os">mac os<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/tomcat/" title="tomcat">tomcat<sup>1</sup></a></li>
+				<li><a href="/tags/hexo/" title="hexo">hexo<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/hexo/" title="hexo">hexo<sup>1</sup></a></li>
+				<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>1</sup></a></li>
 			
 		
 			
