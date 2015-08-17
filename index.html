@@ -94,7 +94,7 @@
 </header>
     <div class="article-content">
         
-        <p>之前尝试折腾过octpress,不过使用起来实在感觉麻烦，今天发现hexo，尝试了一下感觉方便很多，需要安装node.js，基本根据下面两篇文档就能搞定：<br><br><a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="external">hexo文档</a><br><br><a href="http://www.wuchong.me/jacman/2014/11/20/how-to-use-jacman/" target="_blank" rel="external">如何使用Jacman主题</a><br><br>两个项目作者一个是台湾大学生，一个是北理大学生，膜拜一下<br><br><br>配置起来很顺利，就是在配置category和tags插件的时候要先成带有categories和tags的文章插件才能显示出来，配置好后以为没成功折腾了好一会。</p>
+        <p>之前尝试折腾过octpress,不过使用起来实在感觉麻烦，今天发现hexo，尝试了一下感觉方便很多，需要安装node.js，基本根据下面两篇文档就能搞定：<br><br><a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="external">hexo文档</a><br><br><a href="http://www.wuchong.me/jacman/2014/11/20/how-to-use-jacman/" target="_blank" rel="external">如何使用Jacman主题</a><br><br>两个项目作者一个是台湾大学生，一个是北理大学生，膜拜一下<br><br><br>配置起来很顺利，就是在配置category和tags插件的时候要生成带有categories和tags的文章后插件才能显示出来，配置好后以为没成功折腾了好一会。</p>
 
         
         
@@ -270,6 +270,117 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/04/28/15081704/" title="java中回调函数的用法" itemprop="url">java中回调函数的用法</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="climbran" target="_blank" itemprop="author">climbran</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-28T01:27:42.000Z" itemprop="datePublished"> 发表于 2015-04-28</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>C语言中回调函数由指针实现，java 中没有指针，可以通过以下方法实现：</p>
+<pre>
+public interface MyCallInterface{
+    public void method();
+}
+</pre>
+<pre>
+public Client implements MyCallInterface{
+    @Override
+    public void method(){
+        //TODO: 回调内容
+    }
+}
+</pre>
+
+<p>调用时：</p>
+<pre>
+public class Caller{
+    private MyCallInterface callInterface;
+
+    public Caller(){
+    }
+
+    public void setCallFunc(MyCallInterface callInterface){
+        this.callInterface = callInterface;
+    }
+
+    public void call(){
+        callInterface.method();
+    }
+}
+</pre>
+<pre>
+public class Test{
+    public static void main(String args){
+        Caller caller = new Caller();
+        caller.setCallFunc(new Client());
+        client.call();
+    }
+}
+</pre>
+或者
+<pre>
+public class Caller{
+    public void call(Client client){
+        client.method();
+    }
+}
+</pre>
+<pre>
+public class Test{
+    public static void main(String args){
+        Caller caller = new Caller();
+        caller.call(new Client());
+    }
+}
+</pre>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/java/">java</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/04/01/15081701/" title="如何在mac os下根据端口号查杀进程" itemprop="url">如何在mac os下根据端口号查杀进程</a>
   </h1>
   <p class="article-author">By
@@ -344,6 +455,10 @@
 		
 			
 				<li><a href="/tags/hexo/" title="hexo">hexo<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/java/" title="java">java<sup>1</sup></a></li>
 			
 		
 			
