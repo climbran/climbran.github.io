@@ -4,23 +4,35 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>brew安装 | CLIMBRAN</title>
+    <title>在foreach循环中移除元素的方法 | CLIMBRAN</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="climbran">
     
 
     
-    <meta name="description" content="网上找了好多brew的安装方式，结果都是太旧的方法，无法安装，后来发现其实直接去官方网站就有最新的安装方式，传送门">
+    <meta name="description" content="foreach循环中无法直接对Iterable中的元素进行remove，可以通过下面方式实现:
+for(String s : new ArrayList().addAll(list)){ //list为一个List
+    if(s.equals(&quot;need remove&quot;))
+        list.remove(s);
+}">
 <meta property="og:type" content="article">
-<meta property="og:title" content="brew安装">
-<meta property="og:url" content="http://yoursite.com/2015/03/20/15081705/index.html">
+<meta property="og:title" content="在foreach循环中移除元素的方法">
+<meta property="og:url" content="http://yoursite.com/2015/06/18/remove-element-in-foreach/index.html">
 <meta property="og:site_name" content="CLIMBRAN">
-<meta property="og:description" content="网上找了好多brew的安装方式，结果都是太旧的方法，无法安装，后来发现其实直接去官方网站就有最新的安装方式，传送门">
-<meta property="og:updated_time" content="2015-08-17T02:17:04.000Z">
+<meta property="og:description" content="foreach循环中无法直接对Iterable中的元素进行remove，可以通过下面方式实现:
+for(String s : new ArrayList().addAll(list)){ //list为一个List
+    if(s.equals(&quot;need remove&quot;))
+        list.remove(s);
+}">
+<meta property="og:updated_time" content="2015-08-18T03:45:10.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="brew安装">
-<meta name="twitter:description" content="网上找了好多brew的安装方式，结果都是太旧的方法，无法安装，后来发现其实直接去官方网站就有最新的安装方式，传送门">
+<meta name="twitter:title" content="在foreach循环中移除元素的方法">
+<meta name="twitter:description" content="foreach循环中无法直接对Iterable中的元素进行remove，可以通过下面方式实现:
+for(String s : new ArrayList().addAll(list)){ //list为一个List
+    if(s.equals(&quot;need remove&quot;))
+        list.remove(s);
+}">
 
     
     <link rel="alternative" href="/atom.xml" title="CLIMBRAN" type="application/atom+xml">
@@ -80,21 +92,24 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/03/20/15081705/" title="brew安装" itemprop="url">brew安装</a>
+      <a href="/2015/06/18/remove-element-in-foreach/" title="在foreach循环中移除元素的方法" itemprop="url">在foreach循环中移除元素的方法</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="climbran" target="_blank" itemprop="author">climbran</a>
 		
   <p class="article-time">
-    <time datetime="2015-03-20T07:13:35.000Z" itemprop="datePublished"> 发表于 2015-03-20</time>
+    <time datetime="2015-06-18T03:18:18.000Z" itemprop="datePublished"> 发表于 2015-06-18</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
-		<p>网上找了好多brew的安装方式，结果都是太旧的方法，无法安装，后来发现其实直接去官方网站就有最新的安装方式，<a href="http://brew.sh/" target="_blank" rel="external">传送门</a></p>
-  
+		<p>foreach循环中无法直接对Iterable中的元素进行remove，可以通过下面方式实现:</p>
+<pre><xmp>for(String s : new ArrayList<string>().addAll(list)){ //list为一个List<string>
+    if(s.equals("need remove"))
+        list.remove(s);
+}</string></string></xmp></pre>  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
@@ -102,7 +117,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/mac-os/">mac os</a>
+  <span></span> <a href="/tags/java/">java</a>
   </div>
 
 </div>
@@ -111,7 +126,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/03/20/15081705/" data-title="brew安装 | CLIMBRAN" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/06/18/remove-element-in-foreach/" data-title="在foreach循环中移除元素的方法 | CLIMBRAN" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -125,19 +140,27 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/04/01/15081701/" title="如何在mac os下根据端口号查杀进程">
+ <a href="/2015/07/11/resource-and-the-representation-of-the-resource/" title="关于资源和表述">
   <strong>上一篇：</strong><br/>
   <span>
-  如何在mac os下根据端口号查杀进程</span>
+  关于资源和表述</span>
 </a>
 </div>
 
+
+<div class="next">
+<a href="/2015/05/17/the-gibberish-issue-in-Spring-MVC/"  title="Spring MVC中文乱码问题">
+ <strong>下一篇：</strong><br/> 
+ <span>Spring MVC中文乱码问题
+</span>
+</a>
+</div>
 
 </nav>
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/03/20/15081705/" data-title="brew安装" data-url="http://yoursite.com/2015/03/20/15081705/"></div>
+	<div class="ds-thread" data-thread-key="2015/06/18/remove-element-in-foreach/" data-title="在foreach循环中移除元素的方法" data-url="http://yoursite.com/2015/06/18/remove-element-in-foreach/"></div>
 </section>
 
 

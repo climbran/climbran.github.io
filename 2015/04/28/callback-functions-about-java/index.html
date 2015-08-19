@@ -4,56 +4,53 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Spring MVC中文乱码问题 | CLIMBRAN</title>
+    <title>java中回调函数的用法 | CLIMBRAN</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="climbran">
     
 
     
-    <meta name="description" content="Spring MVC请求时经常出现中文乱码，查看配置文件，web.xml中已配置：
+    <meta name="description" content="C语言中回调函数由指针实现，java 中没有指针，可以通过以下方法实现：
 
-  
-    CharacterEncodingFilter  
-    org.springframework.web.filter.CharacterEncodingFilter  
-      
-        encoding  
-        utf-8  
-    
- 
-  
-    Charact">
+public interface MyCallInterface{
+    public void method();
+}
+
+
+public Client implements MyCallInterface{
+    @Override
+    public void method(){
+        //TODO:">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Spring MVC中文乱码问题">
-<meta property="og:url" content="http://yoursite.com/2015/05/17/15081703/index.html">
+<meta property="og:title" content="java中回调函数的用法">
+<meta property="og:url" content="http://yoursite.com/2015/04/28/callback-functions-about-java/index.html">
 <meta property="og:site_name" content="CLIMBRAN">
-<meta property="og:description" content="Spring MVC请求时经常出现中文乱码，查看配置文件，web.xml中已配置：
+<meta property="og:description" content="C语言中回调函数由指针实现，java 中没有指针，可以通过以下方法实现：
 
-  
-    CharacterEncodingFilter  
-    org.springframework.web.filter.CharacterEncodingFilter  
-      
-        encoding  
-        utf-8  
-    
- 
-  
-    Charact">
-<meta property="og:updated_time" content="2015-08-16T17:45:46.000Z">
+public interface MyCallInterface{
+    public void method();
+}
+
+
+public Client implements MyCallInterface{
+    @Override
+    public void method(){
+        //TODO:">
+<meta property="og:updated_time" content="2015-08-17T02:04:05.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Spring MVC中文乱码问题">
-<meta name="twitter:description" content="Spring MVC请求时经常出现中文乱码，查看配置文件，web.xml中已配置：
+<meta name="twitter:title" content="java中回调函数的用法">
+<meta name="twitter:description" content="C语言中回调函数由指针实现，java 中没有指针，可以通过以下方法实现：
 
-  
-    CharacterEncodingFilter  
-    org.springframework.web.filter.CharacterEncodingFilter  
-      
-        encoding  
-        utf-8  
-    
- 
-  
-    Charact">
+public interface MyCallInterface{
+    public void method();
+}
+
+
+public Client implements MyCallInterface{
+    @Override
+    public void method(){
+        //TODO:">
 
     
     <link rel="alternative" href="/atom.xml" title="CLIMBRAN" type="application/atom+xml">
@@ -113,38 +110,77 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/05/17/15081703/" title="Spring MVC中文乱码问题" itemprop="url">Spring MVC中文乱码问题</a>
+      <a href="/2015/04/28/callback-functions-about-java/" title="java中回调函数的用法" itemprop="url">java中回调函数的用法</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="climbran" target="_blank" itemprop="author">climbran</a>
 		
   <p class="article-time">
-    <time datetime="2015-05-17T05:26:27.000Z" itemprop="datePublished"> 发表于 2015-05-17</time>
+    <time datetime="2015-04-28T01:27:42.000Z" itemprop="datePublished"> 发表于 2015-04-28</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
-		<p>Spring MVC请求时经常出现中文乱码，查看配置文件，web.xml中已配置：</p>
+		<p>C语言中回调函数由指针实现，java 中没有指针，可以通过以下方法实现：</p>
 <pre>
-<xmp><filter>  
-    <filter-name>CharacterEncodingFilter</filter-name>  
-    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>  
-    <init-param>  
-        <param-name>encoding</param-name>  
-        <param-value>utf-8</param-value>  
-    </init-param>
-</filter> 
-<filter-mapping>  
-    <filter-name>CharacterEncodingFilter</filter-name>  
-    <url-pattern>/*</url-pattern>  
-</filter-mapping>
-</xmp></pre>
-度娘后发现该配置只对post请求有效，对于get请求还要对tomcat的service.xml进行配置，具体配置如下：
-<pre><xmp><connector connectiontimeout="20000" port="8080" protocol="HTTP/1.1" redirectport="8443" usebodyencodingforuri="true"></connector></xmp></pre>
-上面配置对ajax的get请求无效，如果要同时对ajax请求有效则改为
-<pre><xmp><connector connectiontimeout="20000" port="8080" protocol="HTTP/1.1" redirectport="8443" uriencoding="UTF-8"></connector></xmp></pre>  
+public interface MyCallInterface{
+    public void method();
+}
+</pre>
+<pre>
+public Client implements MyCallInterface{
+    @Override
+    public void method(){
+        //TODO: 回调内容
+    }
+}
+</pre>
+
+<p>调用时：</p>
+<pre>
+public class Caller{
+    private MyCallInterface callInterface;
+
+    public Caller(){
+    }
+
+    public void setCallFunc(MyCallInterface callInterface){
+        this.callInterface = callInterface;
+    }
+
+    public void call(){
+        callInterface.method();
+    }
+}
+</pre>
+<pre>
+public class Test{
+    public static void main(String args){
+        Caller caller = new Caller();
+        caller.setCallFunc(new Client());
+        client.call();
+    }
+}
+</pre>
+或者
+<pre>
+public class Caller{
+    public void call(Client client){
+        client.method();
+    }
+}
+</pre>
+<pre>
+public class Test{
+    public static void main(String args){
+        Caller caller = new Caller();
+        caller.call(new Client());
+    }
+}
+</pre>
+  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
@@ -152,7 +188,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Spring-MVC/">Spring MVC</a><a href="/tags/tomcat/">tomcat</a>
+  <span></span> <a href="/tags/java/">java</a>
   </div>
 
 </div>
@@ -161,7 +197,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/05/17/15081703/" data-title="Spring MVC中文乱码问题 | CLIMBRAN" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/04/28/callback-functions-about-java/" data-title="java中回调函数的用法 | CLIMBRAN" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -175,18 +211,18 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/06/18/资源和表述/" title="在foreach循环中移除元素的方法">
+ <a href="/2015/05/17/the-gibberish-issue-in-Spring-MVC/" title="Spring MVC中文乱码问题">
   <strong>上一篇：</strong><br/>
   <span>
-  在foreach循环中移除元素的方法</span>
+  Spring MVC中文乱码问题</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/04/28/15081704/"  title="java中回调函数的用法">
+<a href="/2015/04/01/how-to-kill-process-on-mac/"  title="如何在mac os下根据端口号查杀进程">
  <strong>下一篇：</strong><br/> 
- <span>java中回调函数的用法
+ <span>如何在mac os下根据端口号查杀进程
 </span>
 </a>
 </div>
@@ -195,7 +231,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/05/17/15081703/" data-title="Spring MVC中文乱码问题" data-url="http://yoursite.com/2015/05/17/15081703/"></div>
+	<div class="ds-thread" data-thread-key="2015/04/28/callback-functions-about-java/" data-title="java中回调函数的用法" data-url="http://yoursite.com/2015/04/28/callback-functions-about-java/"></div>
 </section>
 
 

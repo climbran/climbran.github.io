@@ -4,53 +4,23 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>java中回调函数的用法 | CLIMBRAN</title>
+    <title>开始使用hexo | CLIMBRAN</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="climbran">
     
 
     
-    <meta name="description" content="C语言中回调函数由指针实现，java 中没有指针，可以通过以下方法实现：
-
-public interface MyCallInterface{
-    public void method();
-}
-
-
-public Client implements MyCallInterface{
-    @Override
-    public void method(){
-        //TODO:">
+    <meta name="description" content="之前尝试折腾过octpress,不过使用起来实在感觉麻烦，今天发现hexo，尝试了一下感觉方便很多，需要安装node.js，基本根据下面两篇文档就能搞定：hexo文档如何使用Jacman主题两个项目作者一个是台湾大学生，一个是北理大学生，膜拜一下配置起来很顺利，就是在配置category和tags插件的时候要生成带有categories和tags的文章后插件才能显示出来，配置好后以为没成功折腾了好">
 <meta property="og:type" content="article">
-<meta property="og:title" content="java中回调函数的用法">
-<meta property="og:url" content="http://yoursite.com/2015/04/28/15081704/index.html">
+<meta property="og:title" content="开始使用hexo">
+<meta property="og:url" content="http://yoursite.com/2015/08/16/start-hexo/index.html">
 <meta property="og:site_name" content="CLIMBRAN">
-<meta property="og:description" content="C语言中回调函数由指针实现，java 中没有指针，可以通过以下方法实现：
-
-public interface MyCallInterface{
-    public void method();
-}
-
-
-public Client implements MyCallInterface{
-    @Override
-    public void method(){
-        //TODO:">
-<meta property="og:updated_time" content="2015-08-17T02:04:05.000Z">
+<meta property="og:description" content="之前尝试折腾过octpress,不过使用起来实在感觉麻烦，今天发现hexo，尝试了一下感觉方便很多，需要安装node.js，基本根据下面两篇文档就能搞定：hexo文档如何使用Jacman主题两个项目作者一个是台湾大学生，一个是北理大学生，膜拜一下配置起来很顺利，就是在配置category和tags插件的时候要生成带有categories和tags的文章后插件才能显示出来，配置好后以为没成功折腾了好">
+<meta property="og:updated_time" content="2015-08-16T18:00:21.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="java中回调函数的用法">
-<meta name="twitter:description" content="C语言中回调函数由指针实现，java 中没有指针，可以通过以下方法实现：
-
-public interface MyCallInterface{
-    public void method();
-}
-
-
-public Client implements MyCallInterface{
-    @Override
-    public void method(){
-        //TODO:">
+<meta name="twitter:title" content="开始使用hexo">
+<meta name="twitter:description" content="之前尝试折腾过octpress,不过使用起来实在感觉麻烦，今天发现hexo，尝试了一下感觉方便很多，需要安装node.js，基本根据下面两篇文档就能搞定：hexo文档如何使用Jacman主题两个项目作者一个是台湾大学生，一个是北理大学生，膜拜一下配置起来很顺利，就是在配置category和tags插件的时候要生成带有categories和tags的文章后插件才能显示出来，配置好后以为没成功折腾了好">
 
     
     <link rel="alternative" href="/atom.xml" title="CLIMBRAN" type="application/atom+xml">
@@ -110,76 +80,20 @@ public Client implements MyCallInterface{
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/04/28/15081704/" title="java中回调函数的用法" itemprop="url">java中回调函数的用法</a>
+      <a href="/2015/08/16/start-hexo/" title="开始使用hexo" itemprop="url">开始使用hexo</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="climbran" target="_blank" itemprop="author">climbran</a>
 		
   <p class="article-time">
-    <time datetime="2015-04-28T01:27:42.000Z" itemprop="datePublished"> 发表于 2015-04-28</time>
+    <time datetime="2015-08-16T09:35:32.000Z" itemprop="datePublished"> 发表于 2015-08-16</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
-		<p>C语言中回调函数由指针实现，java 中没有指针，可以通过以下方法实现：</p>
-<pre>
-public interface MyCallInterface{
-    public void method();
-}
-</pre>
-<pre>
-public Client implements MyCallInterface{
-    @Override
-    public void method(){
-        //TODO: 回调内容
-    }
-}
-</pre>
-
-<p>调用时：</p>
-<pre>
-public class Caller{
-    private MyCallInterface callInterface;
-
-    public Caller(){
-    }
-
-    public void setCallFunc(MyCallInterface callInterface){
-        this.callInterface = callInterface;
-    }
-
-    public void call(){
-        callInterface.method();
-    }
-}
-</pre>
-<pre>
-public class Test{
-    public static void main(String args){
-        Caller caller = new Caller();
-        caller.setCallFunc(new Client());
-        client.call();
-    }
-}
-</pre>
-或者
-<pre>
-public class Caller{
-    public void call(Client client){
-        client.method();
-    }
-}
-</pre>
-<pre>
-public class Test{
-    public static void main(String args){
-        Caller caller = new Caller();
-        caller.call(new Client());
-    }
-}
-</pre>
+		<p>之前尝试折腾过octpress,不过使用起来实在感觉麻烦，今天发现hexo，尝试了一下感觉方便很多，需要安装node.js，基本根据下面两篇文档就能搞定：<br><br><a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="external">hexo文档</a><br><br><a href="http://www.wuchong.me/jacman/2014/11/20/how-to-use-jacman/" target="_blank" rel="external">如何使用Jacman主题</a><br><br>两个项目作者一个是台湾大学生，一个是北理大学生，膜拜一下<br><br><br>配置起来很顺利，就是在配置category和tags插件的时候要生成带有categories和tags的文章后插件才能显示出来，配置好后以为没成功折腾了好一会。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -188,7 +102,7 @@ public class Test{
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/java/">java</a>
+  <span></span> <a href="/tags/hexo/">hexo</a>
   </div>
 
 </div>
@@ -197,7 +111,7 @@ public class Test{
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/04/28/15081704/" data-title="java中回调函数的用法 | CLIMBRAN" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/08/16/start-hexo/" data-title="开始使用hexo | CLIMBRAN" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -210,19 +124,11 @@ public class Test{
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/05/17/15081703/" title="Spring MVC中文乱码问题">
-  <strong>上一篇：</strong><br/>
-  <span>
-  Spring MVC中文乱码问题</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/04/01/15081701/"  title="如何在mac os下根据端口号查杀进程">
+<a href="/2015/07/30/about-domain-object/"  title="关于领域模型（贫血模型，充血模型）">
  <strong>下一篇：</strong><br/> 
- <span>如何在mac os下根据端口号查杀进程
+ <span>关于领域模型（贫血模型，充血模型）
 </span>
 </a>
 </div>
@@ -231,7 +137,7 @@ public class Test{
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/04/28/15081704/" data-title="java中回调函数的用法" data-url="http://yoursite.com/2015/04/28/15081704/"></div>
+	<div class="ds-thread" data-thread-key="2015/08/16/start-hexo/" data-title="开始使用hexo" data-url="http://yoursite.com/2015/08/16/start-hexo/"></div>
 </section>
 
 

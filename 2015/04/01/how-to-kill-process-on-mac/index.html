@@ -4,23 +4,23 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>关于资源和表述 | CLIMBRAN</title>
+    <title>如何在mac os下根据端口号查杀进程 | CLIMBRAN</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="climbran">
     
 
     
-    <meta name="description" content="最早通过在网上资料学习restful时，，都是说每个url代表一个资源(resource)，在项目设计时，会发现有时候为一个资源设计url时会发生冲突。比如一个教育系统中有老师和学生两种类型账号，一个班级的url为/class，而在老师账号中还有一个班级管理模块，同样使用的班级这一资源，但/class这一url已被使用。后来突然想到我们是不是能把浏览的班级和老师的班级管理模块当成两种不同资源？于是">
+    <meta name="description" content="在使用mac os时，tomcat异常中断重启时提示端口被占用，可通过lsof -i :8080查看pid,然后kill 来停止进程">
 <meta property="og:type" content="article">
-<meta property="og:title" content="关于资源和表述">
-<meta property="og:url" content="http://yoursite.com/2015/07/11/15081901/index.html">
+<meta property="og:title" content="如何在mac os下根据端口号查杀进程">
+<meta property="og:url" content="http://yoursite.com/2015/04/01/how-to-kill-process-on-mac/index.html">
 <meta property="og:site_name" content="CLIMBRAN">
-<meta property="og:description" content="最早通过在网上资料学习restful时，，都是说每个url代表一个资源(resource)，在项目设计时，会发现有时候为一个资源设计url时会发生冲突。比如一个教育系统中有老师和学生两种类型账号，一个班级的url为/class，而在老师账号中还有一个班级管理模块，同样使用的班级这一资源，但/class这一url已被使用。后来突然想到我们是不是能把浏览的班级和老师的班级管理模块当成两种不同资源？于是">
-<meta property="og:updated_time" content="2015-08-19T14:18:26.000Z">
+<meta property="og:description" content="在使用mac os时，tomcat异常中断重启时提示端口被占用，可通过lsof -i :8080查看pid,然后kill 来停止进程">
+<meta property="og:updated_time" content="2015-08-16T16:25:08.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="关于资源和表述">
-<meta name="twitter:description" content="最早通过在网上资料学习restful时，，都是说每个url代表一个资源(resource)，在项目设计时，会发现有时候为一个资源设计url时会发生冲突。比如一个教育系统中有老师和学生两种类型账号，一个班级的url为/class，而在老师账号中还有一个班级管理模块，同样使用的班级这一资源，但/class这一url已被使用。后来突然想到我们是不是能把浏览的班级和老师的班级管理模块当成两种不同资源？于是">
+<meta name="twitter:title" content="如何在mac os下根据端口号查杀进程">
+<meta name="twitter:description" content="在使用mac os时，tomcat异常中断重启时提示端口被占用，可通过lsof -i :8080查看pid,然后kill 来停止进程">
 
     
     <link rel="alternative" href="/atom.xml" title="CLIMBRAN" type="application/atom+xml">
@@ -80,21 +80,20 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/07/11/15081901/" title="关于资源和表述" itemprop="url">关于资源和表述</a>
+      <a href="/2015/04/01/how-to-kill-process-on-mac/" title="如何在mac os下根据端口号查杀进程" itemprop="url">如何在mac os下根据端口号查杀进程</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="climbran" target="_blank" itemprop="author">climbran</a>
 		
   <p class="article-time">
-    <time datetime="2015-07-11T13:44:26.000Z" itemprop="datePublished"> 发表于 2015-07-11</time>
+    <time datetime="2015-03-31T16:17:09.000Z" itemprop="datePublished"> 发表于 2015-04-01</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
-		<p>最早通过在网上资料学习restful时，，都是说每个url代表一个资源(resource)，在项目设计时，会发现有时候为一个资源设计url时会发生冲突。<br><br><br>比如一个教育系统中有老师和学生两种类型账号，一个班级的url为/class，而在老师账号中还有一个班级管理模块，同样使用的班级这一资源，但/class这一url已被使用。<br><br><br>后来突然想到我们是不是能把浏览的班级和老师的班级管理模块当成两种不同资源？于是设计成了</p>
-<p><pre><br>/class        // 班级资源<br>/classmgr     //班级管理资源<br></pre><br>最近看《restful web APIs》时看到表述(representation of the resource)一词，突然顿悟到到其实上面两个url对应的是同一个资源的两个不同表述。每个url代表一个资源的说法也并没错，每个资源可以有多个表述，url和资源是多对一关系。在客户端看来，不同url获取的是不同表述，但最终定位的可能是同一资源。</p>
+		<p>在使用mac os时，tomcat异常中断重启时提示端口被占用，可通过lsof -i :8080查看pid,然后kill <pid>来停止进程</pid></p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -103,7 +102,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/restful/">restful</a>
+  <span></span> <a href="/tags/mac-os/">mac os</a><a href="/tags/tomcat/">tomcat</a>
   </div>
 
 </div>
@@ -112,7 +111,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/07/11/15081901/" data-title="关于资源和表述 | CLIMBRAN" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/04/01/how-to-kill-process-on-mac/" data-title="如何在mac os下根据端口号查杀进程 | CLIMBRAN" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -126,18 +125,18 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/07/30/15081702/" title="关于领域模型（贫血模型，充血模型）">
+ <a href="/2015/04/28/callback-functions-about-java/" title="java中回调函数的用法">
   <strong>上一篇：</strong><br/>
   <span>
-  关于领域模型（贫血模型，充血模型）</span>
+  java中回调函数的用法</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/06/18/资源和表述/"  title="在foreach循环中移除元素的方法">
+<a href="/2015/03/20/brew-install/"  title="brew安装">
  <strong>下一篇：</strong><br/> 
- <span>在foreach循环中移除元素的方法
+ <span>brew安装
 </span>
 </a>
 </div>
@@ -146,7 +145,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/07/11/15081901/" data-title="关于资源和表述" data-url="http://yoursite.com/2015/07/11/15081901/"></div>
+	<div class="ds-thread" data-thread-key="2015/04/01/how-to-kill-process-on-mac/" data-title="如何在mac os下根据端口号查杀进程" data-url="http://yoursite.com/2015/04/01/how-to-kill-process-on-mac/"></div>
 </section>
 
 
