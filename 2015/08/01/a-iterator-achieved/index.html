@@ -4,23 +4,59 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>brew安装 | CLIMBRAN</title>
+    <title>Iterator的实现 | CLIMBRAN</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="climbran">
     
 
     
-    <meta name="description" content="网上找了好多brew的安装方式，结果都是太旧的方法，无法安装，后来发现其实直接去官方网站就有最新的安装方式，传送门">
+    <meta name="description" content="interface Iterator{
+    boolean end();
+    Object current();
+    void next();
+}
+
+
+public class Sequence{
+    private Object[] items;
+    private next = 0;
+
+    public Sequence(int size){
+        items">
 <meta property="og:type" content="article">
-<meta property="og:title" content="brew安装">
-<meta property="og:url" content="http://yoursite.com/2015/03/20/brew-install/index.html">
+<meta property="og:title" content="Iterator的实现">
+<meta property="og:url" content="http://yoursite.com/2015/08/01/a-iterator-achieved/index.html">
 <meta property="og:site_name" content="CLIMBRAN">
-<meta property="og:description" content="网上找了好多brew的安装方式，结果都是太旧的方法，无法安装，后来发现其实直接去官方网站就有最新的安装方式，传送门">
-<meta property="og:updated_time" content="2015-08-17T02:17:04.000Z">
+<meta property="og:description" content="interface Iterator{
+    boolean end();
+    Object current();
+    void next();
+}
+
+
+public class Sequence{
+    private Object[] items;
+    private next = 0;
+
+    public Sequence(int size){
+        items">
+<meta property="og:updated_time" content="2015-08-26T09:42:57.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="brew安装">
-<meta name="twitter:description" content="网上找了好多brew的安装方式，结果都是太旧的方法，无法安装，后来发现其实直接去官方网站就有最新的安装方式，传送门">
+<meta name="twitter:title" content="Iterator的实现">
+<meta name="twitter:description" content="interface Iterator{
+    boolean end();
+    Object current();
+    void next();
+}
+
+
+public class Sequence{
+    private Object[] items;
+    private next = 0;
+
+    public Sequence(int size){
+        items">
 
     
     <link rel="alternative" href="/atom.xml" title="CLIMBRAN" type="application/atom+xml">
@@ -80,21 +116,39 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/03/20/brew-install/" title="brew安装" itemprop="url">brew安装</a>
+      <a href="/2015/08/01/a-iterator-achieved/" title="Iterator的实现" itemprop="url">Iterator的实现</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="climbran" target="_blank" itemprop="author">climbran</a>
 		
   <p class="article-time">
-    <time datetime="2015-03-20T07:13:35.000Z" itemprop="datePublished"> 发表于 2015-03-20</time>
+    <time datetime="2015-08-01T09:26:08.000Z" itemprop="datePublished"> 发表于 2015-08-01</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
-		<p>网上找了好多brew的安装方式，结果都是太旧的方法，无法安装，后来发现其实直接去官方网站就有最新的安装方式，<a href="http://brew.sh/" target="_blank" rel="external">传送门</a></p>
-  
+		<pre>
+<code>
+interface Iterator{
+    boolean end();
+    Object current();
+    void next();
+}
+
+
+public class Sequence{
+    private Object[] items;
+    private next = 0;
+
+    public Sequence(int size){
+        items = new Objec[size];
+    }
+
+    public void add(Object x){
+        if(next<items.length) items[next++]="x;" }="" private="" class="" sequenceiterator="" implements="" iterator{="" int="" i="0;" public="" boolean="" end(){="" return="" items.length;="" object="" current(){="" items[i];="" void="" next(){="" if(i<items.length)="" i++;="" pubic="" iterator="" iterator(){="" new="" sequenceiterator();="" <="" code="">
+</items.length)></code></pre>  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
@@ -102,7 +156,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/mac-os/">mac os</a>
+  <span></span> <a href="/tags/java/">java</a><a href="/tags/设计模式/">设计模式</a>
   </div>
 
 </div>
@@ -111,7 +165,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/03/20/brew-install/" data-title="brew安装 | CLIMBRAN" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/08/01/a-iterator-achieved/" data-title="Iterator的实现 | CLIMBRAN" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -125,19 +179,27 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/04/01/how-to-kill-process-on-mac/" title="如何在mac os下根据端口号查杀进程">
+ <a href="/2015/08/16/start-hexo/" title="开始使用hexo">
   <strong>上一篇：</strong><br/>
   <span>
-  如何在mac os下根据端口号查杀进程</span>
+  开始使用hexo</span>
 </a>
 </div>
 
+
+<div class="next">
+<a href="/2015/07/30/about-domain-object/"  title="关于领域模型（贫血模型，充血模型）">
+ <strong>下一篇：</strong><br/> 
+ <span>关于领域模型（贫血模型，充血模型）
+</span>
+</a>
+</div>
 
 </nav>
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/03/20/brew-install/" data-title="brew安装" data-url="http://yoursite.com/2015/03/20/brew-install/"></div>
+	<div class="ds-thread" data-thread-key="2015/08/01/a-iterator-achieved/" data-title="Iterator的实现" data-url="http://yoursite.com/2015/08/01/a-iterator-achieved/"></div>
 </section>
 
 
