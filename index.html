@@ -154,7 +154,7 @@
     <div class="article-content">
         
         <pre>
-<xmp>
+<code>
 interface Iterator{
     boolean end();
     Object current();
@@ -170,8 +170,30 @@ public class Sequence{
     }
 
     public void add(Object x){
-        if(next<items.length) items[next++]="x;" }="" private="" class="" sequenceiterator="" implements="" iterator{="" int="" i="0;" public="" boolean="" end(){="" return="" items.length;="" object="" current(){="" items[i];="" void="" next(){="" if(i<items.length)="" i++;="" pubic="" iterator="" iterator(){="" new="" sequenceiterator();="" <="" xmp="">
-</items.length)></xmp></pre>
+        if(next&ltitems.length)
+            items[next++] = x;
+    }
+
+    private class SequenceIterator implements Iterator{
+        private int i = 0;
+        public boolean end(){
+            return i == items.length;
+        }
+        public Object current(){
+            return items[i];
+        }
+        public void next(){
+            if(i&ltitems.length)
+                i++;
+        }
+    }
+
+    pubic Iterator iterator(){
+        return new SequenceIterator();
+    }
+}
+</code>
+</pre>
         
         
         <p class="article-more-link">
