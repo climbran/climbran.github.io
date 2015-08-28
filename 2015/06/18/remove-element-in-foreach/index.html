@@ -11,31 +11,16 @@
     
 
     
-    <meta name="description" content="foreach循环中无法直接对Iterable中的元素进行remove，可以通过下面方式实现:
-
-for(String s : new ArrayList&amp;lt;String&amp;gt;().addAll(list)){ //list为一个List&amp;lt;String&amp;gt;
-    if(s.equals(&quot;need remove&quot;))
-        list.remove(s);
-}">
+    <meta name="description" content="foreach循环中无法直接对Iterable中的元素进行remove，可以通过下面方式实现:1234for(String s : new ArrayList&amp;lt;String&amp;gt;().addAll(list))&amp;#123; //list为一个List&amp;lt;String&amp;gt;	if(s.equals(&quot;need remove&quot;))		list.remove(s);&amp;#125;">
 <meta property="og:type" content="article">
 <meta property="og:title" content="在foreach循环中移除元素的方法">
 <meta property="og:url" content="http://yoursite.com/2015/06/18/remove-element-in-foreach/index.html">
 <meta property="og:site_name" content="CLIMBRAN">
-<meta property="og:description" content="foreach循环中无法直接对Iterable中的元素进行remove，可以通过下面方式实现:
-
-for(String s : new ArrayList&amp;lt;String&amp;gt;().addAll(list)){ //list为一个List&amp;lt;String&amp;gt;
-    if(s.equals(&quot;need remove&quot;))
-        list.remove(s);
-}">
-<meta property="og:updated_time" content="2015-08-28T05:35:25.000Z">
+<meta property="og:description" content="foreach循环中无法直接对Iterable中的元素进行remove，可以通过下面方式实现:1234for(String s : new ArrayList&amp;lt;String&amp;gt;().addAll(list))&amp;#123; //list为一个List&amp;lt;String&amp;gt;	if(s.equals(&quot;need remove&quot;))		list.remove(s);&amp;#125;">
+<meta property="og:updated_time" content="2015-08-28T06:23:24.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="在foreach循环中移除元素的方法">
-<meta name="twitter:description" content="foreach循环中无法直接对Iterable中的元素进行remove，可以通过下面方式实现:
-
-for(String s : new ArrayList&amp;lt;String&amp;gt;().addAll(list)){ //list为一个List&amp;lt;String&amp;gt;
-    if(s.equals(&quot;need remove&quot;))
-        list.remove(s);
-}">
+<meta name="twitter:description" content="foreach循环中无法直接对Iterable中的元素进行remove，可以通过下面方式实现:1234for(String s : new ArrayList&amp;lt;String&amp;gt;().addAll(list))&amp;#123; //list为一个List&amp;lt;String&amp;gt;	if(s.equals(&quot;need remove&quot;))		list.remove(s);&amp;#125;">
 
     
     <link rel="alternative" href="/atom.xml" title="CLIMBRAN" type="application/atom+xml">
@@ -108,13 +93,8 @@ for(String s : new ArrayList&amp;lt;String&amp;gt;().addAll(list)){ //list为一
 </header>
 	<div class="article-content">
 		
-		<p>foreach循环中无法直接对Iterable中的元素进行remove，可以通过下面方式实现:</p>
-<pre>
-<code>for(String s : new ArrayList&lt;String>().addAll(list)){ //list为一个List&lt;String>
-    if(s.equals("need remove"))
-        list.remove(s);
-}
-</code></pre>  
+		<p>foreach循环中无法直接对Iterable中的元素进行remove，可以通过下面方式实现:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(String s : <span class="keyword">new</span> ArrayList&lt;String&gt;().addAll(list))&#123; <span class="comment">//list为一个List&lt;String&gt;</span></span><br><span class="line">	<span class="keyword">if</span>(s.equals(<span class="string">"need remove"</span>))</span><br><span class="line">		list.remove(s);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
