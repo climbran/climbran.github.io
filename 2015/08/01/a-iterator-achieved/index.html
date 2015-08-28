@@ -11,49 +11,16 @@
     
 
     
-    <meta name="description" content="interface Iterator{
-    boolean end();
-    Object current();
-    void next();
-}
-
-public class Sequence{
-    private Object[] items;
-    private next = 0;
-
-    public Sequence(int size){
-        items">
+    <meta name="description" content="12345678910111213141516171819202122232425262728293031323334353637interface Iterator&amp;#123;	boolean end();	Object current();	void next();&amp;#125;public class Sequence&amp;#123;	private Object[] items;	private">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Iterator的实现">
 <meta property="og:url" content="http://yoursite.com/2015/08/01/a-iterator-achieved/index.html">
 <meta property="og:site_name" content="CLIMBRAN">
-<meta property="og:description" content="interface Iterator{
-    boolean end();
-    Object current();
-    void next();
-}
-
-public class Sequence{
-    private Object[] items;
-    private next = 0;
-
-    public Sequence(int size){
-        items">
-<meta property="og:updated_time" content="2015-08-26T10:04:16.000Z">
+<meta property="og:description" content="12345678910111213141516171819202122232425262728293031323334353637interface Iterator&amp;#123;	boolean end();	Object current();	void next();&amp;#125;public class Sequence&amp;#123;	private Object[] items;	private">
+<meta property="og:updated_time" content="2015-08-28T06:15:47.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Iterator的实现">
-<meta name="twitter:description" content="interface Iterator{
-    boolean end();
-    Object current();
-    void next();
-}
-
-public class Sequence{
-    private Object[] items;
-    private next = 0;
-
-    public Sequence(int size){
-        items">
+<meta name="twitter:description" content="12345678910111213141516171819202122232425262728293031323334353637interface Iterator&amp;#123;	boolean end();	Object current();	void next();&amp;#125;public class Sequence&amp;#123;	private Object[] items;	private">
 
     
     <link rel="alternative" href="/atom.xml" title="CLIMBRAN" type="application/atom+xml">
@@ -126,47 +93,7 @@ public class Sequence{
 </header>
 	<div class="article-content">
 		
-		<pre>
-<code>
-interface Iterator{
-    boolean end();
-    Object current();
-    void next();
-}
-
-public class Sequence{
-    private Object[] items;
-    private next = 0;
-
-    public Sequence(int size){
-        items = new Objec[size];
-    }
-
-    public void add(Object x){
-        if(next&ltitems.length)
-            items[next++] = x;
-    }
-
-    private class SequenceIterator implements Iterator{
-        private int i = 0;
-        public boolean end(){
-            return i == items.length;
-        }
-        public Object current(){
-            return items[i];
-        }
-        public void next(){
-            if(i&ltitems.length)
-                i++;
-        }
-    }
-
-    pubic Iterator iterator(){
-        return new SequenceIterator();
-    }
-}
-</code>
-</pre>  
+		<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Iterator</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">boolean</span> <span class="title">end</span><span class="params">()</span></span>;</span><br><span class="line">	<span class="function">Object <span class="title">current</span><span class="params">()</span></span>;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">next</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Sequence</span></span>&#123;</span><br><span class="line">	<span class="keyword">private</span> Object[] items;</span><br><span class="line">	<span class="keyword">private</span> next = <span class="number">0</span>;</span><br><span class="line">		</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">Sequence</span><span class="params">(<span class="keyword">int</span> size)</span></span>&#123;</span><br><span class="line">		items = <span class="keyword">new</span> Objec[size];</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(Object x)</span></span>&#123;</span><br><span class="line">		<span class="keyword">if</span>(next&amp;ltitems.length)</span><br><span class="line">			items[next++] = x;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">SequenceIterator</span> <span class="keyword">implements</span> <span class="title">Iterator</span></span>&#123;</span><br><span class="line">		<span class="keyword">private</span> <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">end</span><span class="params">()</span></span>&#123;</span><br><span class="line">			<span class="keyword">return</span> i == items.length;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="function"><span class="keyword">public</span> Object <span class="title">current</span><span class="params">()</span></span>&#123;</span><br><span class="line">			<span class="keyword">return</span> items[i];</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">next</span><span class="params">()</span></span>&#123;</span><br><span class="line">			<span class="keyword">if</span>(i&amp;ltitems.length)</span><br><span class="line">				i++;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function">pubic Iterator <span class="title">iterator</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> SequenceIterator();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
