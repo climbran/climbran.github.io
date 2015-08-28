@@ -95,47 +95,40 @@
     <div class="article-content">
         
         <p>今天下载了个intelliJ试着用下。官网有30天试用的Ultimate版本和免费的Community版本，先下载了Community Editor，结果发现没有application service功能，无法使用tomcat，果断换Ultimate Editor，找了个激活码激活。<br><br>下载链接:<a href="http://www.jetbrains.com/idea/" target="_blank" rel="external">http://www.jetbrains.com/idea/</a><br><br><br>下载安装打开，界面风格类似rubyMine，自从用过rubyMine之后一直嫌弃eclipse的界面,看着这个感觉爽多了。<br><br><br>接下来开始试着创建Spring项目，先新建一个new project,左边选择spring,右边勾选spring mvc:<br><img width="500" src="/img/start-intellij/1.png"><br><br>点击next,依次按提示完成创建<br><br><br>在项目上右键，选择open modules setting,参照以前eclipse下的spring项目建立以下目录结构：<br><br><img width="500" src="/img/start-intellij/2.png"><br><br><br>然后根据个人习惯修改配置，我的配置如下：</p>
-<p><pre><code><br>&lt;?xml version=”1.0” encoding=”UTF-8”?&gt;</code></pre></p>
-<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemalocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
+<p><pre><code><br>&lt;?xml version=”1.0” encoding=”UTF-8”?&gt;<br>&lt;web-app xmlns=”<a href="http://java.sun.com/xml/ns/javaee" target="_blank" rel="external">http://java.sun.com/xml/ns/javaee</a>“<br>    xmlns:xsi=”<a href="http://www.w3.org/2001/XMLSchema-instance" target="_blank" rel="external">http://www.w3.org/2001/XMLSchema-instance</a>“<br>    xsi:schemaLocation=”<a href="http://java.sun.com/xml/ns/javaee" target="_blank" rel="external">http://java.sun.com/xml/ns/javaee</a> <a href="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" target="_blank" rel="external">http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd</a>“<br>    xmlns:web=”<a href="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" target="_blank" rel="external">http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd</a>“<br>    version=”2.5”&gt;</code></pre></p>
+<p>  &lt;display-name&gt;spring-web&lt;/display-name&gt;</p>
+<pre><code>  <span class="subst">&amp;</span><span class="literal">lt</span>;context<span class="attribute">-param</span>&gt;
+    <span class="subst">&amp;</span><span class="literal">lt</span>;param<span class="attribute">-name</span>&gt;contextConfigLocation<span class="subst">&amp;</span><span class="literal">lt</span>;/param<span class="attribute">-name</span>&gt;
+    <span class="subst">&amp;</span><span class="literal">lt</span>;param<span class="attribute">-value</span>&gt;
+        classpath*:/applicationContext<span class="built_in">.</span><span class="built_in">xml</span>
+    <span class="subst">&amp;</span><span class="literal">lt</span>;/param<span class="attribute">-value</span>&gt;
+<span class="subst">&amp;</span><span class="literal">lt</span>;/context<span class="attribute">-param</span>&gt;
 
-<p>  <display-name>spring-web</display-name></p>
-<pre><code>  <span class="variable">&lt;context-param&gt;</span>
-    <span class="variable">&lt;param-name&gt;</span>contextConfigLocation<span class="variable">&lt;/param-name&gt;</span>
-    <span class="variable">&lt;param-value&gt;</span>
-        classpath<span class="keyword">*</span>:/applicationContext.xml
-    <span class="variable">&lt;/param-value&gt;</span>
-<span class="variable">&lt;/context-param&gt;</span>
+  <span class="subst">&amp;</span><span class="literal">lt</span>;servlet&gt;
+    <span class="subst">&amp;</span><span class="literal">lt</span>;servlet<span class="attribute">-name</span>&gt;springServlet<span class="subst">&amp;</span><span class="literal">lt</span>;/servlet<span class="attribute">-name</span>&gt;
+    <span class="subst">&amp;</span><span class="literal">lt</span>;servlet<span class="attribute">-class</span>&gt;org<span class="built_in">.</span>springframework<span class="built_in">.</span>web<span class="built_in">.</span>servlet<span class="built_in">.</span>DispatcherServlet<span class="subst">&amp;</span><span class="literal">lt</span>;/servlet<span class="attribute">-class</span>&gt;
+    <span class="subst">&amp;</span><span class="literal">lt</span>;init<span class="attribute">-param</span>&gt;
+        <span class="subst">&amp;</span><span class="literal">lt</span>;param<span class="attribute">-name</span>&gt;contextConfigLocation<span class="subst">&amp;</span><span class="literal">lt</span>;/param<span class="attribute">-name</span>&gt;
+        <span class="subst">&amp;</span><span class="literal">lt</span>;param<span class="attribute">-value</span>&gt;/WEB<span class="attribute">-INF</span>/spring<span class="attribute">-mvc</span><span class="built_in">.</span><span class="built_in">xml</span><span class="subst">&amp;</span><span class="literal">lt</span>;/param<span class="attribute">-value</span>&gt;
+    <span class="subst">&amp;</span><span class="literal">lt</span>;/init<span class="attribute">-param</span>&gt;
+    <span class="subst">&amp;</span><span class="literal">lt</span>;load<span class="attribute">-on</span><span class="attribute">-startup</span>&gt;<span class="number">1</span>&lt;/load<span class="attribute">-on</span><span class="attribute">-startup</span>&gt; 
 
-  <span class="variable">&lt;servlet&gt;</span>
-    <span class="variable">&lt;servlet-name&gt;</span>springServlet<span class="variable">&lt;/servlet-name&gt;</span>
-    <span class="variable">&lt;servlet-class&gt;</span>org.springframework.web.servlet.DispatcherServlet<span class="variable">&lt;/servlet-class&gt;</span>
-    <span class="variable">&lt;init-param&gt;</span>
-        <span class="variable">&lt;param-name&gt;</span>contextConfigLocation<span class="variable">&lt;/param-name&gt;</span>
-        <span class="variable">&lt;param-value&gt;</span>/WEB-INF/spring-mvc.xml<span class="variable">&lt;/param-value&gt;</span>
-    <span class="variable">&lt;/init-param&gt;</span>
-    <span class="variable">&lt;load-on-startup&gt;</span>1<span class="variable">&lt;/load-on-startup&gt;</span> 
-
-<span class="variable">&lt;/servlet&gt;</span>
-<span class="variable">&lt;servlet-mapping&gt;</span>
-    <span class="variable">&lt;servlet-name&gt;</span>springServlet<span class="variable">&lt;/servlet-name&gt;</span>
-    <span class="variable">&lt;url-pattern&gt;</span>/<span class="variable">&lt;/url-pattern&gt;</span>    
-<span class="variable">&lt;/servlet-mapping&gt;</span>
-</code></pre><p></p></web-app><br><br><br><br>web.xml配置了applicationContext.xml和spring-mvc.xml两个文件,在src/main/resources目录下新建applicationContext.xml：<p></p>
+<span class="subst">&amp;</span><span class="literal">lt</span>;/servlet&gt;
+<span class="subst">&amp;</span><span class="literal">lt</span>;servlet<span class="attribute">-mapping</span>&gt;
+    <span class="subst">&amp;</span><span class="literal">lt</span>;servlet<span class="attribute">-name</span>&gt;springServlet&lt;/servlet<span class="attribute">-name</span>&gt;
+    <span class="subst">&amp;</span><span class="literal">lt</span>;url<span class="attribute">-pattern</span>&gt;/&lt;/url<span class="attribute">-pattern</span>&gt;    
+<span class="subst">&amp;</span><span class="literal">lt</span>;/servlet<span class="attribute">-mapping</span>&gt;
+</code></pre><p><br><br><br><br>web.xml配置了applicationContext.xml和spring-mvc.xml两个文件,在src/main/resources目录下新建applicationContext.xml：</p>
 <p><pre><code><br>&lt;?xml version=”1.0” encoding=”UTF-8”?&gt;<br>&lt;beans xmlns=”<a href="http://www.springframework.org/schema/beans" target="_blank" rel="external">http://www.springframework.org/schema/beans</a>“<br>       xmlns:xsi=”<a href="http://www.w3.org/2001/XMLSchema-instance" target="_blank" rel="external">http://www.w3.org/2001/XMLSchema-instance</a>“<br>       xmlns:context=”<a href="http://www.springframework.org/schema/context" target="_blank" rel="external">http://www.springframework.org/schema/context</a>“<br>       xmlns:jee=”<a href="http://www.springframework.org/schema/jee" target="_blank" rel="external">http://www.springframework.org/schema/jee</a>“<br>       xmlns:tx=”<a href="http://www.springframework.org/schema/tx" target="_blank" rel="external">http://www.springframework.org/schema/tx</a>“<br>       xmlns:aop=”<a href="http://www.springframework.org/schema/aop" target="_blank" rel="external">http://www.springframework.org/schema/aop</a>“<br>       xsi:schemaLocation=”<br>        <a href="http://www.springframework.org/schema/beans" target="_blank" rel="external">http://www.springframework.org/schema/beans</a> <a href="http://www.springframework.org/schema/beans/spring-beans-4.0.xsd" target="_blank" rel="external">http://www.springframework.org/schema/beans/spring-beans-4.0.xsd</a><br>        <a href="http://www.springframework.org/schema/context" target="_blank" rel="external">http://www.springframework.org/schema/context</a> <a href="http://www.springframework.org/schema/context/spring-context-4.0.xsd" target="_blank" rel="external">http://www.springframework.org/schema/context/spring-context-4.0.xsd</a><br>        <a href="http://www.springframework.org/schema/jee" target="_blank" rel="external">http://www.springframework.org/schema/jee</a> <a href="http://www.springframework.org/schema/jee/spring-jee-4.0.xsd" target="_blank" rel="external">http://www.springframework.org/schema/jee/spring-jee-4.0.xsd</a><br>        <a href="http://www.springframework.org/schema/tx" target="_blank" rel="external">http://www.springframework.org/schema/tx</a> <a href="http://www.springframework.org/schema/tx/spring-tx-4.0.xsd" target="_blank" rel="external">http://www.springframework.org/schema/tx/spring-tx-4.0.xsd</a><br>        <a href="http://www.springframework.org/schema/aop" target="_blank" rel="external">http://www.springframework.org/schema/aop</a> <a href="http://www.springframework.org/schema/aop/spring-aop-4.0.xsd" target="_blank" rel="external">http://www.springframework.org/schema/aop/spring-aop-4.0.xsd</a>  “<br>       default-lazy-init=”true”&gt;<br>    //your setting<br>&lt;/beans&gt;<br></code></pre><br><br><br>将src/main/webapp/WEB-INF目录下除web.xml的另一个xml文件rename为spring-mvc.xml（对应web.xml中DispatcherServlet的配置，不填默认为[servelet-name]-servlet.xml）:</p>
-<p><code><br>&lt;?xml version=”1.0” encoding=”UTF-8”?&gt;</code></p>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc" xsi:schemalocation="
-        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
-        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
-        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+<p><pre><br><code><br>&lt;?xml version=”1.0” encoding=”UTF-8”?&gt;<br>&lt;beans xmlns=”<a href="http://www.springframework.org/schema/beans" target="_blank" rel="external">http://www.springframework.org/schema/beans</a>“<br>       xmlns:xsi=”<a href="http://www.w3.org/2001/XMLSchema-instance" target="_blank" rel="external">http://www.w3.org/2001/XMLSchema-instance</a>“<br>       xmlns:context=”<a href="http://www.springframework.org/schema/context" target="_blank" rel="external">http://www.springframework.org/schema/context</a>“<br>       xmlns:mvc=”<a href="http://www.springframework.org/schema/mvc" target="_blank" rel="external">http://www.springframework.org/schema/mvc</a>“<br>       xsi:schemaLocation=”<br>        <a href="http://www.springframework.org/schema/beans" target="_blank" rel="external">http://www.springframework.org/schema/beans</a> <a href="http://www.springframework.org/schema/beans/spring-beans-4.0.xsd" target="_blank" rel="external">http://www.springframework.org/schema/beans/spring-beans-4.0.xsd</a><br>        <a href="http://www.springframework.org/schema/context" target="_blank" rel="external">http://www.springframework.org/schema/context</a> <a href="http://www.springframework.org/schema/context/spring-context-4.0.xsd" target="_blank" rel="external">http://www.springframework.org/schema/context/spring-context-4.0.xsd</a><br>        <a href="http://www.springframework.org/schema/mvc" target="_blank" rel="external">http://www.springframework.org/schema/mvc</a> <a href="http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd&quot;&gt;" target="_blank" rel="external">http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd&quot;&gt;</a>   </code></pre></p>
+<pre><code>&amp;<span class="keyword">lt</span>;context:component-scan base-<span class="keyword">package</span>=<span class="string">"com.climbran.webdemo.spring"</span> /&gt;
+&amp;<span class="keyword">lt</span>;mvc:default-servlet-handler/&gt;
 
-<pre><code>&lt;context:component-scan base-package=<span class="string">"com.climbran.webdemo.spring"</span> /&gt;
-&lt;mvc:default-servlet-handler/&gt;
-
-&lt;bean <span class="property">id</span>=<span class="string">"viewResolver"</span> <span class="type">class</span>=<span class="string">"org.springframework.web.servlet.view.InternalResourceViewResolver"</span>&gt;
-    &lt;<span class="keyword">property</span> <span class="property">name</span>=<span class="string">"prefix"</span> value=<span class="string">"/WEB-INF/views/"</span> /&gt;
-    &lt;<span class="keyword">property</span> <span class="property">name</span>=<span class="string">"suffix"</span> value=<span class="string">".jsp"</span> /&gt;
-&lt;/bean&gt;
-</code></pre><p></p></beans><br><br><br><br><br>再src/main/webapp/WEB-INF目录下新建pages文件夹rename为view（对应spring-mvc.xml文件中的配置）<p></p>
+&amp;<span class="keyword">lt</span>;bean id=<span class="string">"viewResolver"</span> class=<span class="string">"org.springframework.web.servlet.view.InternalResourceViewResolver"</span>&gt;
+    &amp;<span class="keyword">lt</span>;property name=<span class="string">"prefix"</span> value=<span class="string">"/WEB-INF/views/"</span> /&gt;
+    &amp;<span class="keyword">lt</span>;property name=<span class="string">"suffix"</span> value=<span class="string">".jsp"</span> /&gt;
+&amp;<span class="keyword">lt</span>;bean&gt;
+</code></pre><p>&lt;/beans&gt;<br><br><br><br><br><br>再src/main/webapp/WEB-INF目录下新建pages文件夹rename为view（对应spring-mvc.xml文件中的配置）</p>
 
         
         
