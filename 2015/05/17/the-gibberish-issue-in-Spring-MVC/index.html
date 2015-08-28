@@ -11,49 +11,16 @@
     
 
     
-    <meta name="description" content="Spring MVC请求时经常出现中文乱码，查看配置文件，web.xml中已配置：
-
-  
-    CharacterEncodingFilter  
-    org.springframework.web.filter.CharacterEncodingFilter  
-      
-        encoding  
-        utf-8  
-    
- 
-  
-    Charact">
+    <meta name="description" content="Spring MVC请求时经常出现中文乱码，查看配置文件，web.xml中已配置：123456789101112&amp;lt;filter&amp;gt;  	&amp;lt;filter-name&amp;gt;CharacterEncodingFilter&amp;lt;/filter-name&amp;gt;      &amp;lt;filter-class&amp;gt;org.springframework.web.filter.Characte">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Spring MVC中文乱码问题">
 <meta property="og:url" content="http://yoursite.com/2015/05/17/the-gibberish-issue-in-Spring-MVC/index.html">
 <meta property="og:site_name" content="CLIMBRAN">
-<meta property="og:description" content="Spring MVC请求时经常出现中文乱码，查看配置文件，web.xml中已配置：
-
-  
-    CharacterEncodingFilter  
-    org.springframework.web.filter.CharacterEncodingFilter  
-      
-        encoding  
-        utf-8  
-    
- 
-  
-    Charact">
-<meta property="og:updated_time" content="2015-08-28T05:57:39.000Z">
+<meta property="og:description" content="Spring MVC请求时经常出现中文乱码，查看配置文件，web.xml中已配置：123456789101112&amp;lt;filter&amp;gt;  	&amp;lt;filter-name&amp;gt;CharacterEncodingFilter&amp;lt;/filter-name&amp;gt;      &amp;lt;filter-class&amp;gt;org.springframework.web.filter.Characte">
+<meta property="og:updated_time" content="2015-08-28T06:00:53.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring MVC中文乱码问题">
-<meta name="twitter:description" content="Spring MVC请求时经常出现中文乱码，查看配置文件，web.xml中已配置：
-
-  
-    CharacterEncodingFilter  
-    org.springframework.web.filter.CharacterEncodingFilter  
-      
-        encoding  
-        utf-8  
-    
- 
-  
-    Charact">
+<meta name="twitter:description" content="Spring MVC请求时经常出现中文乱码，查看配置文件，web.xml中已配置：123456789101112&amp;lt;filter&amp;gt;  	&amp;lt;filter-name&amp;gt;CharacterEncodingFilter&amp;lt;/filter-name&amp;gt;      &amp;lt;filter-class&amp;gt;org.springframework.web.filter.Characte">
 
     
     <link rel="alternative" href="/atom.xml" title="CLIMBRAN" type="application/atom+xml">
@@ -126,22 +93,7 @@
 </header>
 	<div class="article-content">
 		
-		<p>Spring MVC请求时经常出现中文乱码，查看配置文件，web.xml中已配置：</p>
-<pre>
-<xmp><filter>  
-    <filter-name>CharacterEncodingFilter</filter-name>  
-    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>  
-    <init-param>  
-        <param-name>encoding</param-name>  
-        <param-value>utf-8</param-value>  
-    </init-param>
-</filter> 
-<filter-mapping>  
-    <filter-name>CharacterEncodingFilter</filter-name>  
-    <url-pattern>/*</url-pattern>  
-</filter-mapping>
-</xmp></pre>
-度娘后发现该配置只对post请求有效，对于get请求还要对tomcat的service.xml进行配置，具体配置如下：
+		<p>Spring MVC请求时经常出现中文乱码，查看配置文件，web.xml中已配置：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">filter</span>&gt;</span>  </span><br><span class="line">	<span class="tag">&lt;<span class="title">filter-name</span>&gt;</span>CharacterEncodingFilter<span class="tag">&lt;/<span class="title">filter-name</span>&gt;</span>  </span><br><span class="line">    <span class="tag">&lt;<span class="title">filter-class</span>&gt;</span>org.springframework.web.filter.CharacterEncodingFilter<span class="tag">&lt;/<span class="title">filter-class</span>&gt;</span>  </span><br><span class="line">    <span class="tag">&lt;<span class="title">init-param</span>&gt;</span>  </span><br><span class="line">        <span class="tag">&lt;<span class="title">param-name</span>&gt;</span>encoding<span class="tag">&lt;/<span class="title">param-name</span>&gt;</span>  </span><br><span class="line">        <span class="tag">&lt;<span class="title">param-value</span>&gt;</span>utf-8<span class="tag">&lt;/<span class="title">param-value</span>&gt;</span>  </span><br><span class="line">    <span class="tag">&lt;/<span class="title">init-param</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">filter</span>&gt;</span> </span><br><span class="line"><span class="tag">&lt;<span class="title">filter-mapping</span>&gt;</span>  </span><br><span class="line">    <span class="tag">&lt;<span class="title">filter-name</span>&gt;</span>CharacterEncodingFilter<span class="tag">&lt;/<span class="title">filter-name</span>&gt;</span>  </span><br><span class="line">    <span class="tag">&lt;<span class="title">url-pattern</span>&gt;</span>/*<span class="tag">&lt;/<span class="title">url-pattern</span>&gt;</span>  </span><br><span class="line"><span class="tag">&lt;/<span class="title">filter-mapping</span>&gt;</span></span><br></pre></td></tr></table></figure><br>度娘后发现该配置只对post请求有效，对于get请求还要对tomcat的service.xml进行配置，具体配置如下：</p>
 <pre><xmp><connector connectiontimeout="20000" port="8080" protocol="HTTP/1.1" redirectport="8443" usebodyencodingforuri="true"></connector></xmp></pre>
 上面配置对ajax的get请求无效，如果要同时对ajax请求有效则改为
 <pre><xmp><connector connectiontimeout="20000" port="8080" protocol="HTTP/1.1" redirectport="8443" uriencoding="UTF-8"></connector></xmp></pre>  
