@@ -96,9 +96,9 @@
         
         <p>使用hexo后一直用&lt;pre&gt;加&lt;code&gt;标签表示代码块，但是一遇到’&lt;’符号就出先各种奇怪错误，还每次情况都不一样，今天在一篇文档发现正确使用方式：</p>
 <pre>
-<xmp>
-<figure class="highlight"><figcaption><span>[title] [] [url] [link text]</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">code snippet</span><br></pre></td></tr></table></figure>
-</xmp>
+%7B%25 codeblock [title] [lang:language] [url] [link text] %25%7D
+code snippet
+%7B%25 endcodeblock %25%7D
 </pre>
 
         
