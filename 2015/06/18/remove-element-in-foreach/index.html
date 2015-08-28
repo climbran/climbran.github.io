@@ -13,7 +13,7 @@
     
     <meta name="description" content="foreach循环中无法直接对Iterable中的元素进行remove，可以通过下面方式实现:
 
-for(String s : new ArrayList().addAll(list)){ //list为一个List
+for(String s : new ArrayList&amp;lt;String&amp;gt;().addAll(list)){ //list为一个List&amp;lt;String&amp;gt;
     if(s.equals(&quot;need remove&quot;))
         list.remove(s);
 }">
@@ -23,16 +23,16 @@ for(String s : new ArrayList().addAll(list)){ //list为一个List
 <meta property="og:site_name" content="CLIMBRAN">
 <meta property="og:description" content="foreach循环中无法直接对Iterable中的元素进行remove，可以通过下面方式实现:
 
-for(String s : new ArrayList().addAll(list)){ //list为一个List
+for(String s : new ArrayList&amp;lt;String&amp;gt;().addAll(list)){ //list为一个List&amp;lt;String&amp;gt;
     if(s.equals(&quot;need remove&quot;))
         list.remove(s);
 }">
-<meta property="og:updated_time" content="2015-08-28T05:33:33.000Z">
+<meta property="og:updated_time" content="2015-08-28T05:35:25.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="在foreach循环中移除元素的方法">
 <meta name="twitter:description" content="foreach循环中无法直接对Iterable中的元素进行remove，可以通过下面方式实现:
 
-for(String s : new ArrayList().addAll(list)){ //list为一个List
+for(String s : new ArrayList&amp;lt;String&amp;gt;().addAll(list)){ //list为一个List&amp;lt;String&amp;gt;
     if(s.equals(&quot;need remove&quot;))
         list.remove(s);
 }">
@@ -110,11 +110,11 @@ for(String s : new ArrayList().addAll(list)){ //list为一个List
 		
 		<p>foreach循环中无法直接对Iterable中的元素进行remove，可以通过下面方式实现:</p>
 <pre>
-<code>for(String s : new ArrayList<string>().addAll(list)){ //list为一个List<string>
+<code>for(String s : new ArrayList&lt;String>().addAll(list)){ //list为一个List&lt;String>
     if(s.equals("need remove"))
         list.remove(s);
 }
-</string></string></code></pre>  
+</code></pre>  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
