@@ -4,29 +4,32 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>java中回调函数的用法 | CLIMBRAN</title>
+    <title>hexo使用代码块 | CLIMBRAN</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="climbran">
     
 
     
-    <meta name="description" content="C语言中回调函数由指针实现，java 中没有指针，可以通过以下方法实现：
-123public interface MyCallInterface&amp;#123;	public void method();&amp;#125;
-123456public Client implements MyCallInterface&amp;#123;	@Override	public void method()&amp;#123;		//">
+    <meta name="description" content="使用hexo后一直用&amp;lt;pre&amp;gt;加&amp;lt;code&amp;gt;标签表示代码块，但是一遇到’&amp;lt;’符号就出先各种奇怪错误，还每次情况都不一样，今天在一篇文档发现正确使用方式：
+
+
+[title] [] [url] [link text]1code snippet">
 <meta property="og:type" content="article">
-<meta property="og:title" content="java中回调函数的用法">
-<meta property="og:url" content="http://yoursite.com/2015/04/28/callback-functions-about-java/index.html">
+<meta property="og:title" content="hexo使用代码块">
+<meta property="og:url" content="http://yoursite.com/2015/08/28/how-to-use-hexo-codeblock/index.html">
 <meta property="og:site_name" content="CLIMBRAN">
-<meta property="og:description" content="C语言中回调函数由指针实现，java 中没有指针，可以通过以下方法实现：
-123public interface MyCallInterface&amp;#123;	public void method();&amp;#125;
-123456public Client implements MyCallInterface&amp;#123;	@Override	public void method()&amp;#123;		//">
-<meta property="og:updated_time" content="2015-08-28T06:18:36.000Z">
+<meta property="og:description" content="使用hexo后一直用&amp;lt;pre&amp;gt;加&amp;lt;code&amp;gt;标签表示代码块，但是一遇到’&amp;lt;’符号就出先各种奇怪错误，还每次情况都不一样，今天在一篇文档发现正确使用方式：
+
+
+[title] [] [url] [link text]1code snippet">
+<meta property="og:updated_time" content="2015-08-28T06:42:17.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="java中回调函数的用法">
-<meta name="twitter:description" content="C语言中回调函数由指针实现，java 中没有指针，可以通过以下方法实现：
-123public interface MyCallInterface&amp;#123;	public void method();&amp;#125;
-123456public Client implements MyCallInterface&amp;#123;	@Override	public void method()&amp;#123;		//">
+<meta name="twitter:title" content="hexo使用代码块">
+<meta name="twitter:description" content="使用hexo后一直用&amp;lt;pre&amp;gt;加&amp;lt;code&amp;gt;标签表示代码块，但是一遇到’&amp;lt;’符号就出先各种奇怪错误，还每次情况都不一样，今天在一篇文档发现正确使用方式：
+
+
+[title] [] [url] [link text]1code snippet">
 
     
     <link rel="alternative" href="/atom.xml" title="CLIMBRAN" type="application/atom+xml">
@@ -86,23 +89,25 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/04/28/callback-functions-about-java/" title="java中回调函数的用法" itemprop="url">java中回调函数的用法</a>
+      <a href="/2015/08/28/how-to-use-hexo-codeblock/" title="hexo使用代码块" itemprop="url">hexo使用代码块</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="climbran" target="_blank" itemprop="author">climbran</a>
 		
   <p class="article-time">
-    <time datetime="2015-04-28T01:27:42.000Z" itemprop="datePublished"> 发表于 2015-04-28</time>
+    <time datetime="2015-08-28T06:29:53.000Z" itemprop="datePublished"> 发表于 2015-08-28</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
-		<p>C语言中回调函数由指针实现，java 中没有指针，可以通过以下方法实现：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MyCallInterface</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Client implements MyCallInterface&#123;</span><br><span class="line">	<span class="annotation">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="comment">//<span class="doctag">TODO:</span> 回调内容</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>调用时：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Caller</span></span>&#123;</span><br><span class="line">	<span class="keyword">private</span> MyCallInterface callInterface;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">Caller</span><span class="params">()</span></span>&#123;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setCallFunc</span><span class="params">(MyCallInterface callInterface)</span></span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.callInterface = callInterface;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">call</span><span class="params">()</span></span>&#123;</span><br><span class="line">		callInterface.method();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args)</span></span>&#123;</span><br><span class="line">		Caller caller = <span class="keyword">new</span> Caller();</span><br><span class="line">		caller.setCallFunc(<span class="keyword">new</span> Client());</span><br><span class="line">		client.call();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>或者<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Caller</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">call</span><span class="params">(Client client)</span></span>&#123;</span><br><span class="line">		client.method();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args)</span></span>&#123;</span><br><span class="line">		Caller caller = <span class="keyword">new</span> Caller();</span><br><span class="line">		caller.call(<span class="keyword">new</span> Client());</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+		<p>使用hexo后一直用&lt;pre&gt;加&lt;code&gt;标签表示代码块，但是一遇到’&lt;’符号就出先各种奇怪错误，还每次情况都不一样，今天在一篇文档发现正确使用方式：</p>
+<pre>
+<code>
+<figure class="highlight"><figcaption><span>[title] [] [url] [link text]</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">code snippet</span><br></pre></td></tr></table></figure>
+</code>
+</pre>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -111,7 +116,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/java/">java</a>
+  <span></span> <a href="/tags/hexo/">hexo</a>
   </div>
 
 </div>
@@ -120,7 +125,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/04/28/callback-functions-about-java/" data-title="java中回调函数的用法 | CLIMBRAN" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/08/28/how-to-use-hexo-codeblock/" data-title="hexo使用代码块 | CLIMBRAN" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -133,19 +138,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/05/17/the-gibberish-issue-in-Spring-MVC/" title="Spring MVC中文乱码问题">
-  <strong>上一篇：</strong><br/>
-  <span>
-  Spring MVC中文乱码问题</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/04/26/git-instructions/"  title="git常用指令">
+<a href="/2015/08/27/start-intellij/"  title="intelliJ创建spring项目">
  <strong>下一篇：</strong><br/> 
- <span>git常用指令
+ <span>intelliJ创建spring项目
 </span>
 </a>
 </div>
@@ -154,7 +151,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/04/28/callback-functions-about-java/" data-title="java中回调函数的用法" data-url="http://yoursite.com/2015/04/28/callback-functions-about-java/"></div>
+	<div class="ds-thread" data-thread-key="2015/08/28/how-to-use-hexo-codeblock/" data-title="hexo使用代码块" data-url="http://yoursite.com/2015/08/28/how-to-use-hexo-codeblock/"></div>
 </section>
 
 
