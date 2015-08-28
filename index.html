@@ -128,7 +128,7 @@
         http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd
         http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
         http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd  " default-lazy-init="true"><br>    //your setting<br></beans><br><br><br><br>将src/main/webapp/WEB-INF目录下除web.xml的另一个xml文件rename为spring-mvc.xml（对应web.xml中DispatcherServlet的配置，不填默认为[servelet-name]-servlet.xml）:</p>
-<p><pre><code><br>&lt;?xml version=”1.0” encoding=”UTF-8”?&gt;</code></pre></p>
+<p><code><br>&lt;?xml version=”1.0” encoding=”UTF-8”?&gt;</code></p>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc" xsi:schemalocation="
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
@@ -141,7 +141,7 @@
     &lt;<span class="keyword">property</span> <span class="property">name</span>=<span class="string">"prefix"</span> value=<span class="string">"/WEB-INF/views/"</span> /&gt;
     &lt;<span class="keyword">property</span> <span class="property">name</span>=<span class="string">"suffix"</span> value=<span class="string">".jsp"</span> /&gt;
 &lt;/bean&gt;
-</code></pre><p></p></beans><br><br><br><br>再src/main/webapp/WEB-INF目录下新建pages文件夹rename为view（对应spring-mvc.xml文件中的配置）<p></p>
+</code></pre><p></p></beans><br><br><br><br><br>再src/main/webapp/WEB-INF目录下新建pages文件夹rename为view（对应spring-mvc.xml文件中的配置）<p></p>
 
         
         

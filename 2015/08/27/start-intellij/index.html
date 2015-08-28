@@ -19,7 +19,7 @@
 <meta property="og:description" content="今天下载了个intelliJ试着用下。官网有30天试用的Ultimate版本和免费的Community版本，先下载了Community Editor，结果发现没有application service功能，无法使用tomcat，果断换Ultimate Editor，找了个激活码激活。下载链接:http://www.jetbrains.com/idea/下载安装打开，界面风格类似rubyMine，自">
 <meta property="og:image" content="http://yoursite.com/img/start-intellij/1.png">
 <meta property="og:image" content="http://yoursite.com/img/start-intellij/2.png">
-<meta property="og:updated_time" content="2015-08-28T04:38:34.000Z">
+<meta property="og:updated_time" content="2015-08-28T04:53:24.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="intelliJ创建spring项目">
 <meta name="twitter:description" content="今天下载了个intelliJ试着用下。官网有30天试用的Ultimate版本和免费的Community版本，先下载了Community Editor，结果发现没有application service功能，无法使用tomcat，果断换Ultimate Editor，找了个激活码激活。下载链接:http://www.jetbrains.com/idea/下载安装打开，界面风格类似rubyMine，自">
@@ -129,7 +129,7 @@
         http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd
         http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
         http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd  " default-lazy-init="true"><br>    //your setting<br></beans><br><br><br><br>将src/main/webapp/WEB-INF目录下除web.xml的另一个xml文件rename为spring-mvc.xml（对应web.xml中DispatcherServlet的配置，不填默认为[servelet-name]-servlet.xml）:</p>
-<p><pre><code><br>&lt;?xml version=”1.0” encoding=”UTF-8”?&gt;</code></pre></p>
+<p><code><br>&lt;?xml version=”1.0” encoding=”UTF-8”?&gt;</code></p>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc" xsi:schemalocation="
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
@@ -142,7 +142,7 @@
     &lt;<span class="keyword">property</span> <span class="property">name</span>=<span class="string">"prefix"</span> value=<span class="string">"/WEB-INF/views/"</span> /&gt;
     &lt;<span class="keyword">property</span> <span class="property">name</span>=<span class="string">"suffix"</span> value=<span class="string">".jsp"</span> /&gt;
 &lt;/bean&gt;
-</code></pre><p></p></beans><br><br><br><br>再src/main/webapp/WEB-INF目录下新建pages文件夹rename为view（对应spring-mvc.xml文件中的配置）<p></p>
+</code></pre><p></p></beans><br><br><br><br><br>再src/main/webapp/WEB-INF目录下新建pages文件夹rename为view（对应spring-mvc.xml文件中的配置）<p></p>
   
 	</div>
 		<footer class="article-footer clearfix">
