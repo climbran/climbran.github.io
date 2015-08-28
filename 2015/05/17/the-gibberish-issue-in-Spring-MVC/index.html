@@ -39,7 +39,7 @@
  
   
     Charact">
-<meta property="og:updated_time" content="2015-08-16T17:45:46.000Z">
+<meta property="og:updated_time" content="2015-08-28T05:36:52.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring MVC中文乱码问题">
 <meta name="twitter:description" content="Spring MVC请求时经常出现中文乱码，查看配置文件，web.xml中已配置：
@@ -128,7 +128,7 @@
 		
 		<p>Spring MVC请求时经常出现中文乱码，查看配置文件，web.xml中已配置：</p>
 <pre>
-<xmp><filter>  
+<code><filter>  
     <filter-name>CharacterEncodingFilter</filter-name>  
     <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>  
     <init-param>  
@@ -140,7 +140,7 @@
     <filter-name>CharacterEncodingFilter</filter-name>  
     <url-pattern>/*</url-pattern>  
 </filter-mapping>
-</xmp></pre>
+</code></pre>
 度娘后发现该配置只对post请求有效，对于get请求还要对tomcat的service.xml进行配置，具体配置如下：
 <pre><xmp><connector connectiontimeout="20000" port="8080" protocol="HTTP/1.1" redirectport="8443" usebodyencodingforuri="true"></connector></xmp></pre>
 上面配置对ajax的get请求无效，如果要同时对ajax请求有效则改为
