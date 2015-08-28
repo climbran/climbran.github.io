@@ -19,7 +19,7 @@
 <meta property="og:description" content="今天下载了个intelliJ试着用下。官网有30天试用的Ultimate版本和免费的Community版本，先下载了Community Editor，结果发现没有application service功能，无法使用tomcat，果断换Ultimate Editor，找了个激活码激活。下载链接:http://www.jetbrains.com/idea/下载安装打开，界面风格类似rubyMine，自">
 <meta property="og:image" content="http://yoursite.com/img/start-intellij/1.png">
 <meta property="og:image" content="http://yoursite.com/img/start-intellij/2.png">
-<meta property="og:updated_time" content="2015-08-28T05:17:05.000Z">
+<meta property="og:updated_time" content="2015-08-28T05:18:15.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="intelliJ创建spring项目">
 <meta name="twitter:description" content="今天下载了个intelliJ试着用下。官网有30天试用的Ultimate版本和免费的Community版本，先下载了Community Editor，结果发现没有application service功能，无法使用tomcat，果断换Ultimate Editor，找了个激活码激活。下载链接:http://www.jetbrains.com/idea/下载安装打开，界面风格类似rubyMine，自">
@@ -96,7 +96,7 @@
 	<div class="article-content">
 		
 		<p>今天下载了个intelliJ试着用下。官网有30天试用的Ultimate版本和免费的Community版本，先下载了Community Editor，结果发现没有application service功能，无法使用tomcat，果断换Ultimate Editor，找了个激活码激活。<br><br>下载链接:<a href="http://www.jetbrains.com/idea/" target="_blank" rel="external">http://www.jetbrains.com/idea/</a><br><br><br>下载安装打开，界面风格类似rubyMine，自从用过rubyMine之后一直嫌弃eclipse的界面,看着这个感觉爽多了。<br><br><br>接下来开始试着创建Spring项目，先新建一个new project,左边选择spring,右边勾选spring mvc:<br><img width="500" src="/img/start-intellij/1.png"><br><br>点击next,依次按提示完成创建<br><br><br>在项目上右键，选择open modules setting,参照以前eclipse下的spring项目建立以下目录结构：<br><br><img width="500" src="/img/start-intellij/2.png"><br><br><br>然后根据个人习惯修改配置，我的配置如下：</p>
-<p><pre><code></code></pre></p>
+<p><pre><br>    <code></code></pre></p>
 <p>&lt;?xml version=”1.0” encoding=”UTF-8”?&gt;<br>&lt;web-app xmlns=”<a href="http://java.sun.com/xml/ns/javaee" target="_blank" rel="external">http://java.sun.com/xml/ns/javaee</a>“<br>    xmlns:xsi=”<a href="http://www.w3.org/2001/XMLSchema-instance" target="_blank" rel="external">http://www.w3.org/2001/XMLSchema-instance</a>“<br>    xsi:schemaLocation=”<a href="http://java.sun.com/xml/ns/javaee" target="_blank" rel="external">http://java.sun.com/xml/ns/javaee</a> <a href="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" target="_blank" rel="external">http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd</a>“<br>    xmlns:web=”<a href="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" target="_blank" rel="external">http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd</a>“<br>    version=”2.5”&gt;</p>
 <pre><code> <span class="variable">&lt;display-name&gt;</span>spring-web&amp;lt;/display-name&gt;
 
