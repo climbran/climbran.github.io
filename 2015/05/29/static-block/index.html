@@ -4,23 +4,23 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>在foreach循环中移除元素的方法 | CLIMBRAN</title>
+    <title>static块 | CLIMBRAN</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="climbran">
     
 
     
-    <meta name="description" content="foreach循环中无法直接对Iterable中的元素进行remove，可以通过下面方式实现:1234for(String s : new ArrayList&amp;lt;String&amp;gt;().addAll(list))&amp;#123; //list为一个List&amp;lt;String&amp;gt;	if(s.equals(&quot;need remove&quot;))		list.remove(s);&amp;#125;">
+    <meta name="description" content="看springside的showcase发现static块的直接使用:12345678910111213141516171819package org.springside.examples.showcase.web;import java.util.List;.....@Controller@RequestMapping(value = &quot;/account/user&quot;)public class">
 <meta property="og:type" content="article">
-<meta property="og:title" content="在foreach循环中移除元素的方法">
-<meta property="og:url" content="http://yoursite.com/2015/06/18/remove-element-in-foreach/index.html">
+<meta property="og:title" content="static块">
+<meta property="og:url" content="http://yoursite.com/2015/05/29/static-block/index.html">
 <meta property="og:site_name" content="CLIMBRAN">
-<meta property="og:description" content="foreach循环中无法直接对Iterable中的元素进行remove，可以通过下面方式实现:1234for(String s : new ArrayList&amp;lt;String&amp;gt;().addAll(list))&amp;#123; //list为一个List&amp;lt;String&amp;gt;	if(s.equals(&quot;need remove&quot;))		list.remove(s);&amp;#125;">
-<meta property="og:updated_time" content="2015-08-28T06:23:24.000Z">
+<meta property="og:description" content="看springside的showcase发现static块的直接使用:12345678910111213141516171819package org.springside.examples.showcase.web;import java.util.List;.....@Controller@RequestMapping(value = &quot;/account/user&quot;)public class">
+<meta property="og:updated_time" content="2015-08-29T09:36:18.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="在foreach循环中移除元素的方法">
-<meta name="twitter:description" content="foreach循环中无法直接对Iterable中的元素进行remove，可以通过下面方式实现:1234for(String s : new ArrayList&amp;lt;String&amp;gt;().addAll(list))&amp;#123; //list为一个List&amp;lt;String&amp;gt;	if(s.equals(&quot;need remove&quot;))		list.remove(s);&amp;#125;">
+<meta name="twitter:title" content="static块">
+<meta name="twitter:description" content="看springside的showcase发现static块的直接使用:12345678910111213141516171819package org.springside.examples.showcase.web;import java.util.List;.....@Controller@RequestMapping(value = &quot;/account/user&quot;)public class">
 
     
     <link rel="alternative" href="/atom.xml" title="CLIMBRAN" type="application/atom+xml">
@@ -80,20 +80,30 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/06/18/remove-element-in-foreach/" title="在foreach循环中移除元素的方法" itemprop="url">在foreach循环中移除元素的方法</a>
+      <a href="/2015/05/29/static-block/" title="static块" itemprop="url">static块</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="climbran" target="_blank" itemprop="author">climbran</a>
 		
   <p class="article-time">
-    <time datetime="2015-06-18T03:18:18.000Z" itemprop="datePublished"> 发表于 2015-06-18</time>
+    <time datetime="2015-05-29T09:03:15.000Z" itemprop="datePublished"> 发表于 2015-05-29</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
-		<p>foreach循环中无法直接对Iterable中的元素进行remove，可以通过下面方式实现:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(String s : <span class="keyword">new</span> ArrayList&lt;String&gt;().addAll(list))&#123; <span class="comment">//list为一个List&lt;String&gt;</span></span><br><span class="line">	<span class="keyword">if</span>(s.equals(<span class="string">"need remove"</span>))</span><br><span class="line">		list.remove(s);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+		<p>看springside的showcase发现static块的直接使用:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> org.springside.examples.showcase.web;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line">.....</span><br><span class="line"></span><br><span class="line"><span class="annotation">@Controller</span></span><br><span class="line"><span class="annotation">@RequestMapping</span>(value = <span class="string">"/account/user"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> Map&lt;String, String&gt; allStatus = Maps.newHashMap();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">static</span> &#123;</span><br><span class="line">		allStatus.put(<span class="string">"enabled"</span>, <span class="string">"有效"</span>);</span><br><span class="line">		allStatus.put(<span class="string">"disabled"</span>, <span class="string">"无效"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	......</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>static{}，会在类被加载的时候执行且仅会被执行一次，一般用来初始化静态变量和调用静态方法。</p>
+<p>虚拟机的生命周期中一个类只被加载一次；又因为static{}是伴随类加载执行的，所以，不管你new多少次对象实例，static{}都只执行一次。</p>
+<p>上面说到static{}会在类被加载的时候执行，我们必须准确理解类加载的准确含义，含义如下:</p>
+<p>1、用Class.forName()显示加载的时候，如上面的示例一;</p>
+<p>2、实例化一个类的时候，如将main()函数的内容改为:Test t=new Test();//这种形式其实和1相比，原理是相同的，都是显示的加载这个类，读者可以验证Test t=new Test();和Test t=(Test)Class.forName().newInstance();这两条语句效果相同。</p>
+<p>3、调用类的静态方法的时候，如将main()函数的内容改为:Test.display();</p>
+<p>4、调用类的静态变量的时候，如将main()函数的内容改为:System.out.println(Test.X);</p>
+<p>总体来说就这四种情况，但是我们特别需要注意一下两点:</p>
+<p>1、调用类的静态常量的时候，是不会加载类的，即不会执行static{}语句块，读者可以自己验证一下(将main()函数的内容改为System.out.println(Test.Y);)，你会发现程序只输出了一个200；(这是java虚拟机的规定，当访问类的静态常量时，如果编译器可以计算出常量的值，则不会加载类，否则会加载类)</p>
+<p>2、用Class.forName()形式的时候，我们也可以自己设定要不要加载类，如将Class.forName(“Test”)改为 Class.forName(“Test”,false,StaticBlockTest.class.getClassLoader())，你会发现程序什么都没有输出，即Test没有被加载，static{}没有被执行。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -111,7 +121,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/06/18/remove-element-in-foreach/" data-title="在foreach循环中移除元素的方法 | CLIMBRAN" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/05/29/static-block/" data-title="static块 | CLIMBRAN" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -125,18 +135,18 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/07/11/resource-and-the-representation-of-the-resource/" title="关于资源和表述">
+ <a href="/2015/06/18/remove-element-in-foreach/" title="在foreach循环中移除元素的方法">
   <strong>上一篇：</strong><br/>
   <span>
-  关于资源和表述</span>
+  在foreach循环中移除元素的方法</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/05/29/static-block/"  title="static块">
+<a href="/2015/05/17/the-gibberish-issue-in-Spring-MVC/"  title="Spring MVC中文乱码问题">
  <strong>下一篇：</strong><br/> 
- <span>static块
+ <span>Spring MVC中文乱码问题
 </span>
 </a>
 </div>
@@ -145,7 +155,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/06/18/remove-element-in-foreach/" data-title="在foreach循环中移除元素的方法" data-url="http://yoursite.com/2015/06/18/remove-element-in-foreach/"></div>
+	<div class="ds-thread" data-thread-key="2015/05/29/static-block/" data-title="static块" data-url="http://yoursite.com/2015/05/29/static-block/"></div>
 </section>
 
 
