@@ -4,23 +4,24 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>brew安装 | CLIMBRAN</title>
+    <title>数据库四种设计模式 | CLIMBRAN</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="climbran">
     
 
     
-    <meta name="description" content="网上找了好多brew的安装方式，结果都是太旧的方法，无法安装，后来发现其实直接去官方网站就有最新的安装方式，传送门">
+    <meta name="description" content="1、主扩展模式主扩展模式，通常用来将几个相似的对象的共有属性抽取出来，形成一个“公共属性表”；其余属性则分别形成“专有属性表”，且“公共属性表”与“专有属性表”都是“一对一”的关系。感觉主扩展模式适合用于继承关系，“公共属性表”即父类表，“专有属性表”即各个子类各自独有的属性形成的表。2、主从模式即对象间的一对多关系，例如学校和班级即一种主从模式。3、名值模式名值模式，通常用来描述在系统设计阶段不">
 <meta property="og:type" content="article">
-<meta property="og:title" content="brew安装">
-<meta property="og:url" content="http://yoursite.com/2015/03/20/brew-install/index.html">
+<meta property="og:title" content="数据库四种设计模式">
+<meta property="og:url" content="http://yoursite.com/2015/08/29/database-design-model/index.html">
 <meta property="og:site_name" content="CLIMBRAN">
-<meta property="og:description" content="网上找了好多brew的安装方式，结果都是太旧的方法，无法安装，后来发现其实直接去官方网站就有最新的安装方式，传送门">
-<meta property="og:updated_time" content="2015-08-17T02:17:04.000Z">
+<meta property="og:description" content="1、主扩展模式主扩展模式，通常用来将几个相似的对象的共有属性抽取出来，形成一个“公共属性表”；其余属性则分别形成“专有属性表”，且“公共属性表”与“专有属性表”都是“一对一”的关系。感觉主扩展模式适合用于继承关系，“公共属性表”即父类表，“专有属性表”即各个子类各自独有的属性形成的表。2、主从模式即对象间的一对多关系，例如学校和班级即一种主从模式。3、名值模式名值模式，通常用来描述在系统设计阶段不">
+<meta property="og:image" content="http://yoursite.com/img/database-design-model/1.png">
+<meta property="og:updated_time" content="2015-08-29T13:51:40.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="brew安装">
-<meta name="twitter:description" content="网上找了好多brew的安装方式，结果都是太旧的方法，无法安装，后来发现其实直接去官方网站就有最新的安装方式，传送门">
+<meta name="twitter:title" content="数据库四种设计模式">
+<meta name="twitter:description" content="1、主扩展模式主扩展模式，通常用来将几个相似的对象的共有属性抽取出来，形成一个“公共属性表”；其余属性则分别形成“专有属性表”，且“公共属性表”与“专有属性表”都是“一对一”的关系。感觉主扩展模式适合用于继承关系，“公共属性表”即父类表，“专有属性表”即各个子类各自独有的属性形成的表。2、主从模式即对象间的一对多关系，例如学校和班级即一种主从模式。3、名值模式名值模式，通常用来描述在系统设计阶段不">
 
     
     <link rel="alternative" href="/atom.xml" title="CLIMBRAN" type="application/atom+xml">
@@ -80,20 +81,20 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/03/20/brew-install/" title="brew安装" itemprop="url">brew安装</a>
+      <a href="/2015/08/29/database-design-model/" title="数据库四种设计模式" itemprop="url">数据库四种设计模式</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="climbran" target="_blank" itemprop="author">climbran</a>
 		
   <p class="article-time">
-    <time datetime="2015-03-20T07:13:35.000Z" itemprop="datePublished"> 发表于 2015-03-20</time>
+    <time datetime="2015-08-29T13:17:26.000Z" itemprop="datePublished"> 发表于 2015-08-29</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
-		<p>网上找了好多brew的安装方式，结果都是太旧的方法，无法安装，后来发现其实直接去官方网站就有最新的安装方式，<a href="http://brew.sh/" target="_blank" rel="external">传送门</a></p>
+		<p>1、主扩展模式<br><br>主扩展模式，通常用来将几个相似的对象的共有属性抽取出来，形成一个“公共属性表”；其余属性则分别形成“专有属性表”，且“公共属性表”与“专有属性表”都是“一对一”的关系。<br><br>感觉主扩展模式适合用于继承关系，“公共属性表”即父类表，“专有属性表”即各个子类各自独有的属性形成的表。<br><br><br>2、主从模式<br><br>即对象间的一对多关系，例如学校和班级即一种主从模式。<br><br><br>3、名值模式<br>名值模式，通常用来描述在系统设计阶段不能完全确定属性的对象，这些对象的属性在系统运行时会有很大的变更，或者是多个对象之间的属性存在很大的差异。<br><br>我的理解名值模式就是主扩展模式和多对多模式的混合，将主从模式中的“专有属性表”中列变为一张“属性列表“”中的行。“公共属性表”和“属性列表”为多对多关系，属性值可在映射表中。<br>eg:<br><img width="600 " src="img/database-design-model/1.png"><br><br><br>4、多对多模式<br><br>这个没什么好说的</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -102,7 +103,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/mac-os/">mac os</a>
+  <span></span> <a href="/tags/数据库/">数据库</a>
   </div>
 
 </div>
@@ -111,7 +112,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/03/20/brew-install/" data-title="brew安装 | CLIMBRAN" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/08/29/database-design-model/" data-title="数据库四种设计模式 | CLIMBRAN" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -124,20 +125,20 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/03/20/filter-get-cost-time/" title="利用Filter统计时间开销">
-  <strong>上一篇：</strong><br/>
-  <span>
-  利用Filter统计时间开销</span>
+
+<div class="next">
+<a href="/2015/08/29/one-reason-to-expected-at-least-1-bean/"  title="Autowired时找不到bean的一个原因">
+ <strong>下一篇：</strong><br/> 
+ <span>Autowired时找不到bean的一个原因
+</span>
 </a>
 </div>
-
 
 </nav>
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/03/20/brew-install/" data-title="brew安装" data-url="http://yoursite.com/2015/03/20/brew-install/"></div>
+	<div class="ds-thread" data-thread-key="2015/08/29/database-design-model/" data-title="数据库四种设计模式" data-url="http://yoursite.com/2015/08/29/database-design-model/"></div>
 </section>
 
 

@@ -81,6 +81,64 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/08/29/database-design-model/" title="数据库四种设计模式" itemprop="url">数据库四种设计模式</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="climbran" target="_blank" itemprop="author">climbran</a>
+		
+  <p class="article-time">
+    <time datetime="2015-08-29T13:17:26.000Z" itemprop="datePublished"> 发表于 2015-08-29</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>1、主扩展模式<br><br>主扩展模式，通常用来将几个相似的对象的共有属性抽取出来，形成一个“公共属性表”；其余属性则分别形成“专有属性表”，且“公共属性表”与“专有属性表”都是“一对一”的关系。<br><br>感觉主扩展模式适合用于继承关系，“公共属性表”即父类表，“专有属性表”即各个子类各自独有的属性形成的表。<br><br><br>2、主从模式<br><br>即对象间的一对多关系，例如学校和班级即一种主从模式。<br><br><br>3、名值模式<br>名值模式，通常用来描述在系统设计阶段不能完全确定属性的对象，这些对象的属性在系统运行时会有很大的变更，或者是多个对象之间的属性存在很大的差异。<br><br>我的理解名值模式就是主扩展模式和多对多模式的混合，将主从模式中的“专有属性表”中列变为一张“属性列表“”中的行。“公共属性表”和“属性列表”为多对多关系，属性值可在映射表中。<br>eg:<br><img width="600 " src="img/database-design-model/1.png"><br><br><br>4、多对多模式<br><br>这个没什么好说的</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/数据库/">数据库</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/08/29/database-design-model/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/08/29/database-design-model/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/08/29/one-reason-to-expected-at-least-1-bean/" title="Autowired时找不到bean的一个原因" itemprop="url">Autowired时找不到bean的一个原因</a>
   </h1>
   <p class="article-author">By
@@ -616,64 +674,6 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/18/remove-element-in-foreach/" title="在foreach循环中移除元素的方法" itemprop="url">在foreach循环中移除元素的方法</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="climbran" target="_blank" itemprop="author">climbran</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-18T03:18:18.000Z" itemprop="datePublished"> 发表于 2015-06-18</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>foreach循环中无法直接对Iterable中的元素进行remove，可以通过下面方式实现:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(String s : <span class="keyword">new</span> ArrayList&lt;String&gt;().addAll(list))&#123; <span class="comment">//list为一个List&lt;String&gt;</span></span><br><span class="line">	<span class="keyword">if</span>(s.equals(<span class="string">"need remove"</span>))</span><br><span class="line">		list.remove(s);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/java/">java</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/18/remove-element-in-foreach/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/18/remove-element-in-foreach/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
@@ -735,6 +735,10 @@
 		
 			
 				<li><a href="/tags/git/" title="git">git<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/数据库/" title="数据库">数据库<sup>1</sup></a></li>
 			
 		
 			
