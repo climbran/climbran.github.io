@@ -4,23 +4,24 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Spring MVC中文乱码问题 | CLIMBRAN</title>
+    <title>一致性哈希 | CLIMBRAN</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="climbran">
     
 
     
-    <meta name="description" content="Spring MVC请求时经常出现中文乱码，查看配置文件，web.xml中已配置：123456789101112&amp;lt;filter&amp;gt;  	&amp;lt;filter-name&amp;gt;CharacterEncodingFilter&amp;lt;/filter-name&amp;gt;      &amp;lt;filter-class&amp;gt;org.springframework.web.filter.Characte">
+    <meta name="description" content="学习redis时，看到一致性哈希。一致性哈希算法在1997年由麻省理工学院提出的一种分布式哈希（DHT）实现算法，设计目标是为了解决因特网中的热点(Hot spot)问题，初衷和CARP十分类似。一致性哈希修正了CARP使用的简 单哈希算法带来的问题，使得分布式哈希（DHT）可以在P2P环境中真正得到应用。    一致性hash算法提出了在动态变化的Cache环境中，判定哈希算法好坏的四个定义：">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Spring MVC中文乱码问题">
-<meta property="og:url" content="http://yoursite.com/2015/05/17/the-gibberish-issue-in-Spring-MVC/index.html">
+<meta property="og:title" content="一致性哈希">
+<meta property="og:url" content="http://yoursite.com/2015/08/29/consistent-hashing/index.html">
 <meta property="og:site_name" content="CLIMBRAN">
-<meta property="og:description" content="Spring MVC请求时经常出现中文乱码，查看配置文件，web.xml中已配置：123456789101112&amp;lt;filter&amp;gt;  	&amp;lt;filter-name&amp;gt;CharacterEncodingFilter&amp;lt;/filter-name&amp;gt;      &amp;lt;filter-class&amp;gt;org.springframework.web.filter.Characte">
-<meta property="og:updated_time" content="2015-08-28T06:12:34.000Z">
+<meta property="og:description" content="学习redis时，看到一致性哈希。一致性哈希算法在1997年由麻省理工学院提出的一种分布式哈希（DHT）实现算法，设计目标是为了解决因特网中的热点(Hot spot)问题，初衷和CARP十分类似。一致性哈希修正了CARP使用的简 单哈希算法带来的问题，使得分布式哈希（DHT）可以在P2P环境中真正得到应用。    一致性hash算法提出了在动态变化的Cache环境中，判定哈希算法好坏的四个定义：">
+<meta property="og:image" content="http://yoursite.com/img/consistent-hashing/1.png">
+<meta property="og:updated_time" content="2015-08-29T15:09:04.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Spring MVC中文乱码问题">
-<meta name="twitter:description" content="Spring MVC请求时经常出现中文乱码，查看配置文件，web.xml中已配置：123456789101112&amp;lt;filter&amp;gt;  	&amp;lt;filter-name&amp;gt;CharacterEncodingFilter&amp;lt;/filter-name&amp;gt;      &amp;lt;filter-class&amp;gt;org.springframework.web.filter.Characte">
+<meta name="twitter:title" content="一致性哈希">
+<meta name="twitter:description" content="学习redis时，看到一致性哈希。一致性哈希算法在1997年由麻省理工学院提出的一种分布式哈希（DHT）实现算法，设计目标是为了解决因特网中的热点(Hot spot)问题，初衷和CARP十分类似。一致性哈希修正了CARP使用的简 单哈希算法带来的问题，使得分布式哈希（DHT）可以在P2P环境中真正得到应用。    一致性hash算法提出了在动态变化的Cache环境中，判定哈希算法好坏的四个定义：">
 
     
     <link rel="alternative" href="/atom.xml" title="CLIMBRAN" type="application/atom+xml">
@@ -80,20 +81,27 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/05/17/the-gibberish-issue-in-Spring-MVC/" title="Spring MVC中文乱码问题" itemprop="url">Spring MVC中文乱码问题</a>
+      <a href="/2015/08/29/consistent-hashing/" title="一致性哈希" itemprop="url">一致性哈希</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="climbran" target="_blank" itemprop="author">climbran</a>
 		
   <p class="article-time">
-    <time datetime="2015-05-17T05:26:27.000Z" itemprop="datePublished"> 发表于 2015-05-17</time>
+    <time datetime="2015-08-29T14:30:53.000Z" itemprop="datePublished"> 发表于 2015-08-29</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
-		<p>Spring MVC请求时经常出现中文乱码，查看配置文件，web.xml中已配置：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">filter</span>&gt;</span>  </span><br><span class="line">	<span class="tag">&lt;<span class="title">filter-name</span>&gt;</span>CharacterEncodingFilter<span class="tag">&lt;/<span class="title">filter-name</span>&gt;</span>  </span><br><span class="line">    <span class="tag">&lt;<span class="title">filter-class</span>&gt;</span>org.springframework.web.filter.CharacterEncodingFilter<span class="tag">&lt;/<span class="title">filter-class</span>&gt;</span>  </span><br><span class="line">    <span class="tag">&lt;<span class="title">init-param</span>&gt;</span>  </span><br><span class="line">        <span class="tag">&lt;<span class="title">param-name</span>&gt;</span>encoding<span class="tag">&lt;/<span class="title">param-name</span>&gt;</span>  </span><br><span class="line">        <span class="tag">&lt;<span class="title">param-value</span>&gt;</span>utf-8<span class="tag">&lt;/<span class="title">param-value</span>&gt;</span>  </span><br><span class="line">    <span class="tag">&lt;/<span class="title">init-param</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">filter</span>&gt;</span> </span><br><span class="line"><span class="tag">&lt;<span class="title">filter-mapping</span>&gt;</span>  </span><br><span class="line">    <span class="tag">&lt;<span class="title">filter-name</span>&gt;</span>CharacterEncodingFilter<span class="tag">&lt;/<span class="title">filter-name</span>&gt;</span>  </span><br><span class="line">    <span class="tag">&lt;<span class="title">url-pattern</span>&gt;</span>/*<span class="tag">&lt;/<span class="title">url-pattern</span>&gt;</span>  </span><br><span class="line"><span class="tag">&lt;/<span class="title">filter-mapping</span>&gt;</span></span><br></pre></td></tr></table></figure><br>度娘后发现该配置只对post请求有效，对于get请求还要对tomcat的service.xml进行配置，具体配置如下：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">Connector</span> <span class="attribute">connectionTimeout</span>=<span class="value">"20000"</span> <span class="attribute">port</span>=<span class="value">"8080"</span> </span><br><span class="line">	<span class="attribute">protocol</span>=<span class="value">"HTTP/1.1"</span> <span class="attribute">redirectPort</span>=<span class="value">"8443"</span> <span class="attribute">useBodyEncodingForURI</span>=<span class="value">"true"</span>/&gt;</span></span><br></pre></td></tr></table></figure><br>上面配置对ajax的get请求无效，如果要同时对ajax请求有效则改为<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">Connector</span> <span class="attribute">connectionTimeout</span>=<span class="value">"20000"</span> </span><br><span class="line">	<span class="attribute">port</span>=<span class="value">"8080"</span> <span class="attribute">protocol</span>=<span class="value">"HTTP/1.1"</span> <span class="attribute">redirectPort</span>=<span class="value">"8443"</span> <span class="attribute">URIEncoding</span>=<span class="value">"UTF-8"</span>/&gt;</span></span><br></pre></td></tr></table></figure></p>
+		<p>学习redis时，看到一致性哈希。<br><br><br>一致性哈希算法在1997年由麻省理工学院提出的一种分布式哈希（DHT）实现算法，设计目标是为了解决因特网中的热点(Hot spot)问题，初衷和CARP十分类似。一致性哈希修正了CARP使用的简 单哈希算法带来的问题，使得分布式哈希（DHT）可以在P2P环境中真正得到应用。<br>    一致性hash算法提出了在动态变化的Cache环境中，判定哈希算法好坏的四个定义：</p>
+<p><pre><br>    1、平衡性(Balance)：平衡性是指哈希的结果能够尽可能分布到所有的node中去，这样可以使得所有的node都得到利用。很多哈希算法都能够满足这一条件(即hash的结果应该平均分配到各个node, 这样从算法上就解决了负载均衡问题)。</pre></p>
+<pre><code><span class="number">2</span>、单调性<span class="params">(Monotonicity)</span>：单调性是指如果已经有一些内容通过哈希分派到了相应的node中，又有新的node加入到系统中。哈希的结果应能够保证原有已分配的内容可以被映射到原有的或者新的node中去，而不会被映射到旧的node集合中的其他node（即在新增或者删减节点时, 同一个key访问到的值总是一样的）。 
+
+<span class="number">3</span>、分散性<span class="params">(Spread)</span>：在分布式环境中，终端有可能看不到所有的node，而是只能看到其中的一部分。当终端希望通过哈希过程将内容映射到node上时，由于不同终端所见的node集合有可能不同，从而导致哈希的结果不一致，最终的结果是相同的内容被不同的终端映射到不同的缓冲区中。这种情况显然是应该避免的，因为它导致相同内容被存储到不同node中去，降低了系统存储的效率。分散性的定义就是上述情况发生的严重程度。好的哈希算法应能够尽量避免不一致的情况发生，也就是尽量降低分散性（即数据应该分散的存放在 分布式集群中的各个节点<span class="params">(节点自己可以有备份)</span>, 不必要每个节点都存储所有的数据）。 
+
+<span class="number">4</span>、负载<span class="params">(Load)</span>：负载问题实际上是从另一个角度看待分散性问题。既然不同的终端可能将相同的内容映射到不同的node中，那么对于一个特定的node而言，也可能被不同的用户映射为不同的内容。导致同一个node被大量访问。与分散性一样，这种情况也是应当避免的，因此好的哈希算法应能够尽量降低node的负荷（即尽量将访问分散到不同node）。
+</code></pre><p><br><br><br><br>为什么要一致性哈希?(why)<br><br>不使用一致性哈希时（不使用哈希或使用普通哈希），增减node几乎所有key的映射要重新维护。<br><br><br>使用一致性哈希时，key映射到固定数量的虚拟节点上，然后将虚拟节点的 哈希值mod(虚拟节点总数/节点数)，来选取node，例如一个key哈希后值为28，虚拟节点40个，节点有5个，节点编号从1开始，则应该存放在node4 (28mod(40/5)+1=4),key值为39时则存放在node1,如下图所示：<br><br><img width="600" src="img/consistent-hashing/1.png"></p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -102,7 +110,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Spring-MVC/">Spring MVC</a><a href="/tags/tomcat/">tomcat</a>
+  <span></span> <a href="/tags/数据库/">数据库</a>
   </div>
 
 </div>
@@ -111,7 +119,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/05/17/the-gibberish-issue-in-Spring-MVC/" data-title="Spring MVC中文乱码问题 | CLIMBRAN" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/08/29/consistent-hashing/" data-title="一致性哈希 | CLIMBRAN" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -124,19 +132,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/05/29/static-block/" title="static块">
-  <strong>上一篇：</strong><br/>
-  <span>
-  static块</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/04/28/callback-functions-about-java/"  title="java中回调函数的用法">
+<a href="/2015/08/29/database-design-model/"  title="数据库四种设计模式">
  <strong>下一篇：</strong><br/> 
- <span>java中回调函数的用法
+ <span>数据库四种设计模式
 </span>
 </a>
 </div>
@@ -145,7 +145,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/05/17/the-gibberish-issue-in-Spring-MVC/" data-title="Spring MVC中文乱码问题" data-url="http://yoursite.com/2015/05/17/the-gibberish-issue-in-Spring-MVC/"></div>
+	<div class="ds-thread" data-thread-key="2015/08/29/consistent-hashing/" data-title="一致性哈希" data-url="http://yoursite.com/2015/08/29/consistent-hashing/"></div>
 </section>
 
 
