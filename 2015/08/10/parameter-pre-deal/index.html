@@ -4,26 +4,23 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>开始使用hexo | CLIMBRAN</title>
+    <title>通过ModelAttribute对请求参数进行预处理 | CLIMBRAN</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="climbran">
     
 
     
-    <meta name="description" content="之前尝试折腾过octpress,不过使用起来实在感觉麻烦，今天发现hexo，尝试了一下感觉方便很多，需要安装node.js，基本根据下面两篇文档就能搞定：hexo文档如何使用Jacman主题
-两个项目作者一个是台湾大学生，一个是北理大学生，膜拜一下配置起来很顺利，就是在配置category和tags插件的时候要生成带有categories和tags的文章后插件才能显示出来，配置好后以为没成功折腾了">
+    <meta name="description" content="UserController.java12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849package org.springside.examples.showcase.web;import java.util.List;......import com.google.c">
 <meta property="og:type" content="article">
-<meta property="og:title" content="开始使用hexo">
-<meta property="og:url" content="http://yoursite.com/2015/08/16/start-hexo/index.html">
+<meta property="og:title" content="通过ModelAttribute对请求参数进行预处理">
+<meta property="og:url" content="http://yoursite.com/2015/08/10/parameter-pre-deal/index.html">
 <meta property="og:site_name" content="CLIMBRAN">
-<meta property="og:description" content="之前尝试折腾过octpress,不过使用起来实在感觉麻烦，今天发现hexo，尝试了一下感觉方便很多，需要安装node.js，基本根据下面两篇文档就能搞定：hexo文档如何使用Jacman主题
-两个项目作者一个是台湾大学生，一个是北理大学生，膜拜一下配置起来很顺利，就是在配置category和tags插件的时候要生成带有categories和tags的文章后插件才能显示出来，配置好后以为没成功折腾了">
-<meta property="og:updated_time" content="2015-08-26T09:19:37.000Z">
+<meta property="og:description" content="UserController.java12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849package org.springside.examples.showcase.web;import java.util.List;......import com.google.c">
+<meta property="og:updated_time" content="2015-08-29T10:22:33.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="开始使用hexo">
-<meta name="twitter:description" content="之前尝试折腾过octpress,不过使用起来实在感觉麻烦，今天发现hexo，尝试了一下感觉方便很多，需要安装node.js，基本根据下面两篇文档就能搞定：hexo文档如何使用Jacman主题
-两个项目作者一个是台湾大学生，一个是北理大学生，膜拜一下配置起来很顺利，就是在配置category和tags插件的时候要生成带有categories和tags的文章后插件才能显示出来，配置好后以为没成功折腾了">
+<meta name="twitter:title" content="通过ModelAttribute对请求参数进行预处理">
+<meta name="twitter:description" content="UserController.java12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849package org.springside.examples.showcase.web;import java.util.List;......import com.google.c">
 
     
     <link rel="alternative" href="/atom.xml" title="CLIMBRAN" type="application/atom+xml">
@@ -83,31 +80,27 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/08/16/start-hexo/" title="开始使用hexo" itemprop="url">开始使用hexo</a>
+      <a href="/2015/08/10/parameter-pre-deal/" title="通过ModelAttribute对请求参数进行预处理" itemprop="url">通过ModelAttribute对请求参数进行预处理</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="climbran" target="_blank" itemprop="author">climbran</a>
 		
   <p class="article-time">
-    <time datetime="2015-08-16T09:35:32.000Z" itemprop="datePublished"> 发表于 2015-08-16</time>
+    <time datetime="2015-08-10T09:42:42.000Z" itemprop="datePublished"> 发表于 2015-08-10</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
-		<p>之前尝试折腾过octpress,不过使用起来实在感觉麻烦，今天发现hexo，尝试了一下感觉方便很多，需要安装node.js，基本根据下面两篇文档就能搞定：<br><br><a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="external">hexo文档</a><br><br><a href="http://www.wuchong.me/jacman/2014/11/20/how-to-use-jacman/" target="_blank" rel="external">如何使用Jacman主题</a><br></p>
-<p>两个项目作者一个是台湾大学生，一个是北理大学生，膜拜一下<br><br><br>配置起来很顺利，就是在配置category和tags插件的时候要生成带有categories和tags的文章后插件才能显示出来，配置好后以为没成功折腾了好一会。<br><br><br>配置好后将源文件上传github，方便在其他地方使用。其他电脑上clone下来后需先配置好环境，再在工程目录下运行npm install。<br><br></p>
+		<figure class="highlight openscad"><figcaption><span>UserController.java</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">package org.springside.examples.showcase.web;</span><br><span class="line"></span><br><span class="line"><span class="built_in">import</span> java.util.List;</span><br><span class="line">......</span><br><span class="line"></span><br><span class="line"><span class="built_in">import</span> com.google.common.collect.Maps;</span><br><span class="line"></span><br><span class="line">@Controller</span><br><span class="line">@RequestMapping<span class="params">(value = <span class="string">"/account/user"</span>)</span></span><br><span class="line">public class UserController &#123;</span><br><span class="line">	</span><br><span class="line">	......</span><br><span class="line">	</span><br><span class="line">	@RequestMapping<span class="params">(value = <span class="string">"update"</span>, method = RequestMethod.POST)</span></span><br><span class="line">	public String update<span class="params">(@Valid @ModelAttribute<span class="params">(<span class="string">"user"</span>)</span> User user,</span><br><span class="line">			@RequestParam<span class="params">(value = <span class="string">"roleList"</span>)</span> List&lt;Long&gt; checkedRoleList, RedirectAttributes redirectAttributes)</span> &#123;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// bind roleList</span></span><br><span class="line">		user.getRoleList<span class="params">()</span>.clear<span class="params">()</span>;</span><br><span class="line">		<span class="keyword">for</span> <span class="params">(Long roleId : checkedRoleList)</span> &#123;</span><br><span class="line">			Role role = new Role<span class="params">(roleId)</span>;</span><br><span class="line">			user.getRoleList<span class="params">()</span>.add<span class="params">(role)</span>;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		accountService.saveUser<span class="params">(user)</span>;</span><br><span class="line"></span><br><span class="line">		redirectAttributes.addFlashAttribute<span class="params">(<span class="string">"message"</span>, <span class="string">"保存用户成功"</span>)</span>;</span><br><span class="line">		return <span class="string">"redirect:/account/user"</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span><br><span class="line">	 * 所有RequestMapping方法调用前的Model准备方法, 实现Struts2 Preparable二次部分绑定的效果,先根据form的id从数据库查出User对象,再把Form提交的内容绑定到该对象上。</span><br><span class="line">	 * 因为仅update()方法的form中有id属性，因此仅在update时实际执行.</span><br><span class="line">	 */</span></span><br><span class="line">	@ModelAttribute</span><br><span class="line">	public void getUser<span class="params">(@RequestParam<span class="params">(value = <span class="string">"id"</span>, defaultValue = <span class="string">"-1"</span>)</span> Long id, Model model)</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> <span class="params">(id != -<span class="number">1</span>)</span> &#123;</span><br><span class="line">			model.addAttribute<span class="params">(<span class="string">"user"</span>, accountService.getUser<span class="params">(id)</span>)</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span><br><span class="line">	 * User类中有roleList,不自动绑定对象中的roleList属性，另行处理。</span><br><span class="line">	 */</span></span><br><span class="line">	@InitBinder</span><br><span class="line">	protected void initBinder<span class="params">(WebDataBinder binder)</span> &#123;</span><br><span class="line">		binder.setDisallowedFields<span class="params">(<span class="string">"roleList"</span>)</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中getUser方法可写成<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@ModelAttribute</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> User <span class="title">getUser</span><span class="params">(@RequestParam(value = <span class="string">"id"</span>, defaultValue = <span class="string">"-1"</span>)</span> Long id, Model model) </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (id != -<span class="number">1</span>) </span><br><span class="line">		<span class="keyword">return</span> accountService.getUser(id);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这种情况，函数隐含Model类型的参数，会调用addAttribute方法，addAttribute的key没有指定，它由返回类型隐含表示，如这个方法返回User类型，那么这个key是user，value为返回对象，其中key值也可以通过@ModelAttribute注解的value参数指定（eg:@ModelAttribute(“user”)）。<br><br><br><br>update方法如果没有标注@SessionAttributes(“user”)，那么scope为request，如果标注了，那么scope为session。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/hexo/">hexo</a>
-  </div>
 
 </div>
 
@@ -115,7 +108,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/08/16/start-hexo/" data-title="开始使用hexo | CLIMBRAN" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/08/10/parameter-pre-deal/" data-title="通过ModelAttribute对请求参数进行预处理 | CLIMBRAN" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -129,18 +122,18 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/08/27/start-intellij/" title="intelliJ创建spring项目">
+ <a href="/2015/08/16/start-hexo/" title="开始使用hexo">
   <strong>上一篇：</strong><br/>
   <span>
-  intelliJ创建spring项目</span>
+  开始使用hexo</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/08/10/parameter-pre-deal/"  title="通过ModelAttribute对请求参数进行预处理">
+<a href="/2015/08/01/a-iterator-achieved/"  title="Iterator的实现">
  <strong>下一篇：</strong><br/> 
- <span>通过ModelAttribute对请求参数进行预处理
+ <span>Iterator的实现
 </span>
 </a>
 </div>
@@ -149,7 +142,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/08/16/start-hexo/" data-title="开始使用hexo" data-url="http://yoursite.com/2015/08/16/start-hexo/"></div>
+	<div class="ds-thread" data-thread-key="2015/08/10/parameter-pre-deal/" data-title="通过ModelAttribute对请求参数进行预处理" data-url="http://yoursite.com/2015/08/10/parameter-pre-deal/"></div>
 </section>
 
 

@@ -381,6 +381,61 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/08/10/parameter-pre-deal/" title="通过ModelAttribute对请求参数进行预处理" itemprop="url">通过ModelAttribute对请求参数进行预处理</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="climbran" target="_blank" itemprop="author">climbran</a>
+		
+  <p class="article-time">
+    <time datetime="2015-08-10T09:42:42.000Z" itemprop="datePublished"> 发表于 2015-08-10</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <figure class="highlight openscad"><figcaption><span>UserController.java</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">package org.springside.examples.showcase.web;</span><br><span class="line"></span><br><span class="line"><span class="built_in">import</span> java.util.List;</span><br><span class="line">......</span><br><span class="line"></span><br><span class="line"><span class="built_in">import</span> com.google.common.collect.Maps;</span><br><span class="line"></span><br><span class="line">@Controller</span><br><span class="line">@RequestMapping<span class="params">(value = <span class="string">"/account/user"</span>)</span></span><br><span class="line">public class UserController &#123;</span><br><span class="line">	</span><br><span class="line">	......</span><br><span class="line">	</span><br><span class="line">	@RequestMapping<span class="params">(value = <span class="string">"update"</span>, method = RequestMethod.POST)</span></span><br><span class="line">	public String update<span class="params">(@Valid @ModelAttribute<span class="params">(<span class="string">"user"</span>)</span> User user,</span><br><span class="line">			@RequestParam<span class="params">(value = <span class="string">"roleList"</span>)</span> List&lt;Long&gt; checkedRoleList, RedirectAttributes redirectAttributes)</span> &#123;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// bind roleList</span></span><br><span class="line">		user.getRoleList<span class="params">()</span>.clear<span class="params">()</span>;</span><br><span class="line">		<span class="keyword">for</span> <span class="params">(Long roleId : checkedRoleList)</span> &#123;</span><br><span class="line">			Role role = new Role<span class="params">(roleId)</span>;</span><br><span class="line">			user.getRoleList<span class="params">()</span>.add<span class="params">(role)</span>;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		accountService.saveUser<span class="params">(user)</span>;</span><br><span class="line"></span><br><span class="line">		redirectAttributes.addFlashAttribute<span class="params">(<span class="string">"message"</span>, <span class="string">"保存用户成功"</span>)</span>;</span><br><span class="line">		return <span class="string">"redirect:/account/user"</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span><br><span class="line">	 * 所有RequestMapping方法调用前的Model准备方法, 实现Struts2 Preparable二次部分绑定的效果,先根据form的id从数据库查出User对象,再把Form提交的内容绑定到该对象上。</span><br><span class="line">	 * 因为仅update()方法的form中有id属性，因此仅在update时实际执行.</span><br><span class="line">	 */</span></span><br><span class="line">	@ModelAttribute</span><br><span class="line">	public void getUser<span class="params">(@RequestParam<span class="params">(value = <span class="string">"id"</span>, defaultValue = <span class="string">"-1"</span>)</span> Long id, Model model)</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> <span class="params">(id != -<span class="number">1</span>)</span> &#123;</span><br><span class="line">			model.addAttribute<span class="params">(<span class="string">"user"</span>, accountService.getUser<span class="params">(id)</span>)</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span><br><span class="line">	 * User类中有roleList,不自动绑定对象中的roleList属性，另行处理。</span><br><span class="line">	 */</span></span><br><span class="line">	@InitBinder</span><br><span class="line">	protected void initBinder<span class="params">(WebDataBinder binder)</span> &#123;</span><br><span class="line">		binder.setDisallowedFields<span class="params">(<span class="string">"roleList"</span>)</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中getUser方法可写成<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@ModelAttribute</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> User <span class="title">getUser</span><span class="params">(@RequestParam(value = <span class="string">"id"</span>, defaultValue = <span class="string">"-1"</span>)</span> Long id, Model model) </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (id != -<span class="number">1</span>) </span><br><span class="line">		<span class="keyword">return</span> accountService.getUser(id);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这种情况，函数隐含Model类型的参数，会调用addAttribute方法，addAttribute的key没有指定，它由返回类型隐含表示，如这个方法返回User类型，那么这个key是user，value为返回对象，其中key值也可以通过@ModelAttribute注解的value参数指定（eg:@ModelAttribute(“user”)）。<br><br><br><br>update方法如果没有标注@SessionAttributes(“user”)，那么scope为request，如果标注了，那么scope为session。</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/08/10/parameter-pre-deal/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/08/10/parameter-pre-deal/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/08/01/a-iterator-achieved/" title="Iterator的实现" itemprop="url">Iterator的实现</a>
   </h1>
   <p class="article-author">By
@@ -601,64 +656,6 @@
 	
 	  	<span></span>
 		<a href="/2015/06/18/remove-element-in-foreach/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/18/remove-element-in-foreach/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/05/29/static-block/" title="static块" itemprop="url">static块</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="climbran" target="_blank" itemprop="author">climbran</a>
-		
-  <p class="article-time">
-    <time datetime="2015-05-29T09:03:15.000Z" itemprop="datePublished"> 发表于 2015-05-29</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>看springside的showcase发现static块的直接使用:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> org.springside.examples.showcase.web;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line">.....</span><br><span class="line"></span><br><span class="line"><span class="annotation">@Controller</span></span><br><span class="line"><span class="annotation">@RequestMapping</span>(value = <span class="string">"/account/user"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> Map&lt;String, String&gt; allStatus = Maps.newHashMap();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">static</span> &#123;</span><br><span class="line">		allStatus.put(<span class="string">"enabled"</span>, <span class="string">"有效"</span>);</span><br><span class="line">		allStatus.put(<span class="string">"disabled"</span>, <span class="string">"无效"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	......</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br><br><br>static{}，会在类被加载的时候执行且仅会被执行一次，一般用来初始化静态变量和调用静态方法。<br><br><br>虚拟机的生命周期中一个类只被加载一次；又因为static{}是伴随类加载执行的，所以，不管你new多少次对象实例，static{}都只执行一次。<br><br><br>类会在以下情况加载:<br><br>1、用Class.forName()显示加载的时候，如上面的示例一;<br><br>2、实例化一个类的时候，如将main()函数的内容改为:Test t=new Test();//这种形式其实和1相比，原理是相同的，都是显示的加载这个类，读者可以验证Test t=new Test();和Test t=(Test)Class.forName().newInstance();这两条语句效果相同。<br><br>3、调用类的静态方法的时候，如将main()函数的内容改为:Test.display();<br><br>4、调用类的静态变量的时候，如将main()函数的内容改为:System.out.println(Test.X);<br><br><br><br><br>以下两种情况类不会加载:<br><br>1、调用类的静态常量的时候，是不会加载类的，即不会执行static{}语句块，读者可以自己验证一下(将main()函数的内容改为System.out.println(Test.Y);)，你会发现程序只输出了一个200；(这是java虚拟机的规定，当访问类的静态常量时，如果编译器可以计算出常量的值，则不会加载类，否则会加载类)<br><br>2、用Class.forName()形式的时候，我们也可以自己设定要不要加载类，如将Class.forName(“Test”)改为 Class.forName(“Test”,false,StaticBlockTest.class.getClassLoader())，你会发现程序什么都没有输出，即Test没有被加载，static{}没有被执行。</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/java/">java</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/05/29/static-block/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/05/29/static-block/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
