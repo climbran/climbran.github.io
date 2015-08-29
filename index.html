@@ -81,6 +81,66 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/08/29/one-reason-to-expected-at-least-1-bean/" title="autowired时找不到bean的错误" itemprop="url">autowired时找不到bean的错误</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="climbran" target="_blank" itemprop="author">climbran</a>
+		
+  <p class="article-time">
+    <time datetime="2015-08-29T07:20:30.000Z" itemprop="datePublished"> 发表于 2015-08-29</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>今天整合spring和mybatis时，在通过@Autowired注入Dao时一直报</p>
+<p><pre><br>expected at least 1 bean which qualifies as autowire candidate for this dependency. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}<br></pre><br>查看了很久applicationContext.xml中的配置没有找出问题，最后对照以前项目的web.xml配置时发现少了一个：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">listener</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">listener-class</span>&gt;</span>org.springframework.web.context.ContextLoaderListener<span class="tag">&lt;/<span class="title">listener-class</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">listener</span>&gt;</span></span><br></pre></td></tr></table></figure><br>加上后问题解决。<br></p>
+<p>ContextLoaderListener通过读取contextConfigLocation参数来读取配置参数，一般来说它配置的是Spring项目的中间层,服务层组件的注入，装配，AOP。</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Spring-MVC/">Spring MVC</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/08/29/one-reason-to-expected-at-least-1-bean/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/08/29/one-reason-to-expected-at-least-1-bean/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/08/29/spring-mybatis-postgresql/" title="spring、mybatis、postgresql整合" itemprop="url">spring、mybatis、postgresql整合</a>
   </h1>
   <p class="article-author">By
@@ -613,67 +673,6 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/28/callback-functions-about-java/" title="java中回调函数的用法" itemprop="url">java中回调函数的用法</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="climbran" target="_blank" itemprop="author">climbran</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-28T01:27:42.000Z" itemprop="datePublished"> 发表于 2015-04-28</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>C语言中回调函数由指针实现，java 中没有指针，可以通过以下方法实现：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MyCallInterface</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Client implements MyCallInterface&#123;</span><br><span class="line">	<span class="annotation">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="comment">//<span class="doctag">TODO:</span> 回调内容</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>调用时：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Caller</span></span>&#123;</span><br><span class="line">	<span class="keyword">private</span> MyCallInterface callInterface;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">Caller</span><span class="params">()</span></span>&#123;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setCallFunc</span><span class="params">(MyCallInterface callInterface)</span></span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.callInterface = callInterface;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">call</span><span class="params">()</span></span>&#123;</span><br><span class="line">		callInterface.method();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args)</span></span>&#123;</span><br><span class="line">		Caller caller = <span class="keyword">new</span> Caller();</span><br><span class="line">		caller.setCallFunc(<span class="keyword">new</span> Client());</span><br><span class="line">		client.call();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>或者<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Caller</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">call</span><span class="params">(Client client)</span></span>&#123;</span><br><span class="line">		client.method();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args)</span></span>&#123;</span><br><span class="line">		Caller caller = <span class="keyword">new</span> Caller();</span><br><span class="line">		caller.call(<span class="keyword">new</span> Client());</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/java/">java</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/28/callback-functions-about-java/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/28/callback-functions-about-java/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
@@ -694,15 +693,15 @@
 		<ul class="clearfix">
 		
 			
+				<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>3</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/java/" title="java">java<sup>3</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/tomcat/" title="tomcat">tomcat<sup>2</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>2</sup></a></li>
 			
 		
 			

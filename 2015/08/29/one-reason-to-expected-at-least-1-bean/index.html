@@ -4,23 +4,26 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>hexo中使用代码块 | CLIMBRAN</title>
+    <title>autowired时找不到bean的错误 | CLIMBRAN</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="climbran">
     
 
     
-    <meta name="description" content="使用hexo后一直用&amp;lt;pre&amp;gt;加&amp;lt;code&amp;gt;标签表示代码块，但是一遇到’&amp;lt;’符号就出先各种奇怪错误，还每次情况都不一样，今天在一篇文档发现正确使用方式：123&amp;#123; %codeblock [title] [lang:language] [url] [link text] % &amp;#125;code snippet&amp;#123; % endcodeblock % &amp;#">
+    <meta name="description" content="今天整合spring和mybatis时，在通过@Autowired注入Dao时一直报
+expected at least 1 bean which qualifies as autowire candidate for this dependency. Dependency annotations: {@org.springframework.beans.factory.annotation.Au">
 <meta property="og:type" content="article">
-<meta property="og:title" content="hexo中使用代码块">
-<meta property="og:url" content="http://yoursite.com/2015/08/28/how-to-use-hexo-codeblock/index.html">
+<meta property="og:title" content="autowired时找不到bean的错误">
+<meta property="og:url" content="http://yoursite.com/2015/08/29/one-reason-to-expected-at-least-1-bean/index.html">
 <meta property="og:site_name" content="CLIMBRAN">
-<meta property="og:description" content="使用hexo后一直用&amp;lt;pre&amp;gt;加&amp;lt;code&amp;gt;标签表示代码块，但是一遇到’&amp;lt;’符号就出先各种奇怪错误，还每次情况都不一样，今天在一篇文档发现正确使用方式：123&amp;#123; %codeblock [title] [lang:language] [url] [link text] % &amp;#125;code snippet&amp;#123; % endcodeblock % &amp;#">
-<meta property="og:updated_time" content="2015-08-28T07:02:56.000Z">
+<meta property="og:description" content="今天整合spring和mybatis时，在通过@Autowired注入Dao时一直报
+expected at least 1 bean which qualifies as autowire candidate for this dependency. Dependency annotations: {@org.springframework.beans.factory.annotation.Au">
+<meta property="og:updated_time" content="2015-08-29T07:38:30.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="hexo中使用代码块">
-<meta name="twitter:description" content="使用hexo后一直用&amp;lt;pre&amp;gt;加&amp;lt;code&amp;gt;标签表示代码块，但是一遇到’&amp;lt;’符号就出先各种奇怪错误，还每次情况都不一样，今天在一篇文档发现正确使用方式：123&amp;#123; %codeblock [title] [lang:language] [url] [link text] % &amp;#125;code snippet&amp;#123; % endcodeblock % &amp;#">
+<meta name="twitter:title" content="autowired时找不到bean的错误">
+<meta name="twitter:description" content="今天整合spring和mybatis时，在通过@Autowired注入Dao时一直报
+expected at least 1 bean which qualifies as autowire candidate for this dependency. Dependency annotations: {@org.springframework.beans.factory.annotation.Au">
 
     
     <link rel="alternative" href="/atom.xml" title="CLIMBRAN" type="application/atom+xml">
@@ -80,21 +83,22 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/08/28/how-to-use-hexo-codeblock/" title="hexo中使用代码块" itemprop="url">hexo中使用代码块</a>
+      <a href="/2015/08/29/one-reason-to-expected-at-least-1-bean/" title="autowired时找不到bean的错误" itemprop="url">autowired时找不到bean的错误</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="climbran" target="_blank" itemprop="author">climbran</a>
 		
   <p class="article-time">
-    <time datetime="2015-08-28T06:29:53.000Z" itemprop="datePublished"> 发表于 2015-08-28</time>
+    <time datetime="2015-08-29T07:20:30.000Z" itemprop="datePublished"> 发表于 2015-08-29</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
-		<p>使用hexo后一直用&lt;pre&gt;加&lt;code&gt;标签表示代码块，但是一遇到’&lt;’符号就出先各种奇怪错误，还每次情况都不一样，今天在一篇文档发现正确使用方式：<br><figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123; %codeblock <span class="comment">[title]</span> <span class="comment">[lang:language]</span> <span class="comment">[url]</span> <span class="comment">[link text]</span> % &#125;</span><br><span class="line">code snippet</span><br><span class="line">&#123; % endcodeblock % &#125;</span><br></pre></td></tr></table></figure></p>
-<p>注意要去掉花括号与%之间的空格</p>
+		<p>今天整合spring和mybatis时，在通过@Autowired注入Dao时一直报</p>
+<p><pre><br>expected at least 1 bean which qualifies as autowire candidate for this dependency. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}<br></pre><br>查看了很久applicationContext.xml中的配置没有找出问题，最后对照以前项目的web.xml配置时发现少了一个：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">listener</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">listener-class</span>&gt;</span>org.springframework.web.context.ContextLoaderListener<span class="tag">&lt;/<span class="title">listener-class</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">listener</span>&gt;</span></span><br></pre></td></tr></table></figure><br>加上后问题解决。<br></p>
+<p>ContextLoaderListener通过读取contextConfigLocation参数来读取配置参数，一般来说它配置的是Spring项目的中间层,服务层组件的注入，装配，AOP。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -103,7 +107,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/hexo/">hexo</a>
+  <span></span> <a href="/tags/Spring-MVC/">Spring MVC</a>
   </div>
 
 </div>
@@ -112,7 +116,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/08/28/how-to-use-hexo-codeblock/" data-title="hexo中使用代码块 | CLIMBRAN" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/08/29/one-reason-to-expected-at-least-1-bean/" data-title="autowired时找不到bean的错误 | CLIMBRAN" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -125,19 +129,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/08/29/spring-mybatis-postgresql/" title="spring、mybatis、postgresql整合">
-  <strong>上一篇：</strong><br/>
-  <span>
-  spring、mybatis、postgresql整合</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/08/27/start-intellij/"  title="intelliJ创建spring项目">
+<a href="/2015/08/29/spring-mybatis-postgresql/"  title="spring、mybatis、postgresql整合">
  <strong>下一篇：</strong><br/> 
- <span>intelliJ创建spring项目
+ <span>spring、mybatis、postgresql整合
 </span>
 </a>
 </div>
@@ -146,7 +142,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/08/28/how-to-use-hexo-codeblock/" data-title="hexo中使用代码块" data-url="http://yoursite.com/2015/08/28/how-to-use-hexo-codeblock/"></div>
+	<div class="ds-thread" data-thread-key="2015/08/29/one-reason-to-expected-at-least-1-bean/" data-title="autowired时找不到bean的错误" data-url="http://yoursite.com/2015/08/29/one-reason-to-expected-at-least-1-bean/"></div>
 </section>
 
 
