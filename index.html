@@ -81,7 +81,7 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/08/29/one-reason-to-expected-at-least-1-bean/" title="autowired时找不到bean的错误" itemprop="url">autowired时找不到bean的错误</a>
+      <a href="/2015/08/29/one-reason-to-expected-at-least-1-bean/" title="Autowired时找不到bean的一个原因" itemprop="url">Autowired时找不到bean的一个原因</a>
   </h1>
   <p class="article-author">By
        
@@ -94,8 +94,7 @@
 </header>
     <div class="article-content">
         
-        <p>今天整合spring和mybatis时，在通过@Autowired注入Dao时一直报</p>
-<p><pre><br>expected at least 1 bean which qualifies as autowire candidate for this dependency. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}<br></pre><br>查看了很久applicationContext.xml中的配置没有找出问题，最后对照以前项目的web.xml配置时发现少了一个：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">listener</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">listener-class</span>&gt;</span>org.springframework.web.context.ContextLoaderListener<span class="tag">&lt;/<span class="title">listener-class</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">listener</span>&gt;</span></span><br></pre></td></tr></table></figure><br>加上后问题解决。<br></p>
+        <p>今天整合spring和mybatis时，在通过@Autowired注入Dao时一直报<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">expected at least <span class="number">1</span> bean which qualifies <span class="literal">as</span> autowire candidate <span class="keyword">for</span> <span class="keyword">this</span> dependency. Dependency annotations: &#123;<span class="annotation">@org</span>.springframework.beans.<span class="literal">factory</span>.annotation.Autowired(required=<span class="keyword">true</span>)&#125;</span><br></pre></td></tr></table></figure><br>查看了很久applicationContext.xml中的配置没有找出问题，最后对照以前项目的web.xml配置时发现少了一个：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">listener</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">listener-class</span>&gt;</span>org.springframework.web.context.ContextLoaderListener<span class="tag">&lt;/<span class="title">listener-class</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">listener</span>&gt;</span></span><br></pre></td></tr></table></figure><br>加上后问题解决。<br></p>
 <p>ContextLoaderListener通过读取contextConfigLocation参数来读取配置参数，一般来说它配置的是Spring项目的中间层,服务层组件的注入，装配，AOP。</p>
 
         
