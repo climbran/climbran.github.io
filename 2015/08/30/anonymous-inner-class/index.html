@@ -4,26 +4,29 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>开始使用hexo | CLIMBRAN</title>
+    <title>匿名内部类学习 | CLIMBRAN</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="climbran">
     
 
     
-    <meta name="description" content="之前尝试折腾过octpress,不过使用起来实在感觉麻烦，今天发现hexo，尝试了一下感觉方便很多，需要安装node.js，基本根据下面两篇文档就能搞定：hexo文档如何使用Jacman主题
-两个项目作者一个是台湾大学生，一个是北理大学生，膜拜一下配置起来很顺利，就是在配置category和tags插件的时候要生成带有categories和tags的文章后插件才能显示出来，配置好后以为没成功折腾了">
+    <meta name="description" content="晚上看Spring-Data-Redis,别人的demo里通过对匿名内部类的回调实现set、get方法，仔细想以下，发现自己对匿名内部类掌握不是很好，就又翻了下Thinking in Java。
+匿名内部类的格式：123new Contents()&amp;#123;	...&amp;#125;
+我对匿名内部类主要有以下几个疑问：一、匿名内部类实现的时什么类型的对象，可以实现接口吗？Contents()可以是调用">
 <meta property="og:type" content="article">
-<meta property="og:title" content="开始使用hexo">
-<meta property="og:url" content="http://yoursite.com/2015/08/16/start-hexo/index.html">
+<meta property="og:title" content="匿名内部类学习">
+<meta property="og:url" content="http://yoursite.com/2015/08/30/anonymous-inner-class/index.html">
 <meta property="og:site_name" content="CLIMBRAN">
-<meta property="og:description" content="之前尝试折腾过octpress,不过使用起来实在感觉麻烦，今天发现hexo，尝试了一下感觉方便很多，需要安装node.js，基本根据下面两篇文档就能搞定：hexo文档如何使用Jacman主题
-两个项目作者一个是台湾大学生，一个是北理大学生，膜拜一下配置起来很顺利，就是在配置category和tags插件的时候要生成带有categories和tags的文章后插件才能显示出来，配置好后以为没成功折腾了">
-<meta property="og:updated_time" content="2015-08-26T09:19:37.000Z">
+<meta property="og:description" content="晚上看Spring-Data-Redis,别人的demo里通过对匿名内部类的回调实现set、get方法，仔细想以下，发现自己对匿名内部类掌握不是很好，就又翻了下Thinking in Java。
+匿名内部类的格式：123new Contents()&amp;#123;	...&amp;#125;
+我对匿名内部类主要有以下几个疑问：一、匿名内部类实现的时什么类型的对象，可以实现接口吗？Contents()可以是调用">
+<meta property="og:updated_time" content="2015-08-30T15:10:53.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="开始使用hexo">
-<meta name="twitter:description" content="之前尝试折腾过octpress,不过使用起来实在感觉麻烦，今天发现hexo，尝试了一下感觉方便很多，需要安装node.js，基本根据下面两篇文档就能搞定：hexo文档如何使用Jacman主题
-两个项目作者一个是台湾大学生，一个是北理大学生，膜拜一下配置起来很顺利，就是在配置category和tags插件的时候要生成带有categories和tags的文章后插件才能显示出来，配置好后以为没成功折腾了">
+<meta name="twitter:title" content="匿名内部类学习">
+<meta name="twitter:description" content="晚上看Spring-Data-Redis,别人的demo里通过对匿名内部类的回调实现set、get方法，仔细想以下，发现自己对匿名内部类掌握不是很好，就又翻了下Thinking in Java。
+匿名内部类的格式：123new Contents()&amp;#123;	...&amp;#125;
+我对匿名内部类主要有以下几个疑问：一、匿名内部类实现的时什么类型的对象，可以实现接口吗？Contents()可以是调用">
 
     
     <link rel="alternative" href="/atom.xml" title="CLIMBRAN" type="application/atom+xml">
@@ -83,21 +86,22 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/08/16/start-hexo/" title="开始使用hexo" itemprop="url">开始使用hexo</a>
+      <a href="/2015/08/30/anonymous-inner-class/" title="匿名内部类学习" itemprop="url">匿名内部类学习</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="climbran" target="_blank" itemprop="author">climbran</a>
 		
   <p class="article-time">
-    <time datetime="2015-08-16T09:35:32.000Z" itemprop="datePublished"> 发表于 2015-08-16</time>
+    <time datetime="2015-08-30T14:04:41.000Z" itemprop="datePublished"> 发表于 2015-08-30</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
-		<p>之前尝试折腾过octpress,不过使用起来实在感觉麻烦，今天发现hexo，尝试了一下感觉方便很多，需要安装node.js，基本根据下面两篇文档就能搞定：<br><br><a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="external">hexo文档</a><br><br><a href="http://www.wuchong.me/jacman/2014/11/20/how-to-use-jacman/" target="_blank" rel="external">如何使用Jacman主题</a><br></p>
-<p>两个项目作者一个是台湾大学生，一个是北理大学生，膜拜一下<br><br><br>配置起来很顺利，就是在配置category和tags插件的时候要生成带有categories和tags的文章后插件才能显示出来，配置好后以为没成功折腾了好一会。<br><br><br>配置好后将源文件上传github，方便在其他地方使用。其他电脑上clone下来后需先配置好环境，再在工程目录下运行npm install。<br><br></p>
+		<p>晚上看Spring-Data-Redis,别人的demo里通过对匿名内部类的回调实现set、get方法，仔细想以下，发现自己对匿名内部类掌握不是很好，就又翻了下Thinking in Java。</p>
+<p>匿名内部类的格式：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> Contents()&#123;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我对匿名内部类主要有以下几个疑问：<br><br>一、匿名内部类实现的时什么类型的对象，可以实现接口吗？<br><br>Contents()可以是调用的一个类的构造器，此时括号中可以根据构造器传入参数，将创建一个继承自Contents的匿名类对象；<br><br>Contents也可以是一个接口，将创建一个实现Contents接口的匿名类对象，此时匿名类中只有一个隐式的无参构造器，所以括号中不能传入参数；<br><br>二、如何引用匿名内部类？<br><br>回答了问题一其实就能解决这个问题了，new表达式返回的引用会被自动向上转型为对Contents的引用<br><br>三、如何实现类似构造器的效果？<br><br>通过实例初始化，就像这样：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> Contents()&#123;</span><br><span class="line">	&#123;print(<span class="string">"instance init"</span>);&#125;</span><br><span class="line">	.....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br><br><br>使用匿名内部类还需要注意以下问题：<br><br>匿名内部类中可以直接调用外部定义的对象，但编译器会要求该对象的引用必须是final的，例如：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Contents <span class="title">getContents</span><span class="params">(<span class="keyword">final</span> String param)</span></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">new</span> Contents()&#123;</span><br><span class="line">		String label = param;</span><br><span class="line">		.....</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -106,7 +110,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/hexo/">hexo</a>
+  <span></span> <a href="/tags/java/">java</a>
   </div>
 
 </div>
@@ -115,7 +119,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/08/16/start-hexo/" data-title="开始使用hexo | CLIMBRAN" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/08/30/anonymous-inner-class/" data-title="匿名内部类学习 | CLIMBRAN" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -128,19 +132,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/08/27/start-intellij/" title="intelliJ创建spring项目">
-  <strong>上一篇：</strong><br/>
-  <span>
-  intelliJ创建spring项目</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/08/10/parameter-pre-deal/"  title="通过ModelAttribute对请求参数进行预处理">
+<a href="/2015/08/29/consistent-hashing/"  title="一致性哈希">
  <strong>下一篇：</strong><br/> 
- <span>通过ModelAttribute对请求参数进行预处理
+ <span>一致性哈希
 </span>
 </a>
 </div>
@@ -149,7 +145,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/08/16/start-hexo/" data-title="开始使用hexo" data-url="http://yoursite.com/2015/08/16/start-hexo/"></div>
+	<div class="ds-thread" data-thread-key="2015/08/30/anonymous-inner-class/" data-title="匿名内部类学习" data-url="http://yoursite.com/2015/08/30/anonymous-inner-class/"></div>
 </section>
 
 

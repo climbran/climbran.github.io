@@ -81,6 +81,64 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/07/23/database-design-model/" title="数据库四种设计模式" itemprop="url">数据库四种设计模式</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="climbran" target="_blank" itemprop="author">climbran</a>
+		
+  <p class="article-time">
+    <time datetime="2015-07-23T13:17:26.000Z" itemprop="datePublished"> 发表于 2015-07-23</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>1、主扩展模式<br><br>主扩展模式，通常用来将几个相似的对象的共有属性抽取出来，形成一个“公共属性表”；其余属性则分别形成“专有属性表”，且“公共属性表”与“专有属性表”都是“一对一”的关系。<br><br>感觉主扩展模式适合用于继承关系，“公共属性表”即父类表，“专有属性表”即各个子类各自独有的属性形成的表。主扩展模式用来描述对象内的关系。<br><br><br>2、主从模式<br><br>即对象间的一对多关系，例如学校和班级即一种主从模式。<br><br><br>3、名值模式<br>名值模式，通常用来描述在系统设计阶段不能完全确定属性的对象，这些对象的属性在系统运行时会有很大的变更，或者是多个对象之间的属性存在很大的差异。<br><br>我的理解名值模式就是主扩展模式和多对多模式的混合，将主从模式中的“专有属性表”中列变为一张“属性列表“”中的行。“公共属性表”和“属性列表”为多对多关系，属性值可在映射表中。用来描述对象内的关系。<br>eg:<br><img width="600 " src="/img/database-design-model/1.png"><br><br><br>4、多对多模式<br><br>这个没什么好说的，可分为关联表有独立的业务处理需求（映射表除映射功能还有其他属性）和关联表没有独立的业务处理需求（映射表只有映射功能）。多对多模式描述对象间的关系。<br><br><br>总结：<br><br>以上4种模式其实就是分别描述了对象内的一对一关系、对象内的多对多关系、对象间的一对多关系，对象间的多对多关系，基本能应用所有情况，其他关系有：<br>1、对象内的一对多关系：多方会存在冗余信息，将冗余信息提取到一张表后即转换为名值模式；<br>2、对象间的一对一关系：貌似不存在这种关系，本想如婚姻关系是对象间的一对一关系，但考虑离婚等情况其实也是多对多关系。</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/数据库/">数据库</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/07/23/database-design-model/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/07/23/database-design-model/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/07/11/resource-and-the-representation-of-the-resource/" title="关于资源和表述" itemprop="url">关于资源和表述</a>
   </h1>
   <p class="article-author">By
@@ -211,7 +269,7 @@
 </header>
     <div class="article-content">
         
-        <p>看springside的showcase发现static块的直接使用:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> org.springside.examples.showcase.web;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line">.....</span><br><span class="line"></span><br><span class="line"><span class="annotation">@Controller</span></span><br><span class="line"><span class="annotation">@RequestMapping</span>(value = <span class="string">"/account/user"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> Map&lt;String, String&gt; allStatus = Maps.newHashMap();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">static</span> &#123;</span><br><span class="line">		allStatus.put(<span class="string">"enabled"</span>, <span class="string">"有效"</span>);</span><br><span class="line">		allStatus.put(<span class="string">"disabled"</span>, <span class="string">"无效"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	......</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br><br><br>static{}，会在类被加载的时候执行且仅会被执行一次，一般用来初始化静态变量和调用静态方法。<br><br><br>虚拟机的生命周期中一个类只被加载一次；又因为static{}是伴随类加载执行的，所以，不管你new多少次对象实例，static{}都只执行一次。<br><br><br>类会在以下情况加载:<br><br>1、用Class.forName()显示加载的时候，如上面的示例一;<br><br>2、实例化一个类的时候，如将main()函数的内容改为:Test t=new Test();//这种形式其实和1相比，原理是相同的，都是显示的加载这个类，读者可以验证Test t=new Test();和Test t=(Test)Class.forName().newInstance();这两条语句效果相同。<br><br>3、调用类的静态方法的时候，如将main()函数的内容改为:Test.display();<br><br>4、调用类的静态变量的时候，如将main()函数的内容改为:System.out.println(Test.X);<br><br><br><br><br>以下两种情况类不会加载:<br><br>1、调用类的静态常量的时候，是不会加载类的，即不会执行static{}语句块，读者可以自己验证一下(将main()函数的内容改为System.out.println(Test.Y);)，你会发现程序只输出了一个200；(这是java虚拟机的规定，当访问类的静态常量时，如果编译器可以计算出常量的值，则不会加载类，否则会加载类)<br><br>2、用Class.forName()形式的时候，我们也可以自己设定要不要加载类，如将Class.forName(“Test”)改为 Class.forName(“Test”,false,StaticBlockTest.class.getClassLoader())，你会发现程序什么都没有输出，即Test没有被加载，static{}没有被执行。</p>
+        <p>看springside的showcase发现static块的直接使用:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> org.springside.examples.showcase.web;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line">.....</span><br><span class="line"></span><br><span class="line"><span class="annotation">@Controller</span></span><br><span class="line"><span class="annotation">@RequestMapping</span>(value = <span class="string">"/account/user"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> Map&lt;String, String&gt; allStatus = Maps.newHashMap();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">static</span> &#123;</span><br><span class="line">		allStatus.put(<span class="string">"enabled"</span>, <span class="string">"有效"</span>);</span><br><span class="line">		allStatus.put(<span class="string">"disabled"</span>, <span class="string">"无效"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	......</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br><br><br>static{}，会在类被加载的时候执行且仅会被执行一次，一般用来初始化静态变量和调用静态方法。<br><br><br>虚拟机的生命周期中一个类只被加载一次；又因为static{}是伴随类加载执行的，所以，不管你new多少次对象实例，static{}都只执行一次。<br><br><br>类会在以下情况加载:<br><br>1、用Class.forName()显示加载的时候，如上面的示例一;<br><br>2、实例化一个类的时候，如将main()函数的内容改为:Test t=new Test();//这种形式其实和1相比，原理是相同的，都是显示的加载这个类，读者可以验证Test t=new Test();和Test t=(Test)Class.forName().newInstance();这两条语句效果相同。<br><br>3、调用类的静态方法的时候，如将main()函数的内容改为:Test.display();<br><br>4、调用类的静态变量的时候，如将main()函数的内容改为:System.out.println(Test.X);<br><br><br><br><br>以下两种情况类不会加载:<br><br>1、调用类的静态常量的时候，是不会加载类的，即不会执行static{}语句块，读者可以自己验证一下(将main()函数的内容改为System.out.println(Test.Y);)，你会发现程序只输出了一个200；(这是java虚拟机的规定，当访问类的静态常量时，如果编译器可以计算出常量的值，则不会加载类，否则会加载类)<br><br>2、用Class.forName()形式的时候，我们也可以自己设定要不要加载类，如将Class.forName(“Test”)改为 Class.forName(“Test”,false,StaticBlockTest.class.getClassLoader())，你会发现程序什么都没有输出，即Test没有被加载，static{}没有被执行。<br><br><br>当带satic的静态初始化块与不带staic的非静态初始化块同时需要执行时，按照以下顺序执行：<br><br>所有类的静态初始化块(从父类自顶向下) –&gt; 所有类的普通初始化块(从父类自顶向下) –&gt; 类的构选器(从父类自顶向下)</p>
 
         
         
@@ -625,7 +683,7 @@
 			
 		
 			
-				<li><a href="/tags/java/" title="java">java<sup>4</sup></a></li>
+				<li><a href="/tags/java/" title="java">java<sup>5</sup></a></li>
 			
 		
 			
