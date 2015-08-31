@@ -4,23 +4,29 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>利用Filter统计时间开销 | CLIMBRAN</title>
+    <title>java-RTTI | CLIMBRAN</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="swe">
     
 
     
-    <meta name="description" content="项目需要在日志中记录每个请求花费的时间开销，算是开始web开发的第一个任务，度娘到Filter这个东西，做出以下是实现：123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354import java.io.IOException;import javax.s">
+    <meta name="description" content="一、什么是RTTIRTTI就是Run-Time Type Information的缩写，Java使用Class对象来实现RTTI。
+二、如何实现RTTI每当编写并且编译一个新类时，就会产生一个Class对象（保存在同名的.class文件中），获取Class对象有以下几种方式：
+1、Class.forName(“className”);2、类字面常量：eg: User.class;不光可用于普通类，">
 <meta property="og:type" content="article">
-<meta property="og:title" content="利用Filter统计时间开销">
-<meta property="og:url" content="http://yoursite.com/2015/03/20/filter-get-cost-time/index.html">
+<meta property="og:title" content="java-RTTI">
+<meta property="og:url" content="http://yoursite.com/2015/08/31/java-RTTI/index.html">
 <meta property="og:site_name" content="CLIMBRAN">
-<meta property="og:description" content="项目需要在日志中记录每个请求花费的时间开销，算是开始web开发的第一个任务，度娘到Filter这个东西，做出以下是实现：123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354import java.io.IOException;import javax.s">
-<meta property="og:updated_time" content="2015-08-31T05:09:36.000Z">
+<meta property="og:description" content="一、什么是RTTIRTTI就是Run-Time Type Information的缩写，Java使用Class对象来实现RTTI。
+二、如何实现RTTI每当编写并且编译一个新类时，就会产生一个Class对象（保存在同名的.class文件中），获取Class对象有以下几种方式：
+1、Class.forName(“className”);2、类字面常量：eg: User.class;不光可用于普通类，">
+<meta property="og:updated_time" content="2015-08-31T17:25:45.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="利用Filter统计时间开销">
-<meta name="twitter:description" content="项目需要在日志中记录每个请求花费的时间开销，算是开始web开发的第一个任务，度娘到Filter这个东西，做出以下是实现：123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354import java.io.IOException;import javax.s">
+<meta name="twitter:title" content="java-RTTI">
+<meta name="twitter:description" content="一、什么是RTTIRTTI就是Run-Time Type Information的缩写，Java使用Class对象来实现RTTI。
+二、如何实现RTTI每当编写并且编译一个新类时，就会产生一个Class对象（保存在同名的.class文件中），获取Class对象有以下几种方式：
+1、Class.forName(“className”);2、类字面常量：eg: User.class;不光可用于普通类，">
 
     
     <link rel="alternative" href="/atom.xml" title="CLIMBRAN" type="application/atom+xml">
@@ -80,21 +86,28 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/03/20/filter-get-cost-time/" title="利用Filter统计时间开销" itemprop="url">利用Filter统计时间开销</a>
+      <a href="/2015/08/31/java-RTTI/" title="java-RTTI" itemprop="url">java-RTTI</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
 		
   <p class="article-time">
-    <time datetime="2015-03-20T07:50:55.000Z" itemprop="datePublished"> 发表于 2015-03-20</time>
+    <time datetime="2015-08-31T15:46:53.000Z" itemprop="datePublished"> 发表于 2015-08-31</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
-		<p>项目需要在日志中记录每个请求花费的时间开销，算是开始web开发的第一个任务，度娘到Filter这个东西，做出以下是实现：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.servlet.Filter;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.FilterChain;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.FilterConfig;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletException;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletRequest;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletResponse;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletRequest;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.slf4j.Logger;</span><br><span class="line"><span class="keyword">import</span> org.slf4j.LoggerFactory;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RequestLogFilter</span> <span class="keyword">implements</span> <span class="title">Filter</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	Logger logger = LoggerFactory.getLogger(<span class="string">"@@@Monitor@@@"</span>);</span><br><span class="line"></span><br><span class="line">	<span class="annotation">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">(FilterConfig filterConfig)</span> <span class="keyword">throws</span> ServletException </span>&#123;</span><br><span class="line">		<span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="annotation">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doFilter</span><span class="params">(ServletRequest request, ServletResponse response,</span><br><span class="line">			FilterChain chain)</span> <span class="keyword">throws</span> IOException, ServletException </span>&#123;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">long</span> startTime = System.currentTimeMillis();</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			chain.doFilter(request, response);</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			<span class="keyword">throw</span> e;</span><br><span class="line">		&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">			<span class="keyword">long</span> stopTime = System.currentTimeMillis();</span><br><span class="line">			<span class="keyword">long</span> costTime = stopTime - startTime;</span><br><span class="line">			String requestURL = ((HttpServletRequest) request).getRequestURI();</span><br><span class="line">			</span><br><span class="line">			<span class="keyword">if</span> (costTime &gt; <span class="number">200</span>) &#123;</span><br><span class="line">				logger.warn(<span class="string">"start[&#123;&#125;] time[&#123;&#125;] tag[&#123;&#125;] message[]"</span>, startTime,</span><br><span class="line">						costTime, requestURL);</span><br><span class="line">			&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">				logger.debug(<span class="string">"start[&#123;&#125;] time[&#123;&#125;] tag[&#123;&#125;] message[]"</span>, startTime,</span><br><span class="line">						costTime, requestURL);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="annotation">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">destroy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>在web.xml中增加配置:<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="attribute">filter</span>&gt;</span><br><span class="line">	&lt;<span class="attribute">filter</span>-name&gt;RequestLogFilter&lt;/<span class="attribute">filter</span>-name&gt;</span><br><span class="line">	&lt;<span class="attribute">filter</span>-class&gt;com<span class="class">.lemon</span><span class="class">.web</span><span class="class">.filter</span><span class="class">.RequestLogFilter</span>&lt;/<span class="attribute">filter</span>-class&gt;</span><br><span class="line">&lt;/<span class="attribute">filter</span>&gt;</span><br><span class="line">&lt;<span class="attribute">filter</span>-mapping&gt;</span><br><span class="line">	&lt;<span class="attribute">filter</span>-name&gt;RequestLogFilter&lt;/<span class="attribute">filter</span>-name&gt;</span><br><span class="line">	&lt;url-pattern&gt;<span class="comment">/*&lt;/url-pattern&gt;</span><br><span class="line">&lt;/filter-mapping&gt;</span></span><br></pre></td></tr></table></figure><br>此处得注意filterChain的顺序，filterChain根据filter在web.xml中的顺序从上往下，在一个栈中执行。</p>
+		<p>一、什么是RTTI<br>RTTI就是Run-Time Type Information的缩写，Java使用Class对象来实现RTTI。</p>
+<p>二、如何实现RTTI<br>每当编写并且编译一个新类时，就会产生一个Class对象（保存在同名的.class文件中），获取Class对象有以下几种方式：</p>
+<p>1、Class.forName(“className”);<br>2、类字面常量：eg: User.class;<br>不光可用于普通类，也可用于接口、数字、基本数据类型。<br>特殊的，基本数据类型的类字面常亮等价于对应包装类的TYPE字段（eg:int.class和Integer.TYPE等价）；<br>3、如果已经有了一个对象的引用（非Class对象），可以通过调用该对象的.getClass()方法获取；</p>
+<p>使用类的准备工作实际包括3个步骤：<br>1、加载：这是由类加载器执行的，该步骤将查找字节码（通常在classpath所指定的路径中查找，但这并非必须的），并从这些字节码中创建一个Class对象；<br>2、链接：在链接阶段将验证类中的字节码，为静态域分配存储空间，并且如果必需的话，将创建这个类对其他类的所有引用；<br>3、初始化：如果该类具有超类，则对其初始化，执行静态初始化器和静态初始化块；</p>
+<p>通过Class.forName(“className”)方式创建Class对象的引用时会初始化Class对象，而.class方式不会初始化Class对象，具体什么时候初始化可参考：<a href="http://climbran.github.io/2015/05/29/static-block/" target="_blank" rel="external">satic块</a></p>
+<p>三、Class对象的常用方法<br>getName    获取全限定名（即带包名的类名）<br>getSimpleName()    获取不含包名的类名<br>getCononicalName()    获取全限定名<br>getInterfaces() 返回Class对象，他们表示表示调用该方法的Class对象中的全部接口<br>isInterface() 告诉你这个Class对象是否表示某个接口<br>newInstance() 实例化一个对象</p>
+<p>调用newInstance时，如果使用泛型时，用？通配、super通配或不使用泛型将返回Object类型的值，如果用extends通配或指定具体类型能返回具体类型的值，例如:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">.....</span><br><span class="line">  	Class c1 = User.class;</span><br><span class="line">  	Class&lt;?&gt; c2 = User.class;</span><br><span class="line">  	Class&lt;? <span class="keyword">super</span> User&gt; c3 = User.class; <span class="comment">//super通配父类，但不知道是具体哪个父类，所以向上转型到Object</span></span><br><span class="line">  	Class&lt;User&gt; c4 = User.class;</span><br><span class="line">  	Class&lt;? extends User&gt; c5 = User.class;</span><br><span class="line">   <span class="keyword">try</span> &#123;</span><br><span class="line">       User nu1 = (User)c1.newInstance();	<span class="comment">//返回值为Object类型，需要强制类型转换</span></span><br><span class="line">       User nu2 = (User)c2.newInstance();</span><br><span class="line">       User nu3 = (User)c3.newInstance(); <span class="comment">//直接返回User类型，不需要强制类型转换</span></span><br><span class="line">       User nu4 = c4.newInstance();</span><br><span class="line">       User nu5 = c5.newInstance();</span><br><span class="line">   &#125; <span class="keyword">catch</span> (InstantiationException e) &#123;</span><br><span class="line">       e.printStackTrace();</span><br><span class="line">   &#125; <span class="keyword">catch</span> (IllegalAccessException e) &#123;</span><br><span class="line">       e.printStackTrace();</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>三、instanceof<br>两种方式直接上示例：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span></span>&#123;&#125;</span><br><span class="line">	</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Administrator</span> <span class="title">exnteds</span> <span class="title">User</span></span>&#123;&#125;</span><br><span class="line">	</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">		Administrator admin = <span class="keyword">new</span> Administrator();</span><br><span class="line">		</span><br><span class="line">		<span class="comment">//方式一</span></span><br><span class="line">		<span class="keyword">if</span>(admn <span class="keyword">instanceof</span> User)</span><br><span class="line">			System.out.println(<span class="string">"admin is instance of User"</span>);		</span><br><span class="line">		<span class="comment">//方式二</span></span><br><span class="line">		Class c = User.class;</span><br><span class="line">		<span class="keyword">if</span>(c.isInstanceof(admin))</span><br><span class="line">			System.out.println(<span class="string">"admin is also instance of User"</span>);</span><br><span class="line">	&#125;	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>注意instanceof不仅可用于类，还可以用于接口，当对象为null时返回false</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -103,7 +116,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Spring-MVC/">Spring MVC</a>
+  <span></span> <a href="/tags/java/">java</a>
   </div>
 
 </div>
@@ -112,7 +125,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/03/20/filter-get-cost-time/" data-title="利用Filter统计时间开销 | CLIMBRAN" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/08/31/java-RTTI/" data-title="java-RTTI | CLIMBRAN" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -125,19 +138,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/03/29/logback/" title="logback配置">
-  <strong>上一篇：</strong><br/>
-  <span>
-  logback配置</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/03/20/brew-install/"  title="brew安装">
+<a href="/2015/08/30/anonymous-inner-class/"  title="匿名内部类学习">
  <strong>下一篇：</strong><br/> 
- <span>brew安装
+ <span>匿名内部类学习
 </span>
 </a>
 </div>
@@ -146,7 +151,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/03/20/filter-get-cost-time/" data-title="利用Filter统计时间开销" data-url="http://yoursite.com/2015/03/20/filter-get-cost-time/"></div>
+	<div class="ds-thread" data-thread-key="2015/08/31/java-RTTI/" data-title="java-RTTI" data-url="http://yoursite.com/2015/08/31/java-RTTI/"></div>
 </section>
 
 
