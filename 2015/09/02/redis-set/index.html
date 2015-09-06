@@ -4,23 +4,26 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>redis数据类型-hash | CLIMBRAN</title>
+    <title>redis数据类型-set | CLIMBRAN</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="swe">
     
 
     
-    <meta name="description" content="1、redishash是一个string类型的field和value的映射表。2、hash特别适合用于存储对象。相较于将对象的每个字段存成单个 string 类型。将一个对象存储在hash类 型中会占用更少的内存,并且可以更方便的存取整个对象。3、新建一个 hash 对象时开始是用 zipmap(又称为 small hash)来存储的。4、如果 field 或者 value 的大小超出一定限制后,">
+    <meta name="description" content="1、redis 的 set 是 string 类型的无序集合2、set 元素最大可以包含(2的32次方-1)个元素3、set 的是通过 hash table 实现的,所以添加,删除,查找的复杂度都是 O(1)。
+相关命令：123456789101112131415161718192021222324252627sadd key member		#添加一个 string 元素到,key 对应的 se">
 <meta property="og:type" content="article">
-<meta property="og:title" content="redis数据类型-hash">
-<meta property="og:url" content="http://yoursite.com/2015/09/06/redis-hash/index.html">
+<meta property="og:title" content="redis数据类型-set">
+<meta property="og:url" content="http://yoursite.com/2015/09/02/redis-set/index.html">
 <meta property="og:site_name" content="CLIMBRAN">
-<meta property="og:description" content="1、redishash是一个string类型的field和value的映射表。2、hash特别适合用于存储对象。相较于将对象的每个字段存成单个 string 类型。将一个对象存储在hash类 型中会占用更少的内存,并且可以更方便的存取整个对象。3、新建一个 hash 对象时开始是用 zipmap(又称为 small hash)来存储的。4、如果 field 或者 value 的大小超出一定限制后,">
-<meta property="og:updated_time" content="2015-09-06T08:40:05.000Z">
+<meta property="og:description" content="1、redis 的 set 是 string 类型的无序集合2、set 元素最大可以包含(2的32次方-1)个元素3、set 的是通过 hash table 实现的,所以添加,删除,查找的复杂度都是 O(1)。
+相关命令：123456789101112131415161718192021222324252627sadd key member		#添加一个 string 元素到,key 对应的 se">
+<meta property="og:updated_time" content="2015-09-06T08:47:17.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="redis数据类型-hash">
-<meta name="twitter:description" content="1、redishash是一个string类型的field和value的映射表。2、hash特别适合用于存储对象。相较于将对象的每个字段存成单个 string 类型。将一个对象存储在hash类 型中会占用更少的内存,并且可以更方便的存取整个对象。3、新建一个 hash 对象时开始是用 zipmap(又称为 small hash)来存储的。4、如果 field 或者 value 的大小超出一定限制后,">
+<meta name="twitter:title" content="redis数据类型-set">
+<meta name="twitter:description" content="1、redis 的 set 是 string 类型的无序集合2、set 元素最大可以包含(2的32次方-1)个元素3、set 的是通过 hash table 实现的,所以添加,删除,查找的复杂度都是 O(1)。
+相关命令：123456789101112131415161718192021222324252627sadd key member		#添加一个 string 元素到,key 对应的 se">
 
     
     <link rel="alternative" href="/atom.xml" title="CLIMBRAN" type="application/atom+xml">
@@ -80,45 +83,22 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/09/06/redis-hash/" title="redis数据类型-hash" itemprop="url">redis数据类型-hash</a>
+      <a href="/2015/09/02/redis-set/" title="redis数据类型-set" itemprop="url">redis数据类型-set</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
 		
   <p class="article-time">
-    <time datetime="2015-09-06T08:28:34.000Z" itemprop="datePublished"> 发表于 2015-09-06</time>
+    <time datetime="2015-09-02T07:58:06.000Z" itemprop="datePublished"> 发表于 2015-09-02</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
-		<p>1、redishash是一个string类型的field和value的映射表。<br>2、hash特别适合用于存储对象。相较于将对象的每个字段存成单个 string 类型。将一个对象存储在hash类 型中会占用更少的内存,并且可以更方便的存取整个对象。<br>3、新建一个 hash 对象时开始是用 zipmap(又称为 small hash)来存储的。<br>4、如果 field 或者 value 的大小超出一定限制后,redis会在内部自动将zipmap替换成正常的 hash 实现. 这个限制可以在配置文件中指定：</p>
-<pre><code>hash-max-zipmap-entries <span class="number">64</span> <span class="preprocessor">#配置字段最多 <span class="number">64</span> 个</span>
-hash-max-zipmap-value <span class="number">512</span> <span class="preprocessor">#配置 value 最大为 <span class="number">512</span> 字节</span>
-</code></pre><p>下面介绍 hash 相关命令：</p>
-<pre><code>hset <span class="keyword">key</span> field value    <span class="preprocessor">#设置 hash field 为指定值,如果 key 不存在,则先创建</span>
-
-hget <span class="keyword">key</span> field        <span class="preprocessor">#获取指定的 hash field</span>
-
-hmget <span class="keyword">key</span> filed1....fieldN        <span class="preprocessor">#获取全部指定的 hash filed</span>
-
-hmset <span class="keyword">key</span> filed1 value1 ... filedN valueN        <span class="preprocessor">#同时设置 hash 的多个 field</span>
-
-hincrby <span class="keyword">key</span> field <span class="built_in">integer</span>        <span class="preprocessor">#将指定的 hash filed 加上给定值</span>
-
-hexists <span class="keyword">key</span> field        <span class="preprocessor">#测试指定 field 是否存在</span>
-
-hdel <span class="keyword">key</span> field        <span class="preprocessor">#删除指定的 hash field</span>
-
-hlen <span class="keyword">key</span>    <span class="preprocessor">#返回指定 hash 的 field 数量</span>
-
-hkeys <span class="keyword">key</span>    <span class="preprocessor">#返回 hash 的所有 field</span>
-
-hvals <span class="keyword">key</span>    <span class="preprocessor">#返回 hash 的所有 value</span>
-
-hgetall <span class="keyword">key</span>        <span class="preprocessor">#返回 hash 的所有 filed 和 value</span>
-</code></pre>  
+		<p>1、redis 的 set 是 string 类型的无序集合<br>2、set 元素最大可以包含(2的32次方-1)个元素<br>3、set 的是通过 hash table 实现的,所以添加,删除,查找的复杂度都是 O(1)。</p>
+<p>相关命令：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">sadd key member		#添加一个 string 元素到,key 对应的 <span class="operator"><span class="keyword">set</span> 集合中,成功返回 <span class="number">1</span>,如果元素已经在集合中,返回 <span class="number">0</span>,<span class="keyword">key</span> 对应的 <span class="keyword">set</span> 不存在返回错误</span><br><span class="line"></span><br><span class="line">	srem <span class="keyword">key</span> <span class="keyword">member</span>		#从 <span class="keyword">key</span> 对应 <span class="keyword">set</span> 中移除给定元素,成功返回 <span class="number">1</span>,如果 <span class="keyword">member</span> 在集合中不存在或者 <span class="keyword">key</span> 不存在返回 <span class="number">0</span>,如果 <span class="keyword">key</span> 对应的不是 <span class="keyword">set</span> 类型的值返回错误</span><br><span class="line">	</span><br><span class="line">	spop <span class="keyword">key</span>	#删除并返回 <span class="keyword">key</span> 对应 <span class="keyword">set</span> 中随机的一个元素,如果 <span class="keyword">set</span> 是空或者 <span class="keyword">key</span> 不存在返回 nil</span><br><span class="line">	</span><br><span class="line">	srandmember		#同 spop,随机取 <span class="keyword">set</span> 中的一个元素,但是不删除元素</span><br><span class="line">	</span><br><span class="line">	smove srckey dstkey <span class="keyword">member</span>		#从 srckey 对应 <span class="keyword">set</span> 中移除 <span class="keyword">member</span> 并添加到 dstkey 对应 <span class="keyword">set</span> 中,整个操作是原子的。成功返回 <span class="number">1</span>,如果 <span class="keyword">member</span> 在 srckey 中不存在返回 <span class="number">0</span>,如果 <span class="keyword">key</span> 不是 <span class="keyword">set</span> 类型返回错误</span><br><span class="line">	</span><br><span class="line">	scard <span class="keyword">key</span>		#返回 <span class="keyword">set</span> 的元素个数,如果 <span class="keyword">set</span> 是空或者 <span class="keyword">key</span> 不存在返回 <span class="number">0</span></span><br><span class="line">	</span><br><span class="line">	sismember <span class="keyword">key</span> <span class="keyword">member</span>	#判断 <span class="keyword">member</span> 是否在 <span class="keyword">set</span> 中,存在返回 <span class="number">1</span>,<span class="number">0</span> 表示不存在或者 <span class="keyword">key</span> 不存在</span><br><span class="line">	</span><br><span class="line">	sinter key1 key2...keyN		#返回所有给定 <span class="keyword">key</span> 的交集</span><br><span class="line">	</span><br><span class="line">	sinterstore dstkey key1...keyN		#同 sinter,但是会同时将交集存到 dstkey 下</span><br><span class="line">	</span><br><span class="line">	sunion key1 key2...keyN		#返回所有给定 <span class="keyword">key</span> 的并集</span><br><span class="line">	</span><br><span class="line">	sunionstore dstkey key1...keyN		#同 sunion,并同时保存并集到 dstkey 下</span><br><span class="line">	</span><br><span class="line">	sdiff key1 key2...keyN		#返回所有给定 <span class="keyword">key</span> 的差集</span><br><span class="line">	</span><br><span class="line">	sdiffstore dstkey key1...keyN	#同 sdiff,并同时保存差集到 dstkey 下</span><br><span class="line">	</span><br><span class="line">	smembers <span class="keyword">key</span>	#返回 <span class="keyword">key</span> 对应 <span class="keyword">set</span> 的所有元素,结果是无序的￼</span></span><br></pre></td></tr></table></figure></p>
+  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
@@ -135,7 +115,7 @@ hgetall <span class="keyword">key</span>        <span class="preprocessor">#返�
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/09/06/redis-hash/" data-title="redis数据类型-hash | CLIMBRAN" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/09/02/redis-set/" data-title="redis数据类型-set | CLIMBRAN" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -148,11 +128,19 @@ hgetall <span class="keyword">key</span>        <span class="preprocessor">#返�
 	
 <nav class="article-nav clearfix">
  
+ <div class="prev" >
+ <a href="/2015/09/02/redis-sorted-set/" title="redis数据类型-sorted set">
+  <strong>上一篇：</strong><br/>
+  <span>
+  redis数据类型-sorted set</span>
+</a>
+</div>
+
 
 <div class="next">
-<a href="/2015/09/06/redis-sorted-set/"  title="redis数据类型-sorted set">
+<a href="/2015/09/02/redis-list/"  title="redis数据类型-list">
  <strong>下一篇：</strong><br/> 
- <span>redis数据类型-sorted set
+ <span>redis数据类型-list
 </span>
 </a>
 </div>
@@ -161,7 +149,7 @@ hgetall <span class="keyword">key</span>        <span class="preprocessor">#返�
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/09/06/redis-hash/" data-title="redis数据类型-hash" data-url="http://yoursite.com/2015/09/06/redis-hash/"></div>
+	<div class="ds-thread" data-thread-key="2015/09/02/redis-set/" data-title="redis数据类型-set" data-url="http://yoursite.com/2015/09/02/redis-set/"></div>
 </section>
 
 
@@ -191,7 +179,7 @@ hgetall <span class="keyword">key</span>        <span class="preprocessor">#返�
 			
 		
 			
-				<li><a href="/tags/java/" title="java">java<sup>7</sup></a></li>
+				<li><a href="/tags/java/" title="java">java<sup>8</sup></a></li>
 			
 		
 			
@@ -240,6 +228,10 @@ hgetall <span class="keyword">key</span>        <span class="preprocessor">#返�
 		
 			
 				<li><a href="/tags/git/" title="git">git<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/jsp/" title="jsp">jsp<sup>1</sup></a></li>
 			
 		
 			

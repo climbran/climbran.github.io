@@ -4,26 +4,26 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>redis数据类型-set | CLIMBRAN</title>
+    <title>redis数据类型-keys | CLIMBRAN</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="swe">
     
 
     
-    <meta name="description" content="1、redis 的 set 是 string 类型的无序集合2、set 元素最大可以包含(2的32次方-1)个元素3、set 的是通过 hash table 实现的,所以添加,删除,查找的复杂度都是 O(1)。
-相关命令：123456789101112131415161718192021222324252627sadd key member		#添加一个 string 元素到,key 对应的 se">
+    <meta name="description" content="redis本质上一个 key-value数据库，关于key注意以下几点：1、其中key也是字符串类型,但是key中不能包括边界字符。2、由于key不是二进制安全(binary safe)的字符串,所以像”my key”和”mykey\n”这样包含空格和换行的 key 是不允许的。3、redis内部并不限制使用binary字符,这是redis协议限制的。”\r\n”在协议格式中会作为特殊字符。
+关于">
 <meta property="og:type" content="article">
-<meta property="og:title" content="redis数据类型-set">
-<meta property="og:url" content="http://yoursite.com/2015/09/06/redis-set/index.html">
+<meta property="og:title" content="redis数据类型-keys">
+<meta property="og:url" content="http://yoursite.com/2015/09/02/redis-keys/index.html">
 <meta property="og:site_name" content="CLIMBRAN">
-<meta property="og:description" content="1、redis 的 set 是 string 类型的无序集合2、set 元素最大可以包含(2的32次方-1)个元素3、set 的是通过 hash table 实现的,所以添加,删除,查找的复杂度都是 O(1)。
-相关命令：123456789101112131415161718192021222324252627sadd key member		#添加一个 string 元素到,key 对应的 se">
-<meta property="og:updated_time" content="2015-09-06T08:42:39.000Z">
+<meta property="og:description" content="redis本质上一个 key-value数据库，关于key注意以下几点：1、其中key也是字符串类型,但是key中不能包括边界字符。2、由于key不是二进制安全(binary safe)的字符串,所以像”my key”和”mykey\n”这样包含空格和换行的 key 是不允许的。3、redis内部并不限制使用binary字符,这是redis协议限制的。”\r\n”在协议格式中会作为特殊字符。
+关于">
+<meta property="og:updated_time" content="2015-09-06T08:46:10.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="redis数据类型-set">
-<meta name="twitter:description" content="1、redis 的 set 是 string 类型的无序集合2、set 元素最大可以包含(2的32次方-1)个元素3、set 的是通过 hash table 实现的,所以添加,删除,查找的复杂度都是 O(1)。
-相关命令：123456789101112131415161718192021222324252627sadd key member		#添加一个 string 元素到,key 对应的 se">
+<meta name="twitter:title" content="redis数据类型-keys">
+<meta name="twitter:description" content="redis本质上一个 key-value数据库，关于key注意以下几点：1、其中key也是字符串类型,但是key中不能包括边界字符。2、由于key不是二进制安全(binary safe)的字符串,所以像”my key”和”mykey\n”这样包含空格和换行的 key 是不允许的。3、redis内部并不限制使用binary字符,这是redis协议限制的。”\r\n”在协议格式中会作为特殊字符。
+关于">
 
     
     <link rel="alternative" href="/atom.xml" title="CLIMBRAN" type="application/atom+xml">
@@ -83,21 +83,51 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/09/06/redis-set/" title="redis数据类型-set" itemprop="url">redis数据类型-set</a>
+      <a href="/2015/09/02/redis-keys/" title="redis数据类型-keys" itemprop="url">redis数据类型-keys</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
 		
   <p class="article-time">
-    <time datetime="2015-09-06T07:58:06.000Z" itemprop="datePublished"> 发表于 2015-09-06</time>
+    <time datetime="2015-09-02T06:24:59.000Z" itemprop="datePublished"> 发表于 2015-09-02</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
-		<p>1、redis 的 set 是 string 类型的无序集合<br>2、set 元素最大可以包含(2的32次方-1)个元素<br>3、set 的是通过 hash table 实现的,所以添加,删除,查找的复杂度都是 O(1)。</p>
-<p>相关命令：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">sadd key member		#添加一个 string 元素到,key 对应的 <span class="operator"><span class="keyword">set</span> 集合中,成功返回 <span class="number">1</span>,如果元素已经在集合中,返回 <span class="number">0</span>,<span class="keyword">key</span> 对应的 <span class="keyword">set</span> 不存在返回错误</span><br><span class="line"></span><br><span class="line">	srem <span class="keyword">key</span> <span class="keyword">member</span>		#从 <span class="keyword">key</span> 对应 <span class="keyword">set</span> 中移除给定元素,成功返回 <span class="number">1</span>,如果 <span class="keyword">member</span> 在集合中不存在或者 <span class="keyword">key</span> 不存在返回 <span class="number">0</span>,如果 <span class="keyword">key</span> 对应的不是 <span class="keyword">set</span> 类型的值返回错误</span><br><span class="line">	</span><br><span class="line">	spop <span class="keyword">key</span>	#删除并返回 <span class="keyword">key</span> 对应 <span class="keyword">set</span> 中随机的一个元素,如果 <span class="keyword">set</span> 是空或者 <span class="keyword">key</span> 不存在返回 nil</span><br><span class="line">	</span><br><span class="line">	srandmember		#同 spop,随机取 <span class="keyword">set</span> 中的一个元素,但是不删除元素</span><br><span class="line">	</span><br><span class="line">	smove srckey dstkey <span class="keyword">member</span>		#从 srckey 对应 <span class="keyword">set</span> 中移除 <span class="keyword">member</span> 并添加到 dstkey 对应 <span class="keyword">set</span> 中,整个操作是原子的。成功返回 <span class="number">1</span>,如果 <span class="keyword">member</span> 在 srckey 中不存在返回 <span class="number">0</span>,如果 <span class="keyword">key</span> 不是 <span class="keyword">set</span> 类型返回错误</span><br><span class="line">	</span><br><span class="line">	scard <span class="keyword">key</span>		#返回 <span class="keyword">set</span> 的元素个数,如果 <span class="keyword">set</span> 是空或者 <span class="keyword">key</span> 不存在返回 <span class="number">0</span></span><br><span class="line">	</span><br><span class="line">	sismember <span class="keyword">key</span> <span class="keyword">member</span>	#判断 <span class="keyword">member</span> 是否在 <span class="keyword">set</span> 中,存在返回 <span class="number">1</span>,<span class="number">0</span> 表示不存在或者 <span class="keyword">key</span> 不存在</span><br><span class="line">	</span><br><span class="line">	sinter key1 key2...keyN		#返回所有给定 <span class="keyword">key</span> 的交集</span><br><span class="line">	</span><br><span class="line">	sinterstore dstkey key1...keyN		#同 sinter,但是会同时将交集存到 dstkey 下</span><br><span class="line">	</span><br><span class="line">	sunion key1 key2...keyN		#返回所有给定 <span class="keyword">key</span> 的并集</span><br><span class="line">	</span><br><span class="line">	sunionstore dstkey key1...keyN		#同 sunion,并同时保存并集到 dstkey 下</span><br><span class="line">	</span><br><span class="line">	sdiff key1 key2...keyN		#返回所有给定 <span class="keyword">key</span> 的差集</span><br><span class="line">	</span><br><span class="line">	sdiffstore dstkey key1...keyN	#同 sdiff,并同时保存差集到 dstkey 下</span><br><span class="line">	</span><br><span class="line">	smembers <span class="keyword">key</span>	#返回 <span class="keyword">key</span> 对应 <span class="keyword">set</span> 的所有元素,结果是无序的￼</span></span><br></pre></td></tr></table></figure></p>
+		<p>redis本质上一个 key-value数据库，关于key注意以下几点：<br>1、其中key也是字符串类型,但是key中不能包括边界字符。<br>2、由于key不是二进制安全(binary safe)的字符串,所以像”my key”和”mykey\n”这样包含空格和换行的 key 是不允许的。<br>3、redis内部并不限制使用binary字符,这是redis协议限制的。”\r\n”在协议格式中会作为特殊字符。</p>
+<p>关于key的一个格式约定介绍下, object-type:id:field。比如 user:1000:password,blog:xxidxx:title。<br>key的长度最好不要太长，占内存,而且查找时候比短key慢。不过也不推荐过短的key,比如 u:1000:pwd,这的，可读性太差。</p>
+<p>下面是key相关命令：</p>
+<pre><code><span class="title">exits</span> key    
+</code></pre><p>测试指定 key 是否存在,返回 1 表示存在,0 不存在</p>
+<pre><code><span class="tag">del</span> key1 key2..<span class="class">.keyN</span>    
+</code></pre><p>删除给定 key,返回删除 key 的数目,0 表示给定 key 都不存在</p>
+<pre><code><span class="typedef"><span class="keyword">type</span> key</span>
+</code></pre><p>返回给定 key 的 value 类型。返回 none表示不存在,string字符类型,list链表类型,set无序集合类型…</p>
+<pre><code><span class="built_in">keys</span> pattern    
+</code></pre><p>返回匹配指定模式的所有 key,下面给个例子</p>
+<pre><code>randomkey
+</code></pre><p>返回从当前数据库中随机选择的一个 key,如果当前数据库是空的,返回空串</p>
+<pre><code><span class="built_in">rename</span> oldkey newkey
+</code></pre><p>原子的重命名一个 key,如果 newkey已存在,将会被覆盖,返回 1 表示成功,0 失败。可能是oldkey不存在或者oldkey和newkey相同。</p>
+<pre><code><span class="title">renamenx</span> oldkey newkey
+</code></pre><p>同上,但是如果 newkey 存在返回失败(0)</p>
+<pre><code>dbsize
+</code></pre><p>返回当前数据库的key的数量</p>
+<pre><code>expire key <span class="built_in">seconds</span>
+</code></pre><p>为key指定过期时间，单位是秒，返回1成功,0表示key已经设置过过期时间,或者key不存在</p>
+<pre><code><span class="title">ttl</span> key
+</code></pre><p>返回设置过过期时间的 key 的剩余过期秒数 -1 表示 key 不存在或者没有设置过过期时间</p>
+<pre><code><span class="keyword">select</span> db-<span class="built_in">index</span>
+</code></pre><p>通过索引选择数据库,默认连接的数据库是0,默认数据库数是16个。返回1表示切换连接成功,0表示失败</p>
+<pre><code><span class="keyword">move</span> key <span class="keyword">db</span>-index 
+</code></pre><p>将key从当前数据库移动到指定数据库。返回1成功。0如果key不存在,或者已经在指定数据库中</p>
+<pre><code>flushdb
+</code></pre><p>删除当前数据库中所有 key,此方法不会失败。慎用</p>
+<pre><code>flushall
+</code></pre><p>删除所有数据库中的所有 key,此方法不会失败。更加慎用</p>
+<p>总结：<br>1、关于select db-index,redis默认分割成16个数据库，默认连接到索引为0的数据库，每个数据库都是动态大小的，一开始非常小。分库作用只是提供一个简单的命名空间（namespace），以便将不同用途的数据分开而已，在同一个服务器进行分库不会带来任何效率上的提升。<br>2、关于move key db-index,只要目标数据库中已存在指定的key，不管value为多少都会返回失败。<br>3、关于keys pattern,例子:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">redis&gt; <span class="built_in">set</span> test dsf OKredis&gt; <span class="built_in">set</span> tast dsaf OKredis&gt; <span class="built_in">set</span> tist adff OKredis&gt; keys t*<span class="number">1.</span> <span class="string">"tist"</span><span class="number">2.</span> <span class="string">"tast"</span><span class="number">3.</span> <span class="string">"test"</span>redis&gt; keys t[ia]st</span><br><span class="line"><span class="number">1.</span> <span class="string">"tist"</span><span class="number">2.</span> <span class="string">"tast"</span>redis&gt; keys t?st<span class="number">1.</span> <span class="string">"tist"</span><span class="number">2.</span> <span class="string">"tast"</span><span class="number">3.</span> <span class="string">"test"</span></span><br></pre></td></tr></table></figure></p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -115,7 +145,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/09/06/redis-set/" data-title="redis数据类型-set | CLIMBRAN" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/09/02/redis-keys/" data-title="redis数据类型-keys | CLIMBRAN" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -129,18 +159,18 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/09/06/redis-sorted-set/" title="redis数据类型-sorted set">
+ <a href="/2015/09/02/redis-string/" title="redis数据类型-string">
   <strong>上一篇：</strong><br/>
   <span>
-  redis数据类型-sorted set</span>
+  redis数据类型-string</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/09/06/redis-list/"  title="redis数据类型-list">
+<a href="/2015/09/01/install-redis-in-Mac/"  title="Mac下安装Redis">
  <strong>下一篇：</strong><br/> 
- <span>redis数据类型-list
+ <span>Mac下安装Redis
 </span>
 </a>
 </div>
@@ -149,7 +179,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/09/06/redis-set/" data-title="redis数据类型-set" data-url="http://yoursite.com/2015/09/06/redis-set/"></div>
+	<div class="ds-thread" data-thread-key="2015/09/02/redis-keys/" data-title="redis数据类型-keys" data-url="http://yoursite.com/2015/09/02/redis-keys/"></div>
 </section>
 
 
@@ -179,7 +209,7 @@
 			
 		
 			
-				<li><a href="/tags/java/" title="java">java<sup>7</sup></a></li>
+				<li><a href="/tags/java/" title="java">java<sup>8</sup></a></li>
 			
 		
 			
@@ -228,6 +258,10 @@
 		
 			
 				<li><a href="/tags/git/" title="git">git<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/jsp/" title="jsp">jsp<sup>1</sup></a></li>
 			
 		
 			
