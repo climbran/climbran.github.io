@@ -4,26 +4,29 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>关于领域模型（贫血模型，充血模型） | CLIMBRAN</title>
+    <title>Java异常开销问题 | CLIMBRAN</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="swe">
     
 
     
-    <meta name="description" content="领域模型(domain object)分为4类:失血模型贫血模型 service –&amp;gt; dao –&amp;gt; entity 充血模型 service –&amp;gt; entity &amp;lt;–&amp;gt; dao 胀血模型
-简单来说，失血模型就是纯数据POJO，业务逻辑完全与entity分离；贫血模型domain object中含有与持久化无关的逻辑，不依赖于dao层；充血模型把domain objec">
+    <meta name="description" content="感觉在项目中使用异常进行逻辑控制能使代码逻辑清晰很多，但公司同事应为抛出异常开销的问题一直反对使用异常，最后代码中充斥着大量if else的逻辑判断。
+但是在使用一些第三方框架时发现里面很多逻辑就在用异常进行控制，所以一直对异常开销这个问题存在疑问，抽空度娘，得出结论如下：
+普通异常开销确实很大，但开销不在于异常的抛出，而是在异常对象创建时开销很大。创建异常开销大的原因在于异常基类Throwabl">
 <meta property="og:type" content="article">
-<meta property="og:title" content="关于领域模型（贫血模型，充血模型）">
-<meta property="og:url" content="http://yoursite.com/2015/07/30/about-domain-object/index.html">
+<meta property="og:title" content="Java异常开销问题">
+<meta property="og:url" content="http://yoursite.com/2015/07/29/java-exception-performance/index.html">
 <meta property="og:site_name" content="CLIMBRAN">
-<meta property="og:description" content="领域模型(domain object)分为4类:失血模型贫血模型 service –&amp;gt; dao –&amp;gt; entity 充血模型 service –&amp;gt; entity &amp;lt;–&amp;gt; dao 胀血模型
-简单来说，失血模型就是纯数据POJO，业务逻辑完全与entity分离；贫血模型domain object中含有与持久化无关的逻辑，不依赖于dao层；充血模型把domain objec">
-<meta property="og:updated_time" content="2015-08-16T17:21:41.000Z">
+<meta property="og:description" content="感觉在项目中使用异常进行逻辑控制能使代码逻辑清晰很多，但公司同事应为抛出异常开销的问题一直反对使用异常，最后代码中充斥着大量if else的逻辑判断。
+但是在使用一些第三方框架时发现里面很多逻辑就在用异常进行控制，所以一直对异常开销这个问题存在疑问，抽空度娘，得出结论如下：
+普通异常开销确实很大，但开销不在于异常的抛出，而是在异常对象创建时开销很大。创建异常开销大的原因在于异常基类Throwabl">
+<meta property="og:updated_time" content="2015-09-06T06:22:11.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="关于领域模型（贫血模型，充血模型）">
-<meta name="twitter:description" content="领域模型(domain object)分为4类:失血模型贫血模型 service –&amp;gt; dao –&amp;gt; entity 充血模型 service –&amp;gt; entity &amp;lt;–&amp;gt; dao 胀血模型
-简单来说，失血模型就是纯数据POJO，业务逻辑完全与entity分离；贫血模型domain object中含有与持久化无关的逻辑，不依赖于dao层；充血模型把domain objec">
+<meta name="twitter:title" content="Java异常开销问题">
+<meta name="twitter:description" content="感觉在项目中使用异常进行逻辑控制能使代码逻辑清晰很多，但公司同事应为抛出异常开销的问题一直反对使用异常，最后代码中充斥着大量if else的逻辑判断。
+但是在使用一些第三方框架时发现里面很多逻辑就在用异常进行控制，所以一直对异常开销这个问题存在疑问，抽空度娘，得出结论如下：
+普通异常开销确实很大，但开销不在于异常的抛出，而是在异常对象创建时开销很大。创建异常开销大的原因在于异常基类Throwabl">
 
     
     <link rel="alternative" href="/atom.xml" title="CLIMBRAN" type="application/atom+xml">
@@ -83,27 +86,29 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/07/30/about-domain-object/" title="关于领域模型（贫血模型，充血模型）" itemprop="url">关于领域模型（贫血模型，充血模型）</a>
+      <a href="/2015/07/29/java-exception-performance/" title="Java异常开销问题" itemprop="url">Java异常开销问题</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
 		
   <p class="article-time">
-    <time datetime="2015-07-30T11:31:51.000Z" itemprop="datePublished"> 发表于 2015-07-30</time>
+    <time datetime="2015-07-29T06:08:10.000Z" itemprop="datePublished"> 发表于 2015-07-29</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
-		<p>领域模型(domain object)分为4类:<br><br>失血模型<br><br>贫血模型 service –&gt; dao –&gt; entity <br><br>充血模型 service –&gt; entity &lt;–&gt; dao <br><br>胀血模型<br></p>
-<p>简单来说，失血模型就是纯数据POJO，业务逻辑完全与entity分离；贫血模型domain object中含有与持久化无关的逻辑，不依赖于dao层；充血模型把domain object和business object合二为一，service层不依赖dao层，而entity层与dao层形成双向依赖；胀血模型直接取消service层，只剩下entity层与dao层。</p>
-<p>由于今年才开始做web开发，之前对各种模型完全没有了解，项目中的模型是由自己瞎摸索出来的。现在总结来看，应该属于贫血模型，但是把大量service层的业务逻辑推到controller层实现，这种方式前期开发相当迅速，但是后期发现严重影响代码重用，不同controller里存在大量重复代码，导致需求更改时需要修改多个controller，影响项目维护。</p>
-<p>我感觉目前使用的模型适合小项目的快速开发，但对于大点的项目还是传统的贫血模型更合适。</p>
-<p>附：不同模型的优缺点<br><br>一、贫血模型<br><br>优点：<br><br>1、各层单向依赖，结构清楚，易于实现和维护<br><br>2、设计简单易行，底层模型非常稳定<br><br>3、非常适合于软件外包和大规模软件团队的协作。每个编程个体只需要负责单一职责的小对象模块编写，不会互相影响。<br><br>缺点：<br><br>1、domain object的部分比较紧密依赖的持久化domain logic被分离到Service层，显得不够OO<br><br>2、Service层过于厚重<br><br>3、可复用的颗粒度比较 小，代码量膨胀的很厉害，最重要的是业务逻辑的描述能力比较差，一个稍微复杂的业务逻辑，就需要太多类和太多代码去表达<br><br>4、对象协作依赖于外部容器的组装，因此裸写代码是不可能的了，必须借助于外部的IoC容器。<br></p>
-<p>二、充血模型<br><br>优点：<br><br>1、更加符合OO的原则。<br>2、对象自洽程度很高，表达能力很强，因此非常适合于复杂的企业业务逻辑的实现，以及可复用程度比较高。<br><br>3、Service层很薄，只充当Facade的角色，不和DAO打交道。<br><br>4、不必依赖外部容器的组装，所以RoR没有IoC的概念。<br><br>缺点：<br><br>1、DAO和domain object形成了双向依赖，复杂的双向依赖会导致很多潜在的问题。<br><br>2、如何划分Service层逻辑和domain层逻辑是非常含混的，在实际项目中，由于设计和开发人员的水平差异，可能导致整个结构的混乱无序。<br><br>3、考虑到Service层的事务封装特性，Service层必须对所有的domain object的逻辑提供相应的事务封装方法，其结果就是Service完全重定义一遍所有的domain logic，非常烦琐，而且Service的事务化封装其意义就等于把OO的domain logic转换为过程的Service TransactionScript。该充血模型辛辛苦苦在domain层实现的OO在Service层又变成了过程式，对于Web层程序员的角度来看，和贫血模型没有什么区别了。<br><br>4、对象高度自洽的结果是不利于大规模团队分工协作。一个编程个体至少要完成一个完整业务逻辑的功能。对于单个完整业务逻辑，无法再细分下去了。<br></p>
-<p>三、胀血模型<br><br>优点：<br><br>1、简化了分层<br><br>2、也算符合OO<br><br>缺点：<br><br>1、很多不是domain logic的service逻辑也被强行放入domain object ，引起了domain ojbect模型的不稳定<br><br>2、domain object暴露给web层过多的信息，可能引起意想不到的副作用。<br></p>
-<p>参考：<br><br><a href="http://www.cnblogs.com/magiccode1023/archive/2012/11/06/2756234.html" target="_blank" rel="external">关于架构设计的“贫血模型”与“充血模型”</a><br><br><a href="http://www.oschina.net/question/54100_10400" target="_blank" rel="external">［转帖］贫血、充血模型的解释以及一些经验</a></p>
+		<p>感觉在项目中使用异常进行逻辑控制能使代码逻辑清晰很多，但公司同事应为抛出异常开销的问题一直反对使用异常，最后代码中充斥着大量if else的逻辑判断。</p>
+<p>但是在使用一些第三方框架时发现里面很多逻辑就在用异常进行控制，所以一直对异常开销这个问题存在疑问，抽空度娘，得出结论如下：</p>
+<p>普通异常开销确实很大，但开销不在于异常的抛出，而是在异常对象创建时开销很大。<br>创建异常开销大的原因在于异常基类Throwable.java的public synchronized native Throwable fillInStackTrace()方法。</p>
+<p>方法介绍:<br>Fills in the execution stack trace. This method records within this Throwable object information about the current state of the stack frames for the current thread.<br>性能开销在于:</p>
+<ol>
+<li>是一个synchronized方法(主因)</li>
+<li>需要填充线程运行堆栈信息</li>
+</ol>
+<p>解决方法：<br>自定义异常继承Exception，并重写fillInStackTrace()<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Throwable <span class="title">fillInStackTrace</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>以该异常作为逻辑控制的异常的基类，那么异常性能将大幅度提高，和if else开销相近。</p>
+<p>参考：<a href="http://www.blogjava.net/stone2083/archive/2010/07/09/325649.html" target="_blank" rel="external">java异常性能问题</a></p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -112,7 +117,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/web/">web</a>
+  <span></span> <a href="/tags/java/">java</a>
   </div>
 
 </div>
@@ -121,7 +126,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/07/30/about-domain-object/" data-title="关于领域模型（贫血模型，充血模型） | CLIMBRAN" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/07/29/java-exception-performance/" data-title="Java异常开销问题 | CLIMBRAN" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -135,18 +140,18 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/08/01/a-iterator-achieved/" title="Iterator的实现">
+ <a href="/2015/07/30/about-domain-object/" title="关于领域模型（贫血模型，充血模型）">
   <strong>上一篇：</strong><br/>
   <span>
-  Iterator的实现</span>
+  关于领域模型（贫血模型，充血模型）</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/07/29/java-exception-performance/"  title="Java异常开销问题">
+<a href="/2015/07/23/database-design-model/"  title="数据库四种设计模式">
  <strong>下一篇：</strong><br/> 
- <span>Java异常开销问题
+ <span>数据库四种设计模式
 </span>
 </a>
 </div>
@@ -155,7 +160,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/07/30/about-domain-object/" data-title="关于领域模型（贫血模型，充血模型）" data-url="http://yoursite.com/2015/07/30/about-domain-object/"></div>
+	<div class="ds-thread" data-thread-key="2015/07/29/java-exception-performance/" data-title="Java异常开销问题" data-url="http://yoursite.com/2015/07/29/java-exception-performance/"></div>
 </section>
 
 
