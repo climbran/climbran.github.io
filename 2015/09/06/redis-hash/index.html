@@ -4,29 +4,23 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Java异常开销问题 | CLIMBRAN</title>
+    <title>redis数据类型-hash | CLIMBRAN</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="swe">
     
 
     
-    <meta name="description" content="感觉在项目中使用异常进行逻辑控制能使代码逻辑清晰很多，但公司同事应为抛出异常开销的问题一直反对使用异常，最后代码中充斥着大量if else的逻辑判断。
-但是在使用一些第三方框架时发现里面很多逻辑就在用异常进行控制，所以一直对异常开销这个问题存在疑问，抽空度娘，得出结论如下：
-普通异常开销确实很大，但开销不在于异常的抛出，而是在异常对象创建时开销很大。创建异常开销大的原因在于异常基类Throwabl">
+    <meta name="description" content="1、redishash是一个string类型的field和value的映射表。2、hash特别适合用于存储对象。相较于将对象的每个字段存成单个 string 类型。将一个对象存储在hash类 型中会占用更少的内存,并且可以更方便的存取整个对象。3、新建一个 hash 对象时开始是用 zipmap(又称为 small hash)来存储的。4、如果 field 或者 value 的大小超出一定限制后,">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java异常开销问题">
-<meta property="og:url" content="http://yoursite.com/2015/07/29/java-exception-performance/index.html">
+<meta property="og:title" content="redis数据类型-hash">
+<meta property="og:url" content="http://yoursite.com/2015/09/06/redis-hash/index.html">
 <meta property="og:site_name" content="CLIMBRAN">
-<meta property="og:description" content="感觉在项目中使用异常进行逻辑控制能使代码逻辑清晰很多，但公司同事应为抛出异常开销的问题一直反对使用异常，最后代码中充斥着大量if else的逻辑判断。
-但是在使用一些第三方框架时发现里面很多逻辑就在用异常进行控制，所以一直对异常开销这个问题存在疑问，抽空度娘，得出结论如下：
-普通异常开销确实很大，但开销不在于异常的抛出，而是在异常对象创建时开销很大。创建异常开销大的原因在于异常基类Throwabl">
-<meta property="og:updated_time" content="2015-09-06T06:22:11.000Z">
+<meta property="og:description" content="1、redishash是一个string类型的field和value的映射表。2、hash特别适合用于存储对象。相较于将对象的每个字段存成单个 string 类型。将一个对象存储在hash类 型中会占用更少的内存,并且可以更方便的存取整个对象。3、新建一个 hash 对象时开始是用 zipmap(又称为 small hash)来存储的。4、如果 field 或者 value 的大小超出一定限制后,">
+<meta property="og:updated_time" content="2015-09-06T08:40:05.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java异常开销问题">
-<meta name="twitter:description" content="感觉在项目中使用异常进行逻辑控制能使代码逻辑清晰很多，但公司同事应为抛出异常开销的问题一直反对使用异常，最后代码中充斥着大量if else的逻辑判断。
-但是在使用一些第三方框架时发现里面很多逻辑就在用异常进行控制，所以一直对异常开销这个问题存在疑问，抽空度娘，得出结论如下：
-普通异常开销确实很大，但开销不在于异常的抛出，而是在异常对象创建时开销很大。创建异常开销大的原因在于异常基类Throwabl">
+<meta name="twitter:title" content="redis数据类型-hash">
+<meta name="twitter:description" content="1、redishash是一个string类型的field和value的映射表。2、hash特别适合用于存储对象。相较于将对象的每个字段存成单个 string 类型。将一个对象存储在hash类 型中会占用更少的内存,并且可以更方便的存取整个对象。3、新建一个 hash 对象时开始是用 zipmap(又称为 small hash)来存储的。4、如果 field 或者 value 的大小超出一定限制后,">
 
     
     <link rel="alternative" href="/atom.xml" title="CLIMBRAN" type="application/atom+xml">
@@ -86,30 +80,45 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/07/29/java-exception-performance/" title="Java异常开销问题" itemprop="url">Java异常开销问题</a>
+      <a href="/2015/09/06/redis-hash/" title="redis数据类型-hash" itemprop="url">redis数据类型-hash</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
 		
   <p class="article-time">
-    <time datetime="2015-07-29T06:08:10.000Z" itemprop="datePublished"> 发表于 2015-07-29</time>
+    <time datetime="2015-09-06T08:28:34.000Z" itemprop="datePublished"> 发表于 2015-09-06</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
-		<p>感觉在项目中使用异常进行逻辑控制能使代码逻辑清晰很多，但公司同事应为抛出异常开销的问题一直反对使用异常，最后代码中充斥着大量if else的逻辑判断。</p>
-<p>但是在使用一些第三方框架时发现里面很多逻辑就在用异常进行控制，所以一直对异常开销这个问题存在疑问，抽空度娘，得出结论如下：</p>
-<p>普通异常开销确实很大，但开销不在于异常的抛出，而是在异常对象创建时开销很大。<br>创建异常开销大的原因在于异常基类Throwable.java的public synchronized native Throwable fillInStackTrace()方法。</p>
-<p>方法介绍:<br>Fills in the execution stack trace. This method records within this Throwable object information about the current state of the stack frames for the current thread.<br>性能开销在于:</p>
-<ol>
-<li>是一个synchronized方法(主因)</li>
-<li>需要填充线程运行堆栈信息</li>
-</ol>
-<p>解决方法：<br>自定义异常继承Exception，并重写fillInStackTrace()<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Throwable <span class="title">fillInStackTrace</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>以该异常作为逻辑控制的异常的基类，那么异常性能将大幅度提高，和if else开销相近。</p>
-<p>参考：<a href="http://www.blogjava.net/stone2083/archive/2010/07/09/325649.html" target="_blank" rel="external">java异常性能问题</a></p>
-  
+		<p>1、redishash是一个string类型的field和value的映射表。<br>2、hash特别适合用于存储对象。相较于将对象的每个字段存成单个 string 类型。将一个对象存储在hash类 型中会占用更少的内存,并且可以更方便的存取整个对象。<br>3、新建一个 hash 对象时开始是用 zipmap(又称为 small hash)来存储的。<br>4、如果 field 或者 value 的大小超出一定限制后,redis会在内部自动将zipmap替换成正常的 hash 实现. 这个限制可以在配置文件中指定：</p>
+<pre><code>hash-max-zipmap-entries <span class="number">64</span> <span class="preprocessor">#配置字段最多 <span class="number">64</span> 个</span>
+hash-max-zipmap-value <span class="number">512</span> <span class="preprocessor">#配置 value 最大为 <span class="number">512</span> 字节</span>
+</code></pre><p>下面介绍 hash 相关命令：</p>
+<pre><code>hset <span class="keyword">key</span> field value    <span class="preprocessor">#设置 hash field 为指定值,如果 key 不存在,则先创建</span>
+
+hget <span class="keyword">key</span> field        <span class="preprocessor">#获取指定的 hash field</span>
+
+hmget <span class="keyword">key</span> filed1....fieldN        <span class="preprocessor">#获取全部指定的 hash filed</span>
+
+hmset <span class="keyword">key</span> filed1 value1 ... filedN valueN        <span class="preprocessor">#同时设置 hash 的多个 field</span>
+
+hincrby <span class="keyword">key</span> field <span class="built_in">integer</span>        <span class="preprocessor">#将指定的 hash filed 加上给定值</span>
+
+hexists <span class="keyword">key</span> field        <span class="preprocessor">#测试指定 field 是否存在</span>
+
+hdel <span class="keyword">key</span> field        <span class="preprocessor">#删除指定的 hash field</span>
+
+hlen <span class="keyword">key</span>    <span class="preprocessor">#返回指定 hash 的 field 数量</span>
+
+hkeys <span class="keyword">key</span>    <span class="preprocessor">#返回 hash 的所有 field</span>
+
+hvals <span class="keyword">key</span>    <span class="preprocessor">#返回 hash 的所有 value</span>
+
+hgetall <span class="keyword">key</span>        <span class="preprocessor">#返回 hash 的所有 filed 和 value</span>
+</code></pre>  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
@@ -117,7 +126,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/java/">java</a>
+  <span></span> <a href="/tags/Redis/">Redis</a>
   </div>
 
 </div>
@@ -126,7 +135,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/07/29/java-exception-performance/" data-title="Java异常开销问题 | CLIMBRAN" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/09/06/redis-hash/" data-title="redis数据类型-hash | CLIMBRAN" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -139,19 +148,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/07/30/about-domain-object/" title="关于领域模型（贫血模型，充血模型）">
-  <strong>上一篇：</strong><br/>
-  <span>
-  关于领域模型（贫血模型，充血模型）</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/07/23/database-design-model/"  title="数据库四种设计模式">
+<a href="/2015/09/06/redis-sorted-set/"  title="redis数据类型-sorted set">
  <strong>下一篇：</strong><br/> 
- <span>数据库四种设计模式
+ <span>redis数据类型-sorted set
 </span>
 </a>
 </div>
@@ -160,7 +161,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/07/29/java-exception-performance/" data-title="Java异常开销问题" data-url="http://yoursite.com/2015/07/29/java-exception-performance/"></div>
+	<div class="ds-thread" data-thread-key="2015/09/06/redis-hash/" data-title="redis数据类型-hash" data-url="http://yoursite.com/2015/09/06/redis-hash/"></div>
 </section>
 
 

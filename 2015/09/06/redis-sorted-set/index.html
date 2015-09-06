@@ -4,29 +4,26 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Java异常开销问题 | CLIMBRAN</title>
+    <title>redis数据类型-sorted set | CLIMBRAN</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="swe">
     
 
     
-    <meta name="description" content="感觉在项目中使用异常进行逻辑控制能使代码逻辑清晰很多，但公司同事应为抛出异常开销的问题一直反对使用异常，最后代码中充斥着大量if else的逻辑判断。
-但是在使用一些第三方框架时发现里面很多逻辑就在用异常进行控制，所以一直对异常开销这个问题存在疑问，抽空度娘，得出结论如下：
-普通异常开销确实很大，但开销不在于异常的抛出，而是在异常对象创建时开销很大。创建异常开销大的原因在于异常基类Throwabl">
+    <meta name="description" content="1、set 一样,sorted set 也是 string 类型元素的集合,不同的是每个元素都会关联一个 double 类型的 score。2、sorted set 的实现是 skip list 和 hash table 的混合体。3、sorted set 最经常的使用方式应该是作为索引来使用。我们可以把要排序的字段作为 score 存储,对象的 id 当元素存储。
+下面是 sorted set">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java异常开销问题">
-<meta property="og:url" content="http://yoursite.com/2015/07/29/java-exception-performance/index.html">
+<meta property="og:title" content="redis数据类型-sorted set">
+<meta property="og:url" content="http://yoursite.com/2015/09/06/redis-sorted-set/index.html">
 <meta property="og:site_name" content="CLIMBRAN">
-<meta property="og:description" content="感觉在项目中使用异常进行逻辑控制能使代码逻辑清晰很多，但公司同事应为抛出异常开销的问题一直反对使用异常，最后代码中充斥着大量if else的逻辑判断。
-但是在使用一些第三方框架时发现里面很多逻辑就在用异常进行控制，所以一直对异常开销这个问题存在疑问，抽空度娘，得出结论如下：
-普通异常开销确实很大，但开销不在于异常的抛出，而是在异常对象创建时开销很大。创建异常开销大的原因在于异常基类Throwabl">
-<meta property="og:updated_time" content="2015-09-06T06:22:11.000Z">
+<meta property="og:description" content="1、set 一样,sorted set 也是 string 类型元素的集合,不同的是每个元素都会关联一个 double 类型的 score。2、sorted set 的实现是 skip list 和 hash table 的混合体。3、sorted set 最经常的使用方式应该是作为索引来使用。我们可以把要排序的字段作为 score 存储,对象的 id 当元素存储。
+下面是 sorted set">
+<meta property="og:updated_time" content="2015-09-06T08:28:03.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java异常开销问题">
-<meta name="twitter:description" content="感觉在项目中使用异常进行逻辑控制能使代码逻辑清晰很多，但公司同事应为抛出异常开销的问题一直反对使用异常，最后代码中充斥着大量if else的逻辑判断。
-但是在使用一些第三方框架时发现里面很多逻辑就在用异常进行控制，所以一直对异常开销这个问题存在疑问，抽空度娘，得出结论如下：
-普通异常开销确实很大，但开销不在于异常的抛出，而是在异常对象创建时开销很大。创建异常开销大的原因在于异常基类Throwabl">
+<meta name="twitter:title" content="redis数据类型-sorted set">
+<meta name="twitter:description" content="1、set 一样,sorted set 也是 string 类型元素的集合,不同的是每个元素都会关联一个 double 类型的 score。2、sorted set 的实现是 skip list 和 hash table 的混合体。3、sorted set 最经常的使用方式应该是作为索引来使用。我们可以把要排序的字段作为 score 存储,对象的 id 当元素存储。
+下面是 sorted set">
 
     
     <link rel="alternative" href="/atom.xml" title="CLIMBRAN" type="application/atom+xml">
@@ -86,30 +83,47 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/07/29/java-exception-performance/" title="Java异常开销问题" itemprop="url">Java异常开销问题</a>
+      <a href="/2015/09/06/redis-sorted-set/" title="redis数据类型-sorted set" itemprop="url">redis数据类型-sorted set</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
 		
   <p class="article-time">
-    <time datetime="2015-07-29T06:08:10.000Z" itemprop="datePublished"> 发表于 2015-07-29</time>
+    <time datetime="2015-09-06T08:13:04.000Z" itemprop="datePublished"> 发表于 2015-09-06</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
-		<p>感觉在项目中使用异常进行逻辑控制能使代码逻辑清晰很多，但公司同事应为抛出异常开销的问题一直反对使用异常，最后代码中充斥着大量if else的逻辑判断。</p>
-<p>但是在使用一些第三方框架时发现里面很多逻辑就在用异常进行控制，所以一直对异常开销这个问题存在疑问，抽空度娘，得出结论如下：</p>
-<p>普通异常开销确实很大，但开销不在于异常的抛出，而是在异常对象创建时开销很大。<br>创建异常开销大的原因在于异常基类Throwable.java的public synchronized native Throwable fillInStackTrace()方法。</p>
-<p>方法介绍:<br>Fills in the execution stack trace. This method records within this Throwable object information about the current state of the stack frames for the current thread.<br>性能开销在于:</p>
-<ol>
-<li>是一个synchronized方法(主因)</li>
-<li>需要填充线程运行堆栈信息</li>
-</ol>
-<p>解决方法：<br>自定义异常继承Exception，并重写fillInStackTrace()<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Throwable <span class="title">fillInStackTrace</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>以该异常作为逻辑控制的异常的基类，那么异常性能将大幅度提高，和if else开销相近。</p>
-<p>参考：<a href="http://www.blogjava.net/stone2083/archive/2010/07/09/325649.html" target="_blank" rel="external">java异常性能问题</a></p>
-  
+		<p>1、set 一样,sorted set 也是 string 类型元素的集合,不同的是每个元素都会关联一个 double 类型的 score。<br>2、sorted set 的实现是 skip list 和 hash table 的混合体。<br>3、sorted set 最经常的使用方式应该是作为索引来使用。我们可以把要排序的字段作为 score 存储,对象的 id 当元素存储。</p>
+<p>下面是 sorted set 相关命令:</p>
+<pre><code>zadd <span class="variable">key</span> score member    <span class="comment">//添加元素到集合,元素在集合中存在则更新对应 score</span>
+
+zrem <span class="variable">key</span> member        <span class="comment">//删除指定元素,1 表示成功,如果元素不存在返回 0</span>
+
+zincrby <span class="variable">key</span> incr member        <span class="comment">//增加对应 member 的 score 值,然后移动元素并保持 skip list 保持有序。返回更新后的 score 值</span>
+
+zrank <span class="variable">key</span> member    <span class="comment">//返回指定元素在集合中的排名(下标),集合中元素是按 score 从小到大排序的</span>
+
+zrevrank <span class="variable">key</span> member        <span class="comment">//同上,但是集合中元素是按 score 从大到小排序</span>
+
+zrange <span class="variable">key</span> start end    <span class="comment">//类似 lrange 操作从集合中去指定区间的元素。返回的是有序结果</span>
+
+zrevrange <span class="variable">key</span> start end        <span class="comment">//同上,返回结果是按 score 逆序的</span>
+
+zrangebyscore <span class="variable">key</span> <span class="built_in">min</span> <span class="built_in">max</span>    <span class="comment">//返回集合中 score 在给定区间的元素</span>
+
+zcount <span class="variable">key</span> <span class="built_in">min</span> <span class="built_in">max</span>        <span class="comment">//返回集合中 score 在给定区间的数量</span>
+
+zcard <span class="variable">key</span>        <span class="comment">//返回集合中元素个数</span>
+
+zscore <span class="variable">key</span> element        <span class="comment">//返回给定元素对应的 score</span>
+
+zremrangebyrank <span class="variable">key</span> <span class="built_in">min</span> <span class="built_in">max</span>        <span class="comment">//删除集合中排名在给定区间的元素</span>
+
+zremrangebyscore <span class="variable">key</span> <span class="built_in">min</span> <span class="built_in">max</span>    <span class="comment">//删除集合中 score 在给定区间的元素</span>
+</code></pre>  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
@@ -117,7 +131,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/java/">java</a>
+  <span></span> <a href="/tags/Redis/">Redis</a>
   </div>
 
 </div>
@@ -126,7 +140,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/07/29/java-exception-performance/" data-title="Java异常开销问题 | CLIMBRAN" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/09/06/redis-sorted-set/" data-title="redis数据类型-sorted set | CLIMBRAN" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -140,18 +154,18 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/07/30/about-domain-object/" title="关于领域模型（贫血模型，充血模型）">
+ <a href="/2015/09/06/redis-hash/" title="redis数据类型-hash">
   <strong>上一篇：</strong><br/>
   <span>
-  关于领域模型（贫血模型，充血模型）</span>
+  redis数据类型-hash</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/07/23/database-design-model/"  title="数据库四种设计模式">
+<a href="/2015/09/06/redis-set/"  title="redis数据类型-set">
  <strong>下一篇：</strong><br/> 
- <span>数据库四种设计模式
+ <span>redis数据类型-set
 </span>
 </a>
 </div>
@@ -160,7 +174,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/07/29/java-exception-performance/" data-title="Java异常开销问题" data-url="http://yoursite.com/2015/07/29/java-exception-performance/"></div>
+	<div class="ds-thread" data-thread-key="2015/09/06/redis-sorted-set/" data-title="redis数据类型-sorted set" data-url="http://yoursite.com/2015/09/06/redis-sorted-set/"></div>
 </section>
 
 

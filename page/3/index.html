@@ -81,6 +81,181 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/07/23/database-design-model/" title="数据库四种设计模式" itemprop="url">数据库四种设计模式</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
+		
+  <p class="article-time">
+    <time datetime="2015-07-23T13:17:26.000Z" itemprop="datePublished"> 发表于 2015-07-23</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>1、主扩展模式<br><br>主扩展模式，通常用来将几个相似的对象的共有属性抽取出来，形成一个“公共属性表”；其余属性则分别形成“专有属性表”，且“公共属性表”与“专有属性表”都是“一对一”的关系。<br><br>感觉主扩展模式适合用于继承关系，“公共属性表”即父类表，“专有属性表”即各个子类各自独有的属性形成的表。主扩展模式用来描述对象内的关系。<br><br><br>2、主从模式<br><br>即对象间的一对多关系，例如学校和班级即一种主从模式。<br><br><br>3、名值模式<br>名值模式，通常用来描述在系统设计阶段不能完全确定属性的对象，这些对象的属性在系统运行时会有很大的变更，或者是多个对象之间的属性存在很大的差异。<br><br>我的理解名值模式就是主扩展模式和多对多模式的混合，将主从模式中的“专有属性表”中列变为一张“属性列表“”中的行。“公共属性表”和“属性列表”为多对多关系，属性值可在映射表中。用来描述对象内的关系。<br>eg:<br><img width="600 " src="/img/database-design-model/1.png"><br><br><br>4、多对多模式<br><br>这个没什么好说的，可分为关联表有独立的业务处理需求（映射表除映射功能还有其他属性）和关联表没有独立的业务处理需求（映射表只有映射功能）。多对多模式描述对象间的关系。<br><br><br>总结：<br><br>以上4种模式其实就是分别描述了对象内的一对一关系、对象内的多对多关系、对象间的一对多关系，对象间的多对多关系，基本能应用所有情况，其他关系有：<br>1、对象内的一对多关系：多方会存在冗余信息，将冗余信息提取到一张表后即转换为名值模式；<br>2、对象间的一对一关系：貌似不存在这种关系，本想如婚姻关系是对象间的一对一关系，但考虑离婚等情况其实也是多对多关系。</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/数据库/">数据库</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/07/23/database-design-model/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/07/23/database-design-model/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/07/11/resource-and-the-representation-of-the-resource/" title="关于资源和表述" itemprop="url">关于资源和表述</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
+		
+  <p class="article-time">
+    <time datetime="2015-07-11T13:44:26.000Z" itemprop="datePublished"> 发表于 2015-07-11</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>最早通过在网上资料学习restful时，，都是说每个url代表一个资源(resource)，在项目设计时，会发现有时候为一个资源设计url时会发生冲突。<br><br><br>比如一个教育系统中有老师和学生两种类型账号，一个班级的url为/class，而在老师账号中还有一个班级管理模块，同样使用的班级这一资源，但/class这一url已被使用。<br><br><br>后来突然想到我们是不是能把浏览的班级和老师的班级管理模块当成两种不同资源？于是设计成了</p>
+<p><pre><br>/class        // 班级资源<br>/classmgr     //班级管理资源<br></pre><br>最近看《restful web APIs》时看到表述(representation of the resource)一词，突然顿悟到到其实上面两个url对应的是同一个资源的两个不同表述。每个url代表一个资源的说法也并没错，每个资源可以有多个表述，url和资源是多对一关系。在客户端看来，不同url获取的是不同表述，但最终定位的可能是同一资源。</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/restful/">restful</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/07/11/resource-and-the-representation-of-the-resource/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/07/11/resource-and-the-representation-of-the-resource/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/06/18/remove-element-in-foreach/" title="在foreach循环中移除元素的方法" itemprop="url">在foreach循环中移除元素的方法</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
+		
+  <p class="article-time">
+    <time datetime="2015-06-18T03:18:18.000Z" itemprop="datePublished"> 发表于 2015-06-18</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>foreach循环中无法直接对Iterable中的元素进行remove，可以通过下面方式实现:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(String s : <span class="keyword">new</span> ArrayList&lt;String&gt;().addAll(list))&#123; <span class="comment">//list为一个List&lt;String&gt;</span></span><br><span class="line">	<span class="keyword">if</span>(s.equals(<span class="string">"need remove"</span>))</span><br><span class="line">		list.remove(s);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/java/">java</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/06/18/remove-element-in-foreach/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/18/remove-element-in-foreach/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/05/29/static-block/" title="static块" itemprop="url">static块</a>
   </h1>
   <p class="article-author">By
@@ -495,125 +670,9 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/03/20/brew-install/" title="brew安装" itemprop="url">brew安装</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
-		
-  <p class="article-time">
-    <time datetime="2015-03-20T07:13:35.000Z" itemprop="datePublished"> 发表于 2015-03-20</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>网上找了好多brew的安装方式，结果都是太旧的方法，无法安装，后来发现其实直接去官方网站就有最新的安装方式，<a href="http://brew.sh/" target="_blank" rel="external">传送门</a></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/mac-os/">mac os</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/03/20/brew-install/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/03/20/brew-install/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/03/17/linux-rename-file/" title="linux下文件重命名" itemprop="url">linux下文件重命名</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
-		
-  <p class="article-time">
-    <time datetime="2015-03-17T02:00:37.000Z" itemprop="datePublished"> 发表于 2015-03-17</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <pre><code>mv oldname<span class="class">.c</span> newname<span class="class">.c</span>  
-</code></pre>
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/linux/">linux</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/03/17/linux-rename-file/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/03/17/linux-rename-file/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
-    <a class="extend prev" rel="prev" href="/page/2/"><span></span>Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+    <a class="extend prev" rel="prev" href="/page/2/"><span></span>Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/4/">Next<span></span></a>
   </nav>
 
 </div>
@@ -631,15 +690,15 @@
 		<ul class="clearfix">
 		
 			
+				<li><a href="/tags/Redis/" title="Redis">Redis<sup>8</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/java/" title="java">java<sup>7</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>6</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Redis/" title="Redis">Redis<sup>5</sup></a></li>
 			
 		
 			
