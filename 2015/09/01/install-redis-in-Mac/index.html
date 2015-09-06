@@ -4,23 +4,53 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>在foreach循环中移除元素的方法 | CLIMBRAN</title>
+    <title>Mac下安装Redis | CLIMBRAN</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="swe">
     
 
     
-    <meta name="description" content="foreach循环中无法直接对Iterable中的元素进行remove，可以通过下面方式实现:1234for(String s : new ArrayList&amp;lt;String&amp;gt;().addAll(list))&amp;#123; //list为一个List&amp;lt;String&amp;gt;	if(s.equals(&quot;need remove&quot;))		list.remove(s);&amp;#125;">
+    <meta name="description" content="http://redis.io/download下载最新的Redis版本，我下载的是3.0.3下载后将文件解压，通过进入文件夹
+cd redis-3.0.3
+执行
+make install
+Redis就安装好了，下面是启动指令：
+#启动 加上‘&amp;amp;’使redis能在后台运行
+src/redis-service &amp;amp;
+#关闭
+src/redis-cli shutdown
+测试
+local">
 <meta property="og:type" content="article">
-<meta property="og:title" content="在foreach循环中移除元素的方法">
-<meta property="og:url" content="http://yoursite.com/2015/06/18/remove-element-in-foreach/index.html">
+<meta property="og:title" content="Mac下安装Redis">
+<meta property="og:url" content="http://yoursite.com/2015/09/01/install-redis-in-Mac/index.html">
 <meta property="og:site_name" content="CLIMBRAN">
-<meta property="og:description" content="foreach循环中无法直接对Iterable中的元素进行remove，可以通过下面方式实现:1234for(String s : new ArrayList&amp;lt;String&amp;gt;().addAll(list))&amp;#123; //list为一个List&amp;lt;String&amp;gt;	if(s.equals(&quot;need remove&quot;))		list.remove(s);&amp;#125;">
-<meta property="og:updated_time" content="2015-08-28T06:23:24.000Z">
+<meta property="og:description" content="http://redis.io/download下载最新的Redis版本，我下载的是3.0.3下载后将文件解压，通过进入文件夹
+cd redis-3.0.3
+执行
+make install
+Redis就安装好了，下面是启动指令：
+#启动 加上‘&amp;amp;’使redis能在后台运行
+src/redis-service &amp;amp;
+#关闭
+src/redis-cli shutdown
+测试
+local">
+<meta property="og:updated_time" content="2015-09-06T01:57:09.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="在foreach循环中移除元素的方法">
-<meta name="twitter:description" content="foreach循环中无法直接对Iterable中的元素进行remove，可以通过下面方式实现:1234for(String s : new ArrayList&amp;lt;String&amp;gt;().addAll(list))&amp;#123; //list为一个List&amp;lt;String&amp;gt;	if(s.equals(&quot;need remove&quot;))		list.remove(s);&amp;#125;">
+<meta name="twitter:title" content="Mac下安装Redis">
+<meta name="twitter:description" content="http://redis.io/download下载最新的Redis版本，我下载的是3.0.3下载后将文件解压，通过进入文件夹
+cd redis-3.0.3
+执行
+make install
+Redis就安装好了，下面是启动指令：
+#启动 加上‘&amp;amp;’使redis能在后台运行
+src/redis-service &amp;amp;
+#关闭
+src/redis-cli shutdown
+测试
+local">
 
     
     <link rel="alternative" href="/atom.xml" title="CLIMBRAN" type="application/atom+xml">
@@ -80,21 +110,35 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/06/18/remove-element-in-foreach/" title="在foreach循环中移除元素的方法" itemprop="url">在foreach循环中移除元素的方法</a>
+      <a href="/2015/09/01/install-redis-in-Mac/" title="Mac下安装Redis" itemprop="url">Mac下安装Redis</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
 		
   <p class="article-time">
-    <time datetime="2015-06-18T03:18:18.000Z" itemprop="datePublished"> 发表于 2015-06-18</time>
+    <time datetime="2015-09-01T11:34:08.000Z" itemprop="datePublished"> 发表于 2015-09-01</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
-		<p>foreach循环中无法直接对Iterable中的元素进行remove，可以通过下面方式实现:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(String s : <span class="keyword">new</span> ArrayList&lt;String&gt;().addAll(list))&#123; <span class="comment">//list为一个List&lt;String&gt;</span></span><br><span class="line">	<span class="keyword">if</span>(s.equals(<span class="string">"need remove"</span>))</span><br><span class="line">		list.remove(s);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-  
+		<p><a href="http://redis.io/download" target="_blank" rel="external">http://redis.io/download</a><br>下载最新的Redis版本，我下载的是3.0.3<br>下载后将文件解压，通过进入文件夹</p>
+<pre><code>cd redis-<span class="number">3.0</span><span class="number">.3</span>
+</code></pre><p>执行</p>
+<pre><code>make <span class="keyword">install</span>
+</code></pre><p>Redis就安装好了，下面是启动指令：</p>
+<pre><code><span class="preprocessor">#启动 加上‘&amp;’使redis能在后台运行</span>
+src/redis-service &amp;
+<span class="preprocessor">#关闭</span>
+src/redis-cli shutdown
+</code></pre><p>测试</p>
+<pre><code>localhost:redis-<span class="number">3.0</span><span class="number">.3</span> ywq$ src/redis-cli 
+<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span>&gt; <span class="built_in">set</span> foo test
+OK
+<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span>&gt; get foo
+<span class="string">"test"</span>
+</code></pre>  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
@@ -102,7 +146,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/java/">java</a>
+  <span></span> <a href="/tags/Redis/">Redis</a>
   </div>
 
 </div>
@@ -111,7 +155,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/06/18/remove-element-in-foreach/" data-title="在foreach循环中移除元素的方法 | CLIMBRAN" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/09/01/install-redis-in-Mac/" data-title="Mac下安装Redis | CLIMBRAN" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -124,19 +168,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/07/11/resource-and-the-representation-of-the-resource/" title="关于资源和表述">
-  <strong>上一篇：</strong><br/>
-  <span>
-  关于资源和表述</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/05/29/static-block/"  title="static块">
+<a href="/2015/08/31/java-RTTI/"  title="Java RTTI学习">
  <strong>下一篇：</strong><br/> 
- <span>static块
+ <span>Java RTTI学习
 </span>
 </a>
 </div>
@@ -145,7 +181,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/06/18/remove-element-in-foreach/" data-title="在foreach循环中移除元素的方法" data-url="http://yoursite.com/2015/06/18/remove-element-in-foreach/"></div>
+	<div class="ds-thread" data-thread-key="2015/09/01/install-redis-in-Mac/" data-title="Mac下安装Redis" data-url="http://yoursite.com/2015/09/01/install-redis-in-Mac/"></div>
 </section>
 
 

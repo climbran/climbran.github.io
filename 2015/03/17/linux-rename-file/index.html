@@ -4,23 +4,23 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>在foreach循环中移除元素的方法 | CLIMBRAN</title>
+    <title>linux下文件重命名 | CLIMBRAN</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="swe">
     
 
     
-    <meta name="description" content="foreach循环中无法直接对Iterable中的元素进行remove，可以通过下面方式实现:1234for(String s : new ArrayList&amp;lt;String&amp;gt;().addAll(list))&amp;#123; //list为一个List&amp;lt;String&amp;gt;	if(s.equals(&quot;need remove&quot;))		list.remove(s);&amp;#125;">
+    <meta name="description" content="mv oldname.c newname.c">
 <meta property="og:type" content="article">
-<meta property="og:title" content="在foreach循环中移除元素的方法">
-<meta property="og:url" content="http://yoursite.com/2015/06/18/remove-element-in-foreach/index.html">
+<meta property="og:title" content="linux下文件重命名">
+<meta property="og:url" content="http://yoursite.com/2015/03/17/linux-rename-file/index.html">
 <meta property="og:site_name" content="CLIMBRAN">
-<meta property="og:description" content="foreach循环中无法直接对Iterable中的元素进行remove，可以通过下面方式实现:1234for(String s : new ArrayList&amp;lt;String&amp;gt;().addAll(list))&amp;#123; //list为一个List&amp;lt;String&amp;gt;	if(s.equals(&quot;need remove&quot;))		list.remove(s);&amp;#125;">
-<meta property="og:updated_time" content="2015-08-28T06:23:24.000Z">
+<meta property="og:description" content="mv oldname.c newname.c">
+<meta property="og:updated_time" content="2015-09-06T02:02:37.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="在foreach循环中移除元素的方法">
-<meta name="twitter:description" content="foreach循环中无法直接对Iterable中的元素进行remove，可以通过下面方式实现:1234for(String s : new ArrayList&amp;lt;String&amp;gt;().addAll(list))&amp;#123; //list为一个List&amp;lt;String&amp;gt;	if(s.equals(&quot;need remove&quot;))		list.remove(s);&amp;#125;">
+<meta name="twitter:title" content="linux下文件重命名">
+<meta name="twitter:description" content="mv oldname.c newname.c">
 
     
     <link rel="alternative" href="/atom.xml" title="CLIMBRAN" type="application/atom+xml">
@@ -80,21 +80,21 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/06/18/remove-element-in-foreach/" title="在foreach循环中移除元素的方法" itemprop="url">在foreach循环中移除元素的方法</a>
+      <a href="/2015/03/17/linux-rename-file/" title="linux下文件重命名" itemprop="url">linux下文件重命名</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
 		
   <p class="article-time">
-    <time datetime="2015-06-18T03:18:18.000Z" itemprop="datePublished"> 发表于 2015-06-18</time>
+    <time datetime="2015-03-17T02:00:37.000Z" itemprop="datePublished"> 发表于 2015-03-17</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
-		<p>foreach循环中无法直接对Iterable中的元素进行remove，可以通过下面方式实现:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(String s : <span class="keyword">new</span> ArrayList&lt;String&gt;().addAll(list))&#123; <span class="comment">//list为一个List&lt;String&gt;</span></span><br><span class="line">	<span class="keyword">if</span>(s.equals(<span class="string">"need remove"</span>))</span><br><span class="line">		list.remove(s);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-  
+		<pre><code>mv oldname<span class="class">.c</span> newname<span class="class">.c</span>  
+</code></pre>  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
@@ -102,7 +102,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/java/">java</a>
+  <span></span> <a href="/tags/linux/">linux</a>
   </div>
 
 </div>
@@ -111,7 +111,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/06/18/remove-element-in-foreach/" data-title="在foreach循环中移除元素的方法 | CLIMBRAN" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/03/17/linux-rename-file/" data-title="linux下文件重命名 | CLIMBRAN" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -125,27 +125,19 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/07/11/resource-and-the-representation-of-the-resource/" title="关于资源和表述">
+ <a href="/2015/03/20/brew-install/" title="brew安装">
   <strong>上一篇：</strong><br/>
   <span>
-  关于资源和表述</span>
+  brew安装</span>
 </a>
 </div>
 
-
-<div class="next">
-<a href="/2015/05/29/static-block/"  title="static块">
- <strong>下一篇：</strong><br/> 
- <span>static块
-</span>
-</a>
-</div>
 
 </nav>
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/06/18/remove-element-in-foreach/" data-title="在foreach循环中移除元素的方法" data-url="http://yoursite.com/2015/06/18/remove-element-in-foreach/"></div>
+	<div class="ds-thread" data-thread-key="2015/03/17/linux-rename-file/" data-title="linux下文件重命名" data-url="http://yoursite.com/2015/03/17/linux-rename-file/"></div>
 </section>
 
 
