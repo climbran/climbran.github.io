@@ -4,53 +4,26 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Mac下安装Redis | CLIMBRAN</title>
+    <title>redis数据类型-string | CLIMBRAN</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="swe">
     
 
     
-    <meta name="description" content="http://redis.io/download下载最新的Redis版本，我下载的是3.0.3下载后将文件解压，通过进入文件夹
-cd redis-3.0.3
-执行
-make install
-Redis就安装好了，下面是启动指令：
-#启动 加上‘&amp;amp;’使redis能在后台运行
-src/redis-service &amp;amp;
-#关闭
-src/redis-cli shutdown
-测试
-local">
+    <meta name="description" content="1、string 是 redis 最基本的类型2、string 类型是二进制安全的。意思是 redis 的 string 可以包含任何数据。比如 jpg 图片或者序列化的对象3、内部实现来看其实 string 可以看作 byte 数组,最大 上限是 1G 字节4、sting可以被部分命令当做int处理，如incr
+string类型的定义：1struct sdshdr &amp;#123;long len">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Mac下安装Redis">
-<meta property="og:url" content="http://yoursite.com/2015/09/01/install-redis-in-Mac/index.html">
+<meta property="og:title" content="redis数据类型-string">
+<meta property="og:url" content="http://yoursite.com/2015/09/06/redis-string/index.html">
 <meta property="og:site_name" content="CLIMBRAN">
-<meta property="og:description" content="http://redis.io/download下载最新的Redis版本，我下载的是3.0.3下载后将文件解压，通过进入文件夹
-cd redis-3.0.3
-执行
-make install
-Redis就安装好了，下面是启动指令：
-#启动 加上‘&amp;amp;’使redis能在后台运行
-src/redis-service &amp;amp;
-#关闭
-src/redis-cli shutdown
-测试
-local">
-<meta property="og:updated_time" content="2015-09-06T01:57:09.000Z">
+<meta property="og:description" content="1、string 是 redis 最基本的类型2、string 类型是二进制安全的。意思是 redis 的 string 可以包含任何数据。比如 jpg 图片或者序列化的对象3、内部实现来看其实 string 可以看作 byte 数组,最大 上限是 1G 字节4、sting可以被部分命令当做int处理，如incr
+string类型的定义：1struct sdshdr &amp;#123;long len">
+<meta property="og:updated_time" content="2015-09-06T07:28:33.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Mac下安装Redis">
-<meta name="twitter:description" content="http://redis.io/download下载最新的Redis版本，我下载的是3.0.3下载后将文件解压，通过进入文件夹
-cd redis-3.0.3
-执行
-make install
-Redis就安装好了，下面是启动指令：
-#启动 加上‘&amp;amp;’使redis能在后台运行
-src/redis-service &amp;amp;
-#关闭
-src/redis-cli shutdown
-测试
-local">
+<meta name="twitter:title" content="redis数据类型-string">
+<meta name="twitter:description" content="1、string 是 redis 最基本的类型2、string 类型是二进制安全的。意思是 redis 的 string 可以包含任何数据。比如 jpg 图片或者序列化的对象3、内部实现来看其实 string 可以看作 byte 数组,最大 上限是 1G 字节4、sting可以被部分命令当做int处理，如incr
+string类型的定义：1struct sdshdr &amp;#123;long len">
 
     
     <link rel="alternative" href="/atom.xml" title="CLIMBRAN" type="application/atom+xml">
@@ -110,35 +83,50 @@ local">
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/09/01/install-redis-in-Mac/" title="Mac下安装Redis" itemprop="url">Mac下安装Redis</a>
+      <a href="/2015/09/06/redis-string/" title="redis数据类型-string" itemprop="url">redis数据类型-string</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
 		
   <p class="article-time">
-    <time datetime="2015-09-01T11:34:08.000Z" itemprop="datePublished"> 发表于 2015-09-01</time>
+    <time datetime="2015-09-06T07:05:35.000Z" itemprop="datePublished"> 发表于 2015-09-06</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
-		<p><a href="http://redis.io/download" target="_blank" rel="external">http://redis.io/download</a><br>下载最新的Redis版本，我下载的是3.0.3<br>下载后将文件解压，通过进入文件夹</p>
-<pre><code>cd redis-<span class="number">3.0</span><span class="number">.3</span>
-</code></pre><p>执行</p>
-<pre><code>make <span class="keyword">install</span>
-</code></pre><p>Redis就安装好了，下面是启动指令：</p>
-<pre><code><span class="preprocessor">#启动 加上‘&amp;’使redis能在后台运行</span>
-src/redis-service &amp;
-<span class="preprocessor">#关闭</span>
-src/redis-cli shutdown
-</code></pre><p>测试</p>
-<pre><code>localhost:redis-<span class="number">3.0</span><span class="number">.3</span> ywq$ src/redis-cli 
-<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span>&gt; <span class="built_in">set</span> foo test
-OK
-<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span>&gt; get foo
-<span class="string">"test"</span>
-</code></pre>  
+		<p>1、string 是 redis 最基本的类型<br>2、string 类型是二进制安全的。意思是 redis 的 string 可以包含任何数据。比如 jpg 图片或者序列化的对象<br>3、内部实现来看其实 string 可以看作 byte 数组,最大 上限是 1G 字节<br>4、sting可以被部分命令当做int处理，如incr</p>
+<p>string类型的定义：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> sdshdr &#123;<span class="keyword">long</span> len; 		<span class="comment">//数组中剩余可用字节数</span><span class="keyword">long</span> <span class="built_in">free</span>; 		<span class="comment">//buf数组的长度</span><span class="keyword">char</span> buf[]		<span class="comment">//用于存贮实际的字符串内容的数组;</span>&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>string相关命令如下</p>
+<pre><code><span class="built_in">set</span> <span class="built_in">key</span> <span class="built_in">value</span> 
+</code></pre><p>设置 key 对应的值为 string 类型的 value,返回 1 表示成功,0 失败</p>
+<pre><code>setnx <span class="built_in">key</span> <span class="built_in">value</span>
+</code></pre><p>同上,但如果 key 已经存在,返回 0 。nx 是 not exist 的意思</p>
+<pre><code><span class="built_in">get</span> <span class="variable">key</span>
+</code></pre><p>获取 key 对应的 string 值,如果 key 不存在返回 nil</p>
+<pre><code>getset <span class="built_in">key</span> <span class="built_in">value</span>
+</code></pre><p>原子的设置 key 的值,并返回 key 的旧值。如果 key 不存在返回 nil</p>
+<pre><code>mget key1 key2 <span class="attribute">...</span> keyN
+</code></pre><p>一次获取多个 key 的值,如果对应 key 不存在,则对应返回 nil</p>
+<pre><code>mset key<span class="number">1</span> <span class="keyword">value</span><span class="number">1</span> ...keyN <span class="keyword">value</span> N
+</code></pre><p>一次设置多个 key 的值,成功返回1,表示所有的值都设置了;失败返回0,表示没有任何值被设置</p>
+<pre><code>msetnx key1 value1 ..<span class="class">.keyN</span> valueN
+</code></pre><p>同上,但是不会覆盖已经存在的 key</p>
+<pre><code><span class="title">incr</span> key
+</code></pre><p>对 key 的值做加加操作,并返回新的值。<br>注意:incr 一个不是 int 的 value 会返回错误;incr一个不存在的 key,则设置 value 为 1</p>
+<pre><code>decr
+</code></pre><p>同上,但是做的是减减操作,decr 一个不存在 key,则设置 key 为-1</p>
+<pre><code>incrby <span class="keyword">key</span> <span class="built_in">integer</span>
+</code></pre><p>同 incr,加指定值 ,key 不存在时候会设置 key,并认为原来的 value 是 0</p>
+<pre><code>decrby <span class="keyword">key</span> <span class="built_in">integer</span>
+</code></pre><p>￼同 decr,减指定值。<br>decrby完全是为了可读性,我们完全可以通过 incrby 一个负<br>值来实现同样效果,反之一样。</p>
+<pre><code><span class="built_in">append</span> <span class="variable">key</span> value
+</code></pre><p>给指定 key 的字符串值追加 value,返回新字符串值的长度。</p>
+<pre><code><span class="keyword">substr </span>key start <span class="preprocessor">end</span>
+</code></pre><p>返回截取过的 key 的字符串值。<br>注意该命令并不修改 key 的值,下标是从 0 开始的</p>
+<p>总结：<br>1、关于mget，如果某个key不存在,只有不存在的key返回nil，其他key任正常返回，例子：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">redis&gt; flushdb OKredis&gt; dbsize (integer) <span class="number">0</span></span><br><span class="line">redis&gt; <span class="built_in">set</span> k1 a OKredis&gt; <span class="built_in">set</span> k2 bOKredis&gt; mget k1 k2 k3 </span><br><span class="line"><span class="number">1.</span> <span class="string">"a"</span><span class="number">2.</span> <span class="string">"b"</span> <span class="number">3.</span> (nil)</span><br></pre></td></tr></table></figure><br>2、关于mset和msetnx<br>mset会覆盖已存在的key<br>msetnx只要有一个key已存在就返回0，表示没有任何值被设置<br>3、关于incrby、decrby<br>当value不是一个int类型时会返回失败</p>
+  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
@@ -155,7 +143,7 @@ OK
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/09/01/install-redis-in-Mac/" data-title="Mac下安装Redis | CLIMBRAN" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/09/06/redis-string/" data-title="redis数据类型-string | CLIMBRAN" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -169,18 +157,18 @@ OK
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/09/06/spring-redis-jedis/" title="Spring与redis集成">
+ <a href="/2015/09/06/redis-list/" title="redis数据类型-list">
   <strong>上一篇：</strong><br/>
   <span>
-  Spring与redis集成</span>
+  redis数据类型-list</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/08/31/java-RTTI/"  title="Java RTTI学习">
+<a href="/2015/09/06/redis-keys/"  title="redis数据类型-keys">
  <strong>下一篇：</strong><br/> 
- <span>Java RTTI学习
+ <span>redis数据类型-keys
 </span>
 </a>
 </div>
@@ -189,7 +177,7 @@ OK
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/09/01/install-redis-in-Mac/" data-title="Mac下安装Redis" data-url="http://yoursite.com/2015/09/01/install-redis-in-Mac/"></div>
+	<div class="ds-thread" data-thread-key="2015/09/06/redis-string/" data-title="redis数据类型-string" data-url="http://yoursite.com/2015/09/06/redis-string/"></div>
 </section>
 
 
