@@ -607,20 +607,25 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/04/01/how-to-kill-process-on-mac/" title="如何在mac os下根据端口号查杀进程" itemprop="url">如何在mac os下根据端口号查杀进程</a>
+      <a href="/2015/04/25/http-restful/" title="restful中http请求的语义" itemprop="url">restful中http请求的语义</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
 		
   <p class="article-time">
-    <time datetime="2015-03-31T16:17:09.000Z" itemprop="datePublished"> 发表于 2015-04-01</time>
+    <time datetime="2015-04-25T01:24:50.000Z" itemprop="datePublished"> 发表于 2015-04-25</time>
     
   </p>
 </header>
     <div class="article-content">
         
-        <p>在使用mac os时，tomcat异常中断重启时提示端口被占用，可通过lsof -i :8080查看pid,然后kill <pid>来停止进程</pid></p>
+        <p>RESTful中使用HTTP协议作为应用层协议。本文主要介绍http协议的 GET、POST、PUT、PATCH、DELETE请求的语义。</p>
+<p>HTTP GET: 主要用于获取URI所代表的资源的表述，但不应该改变资源，是安全且幂等的。</p>
+<p>HTTP POST: 用于创建资源，POST对应的URI是一个表述的类型，比如创建一篇文章应该是 POST <a href="http://www.climbran.com/article,多次POST请求会创建多篇文章。" target="_blank" rel="external">http://www.climbran.com/article,多次POST请求会创建多篇文章。</a></p>
+<p>HTTP PUT: 用于创建或更新资源，创建资源时与POST相比，区别在于PUT是幂等的，例如PUT <a href="http://www.climbran.com/article/1，表示创建或更新id为1的文章。" target="_blank" rel="external">http://www.climbran.com/article/1，表示创建或更新id为1的文章。</a></p>
+<p>HTTP PATCH: 用于更新资源，与PUT相比，区别在于PUT应带有URI对应表述的全部信息，PATCH只带有部分信息，可用于表述信息量非常大，但只希望修改其中一小部分的时候。PATCH同样是幂等的。</p>
+<p>HTTP DELETE: 用于删除资源，应该是幂等的。</p>
 
         
         
@@ -634,7 +639,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/mac-os/">mac os</a><a href="/tags/tomcat/">tomcat</a>
+  <span></span> <a href="/tags/restful/">restful</a>
   </div>
 
 </div>
@@ -645,7 +650,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2015/04/01/how-to-kill-process-on-mac/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/01/how-to-kill-process-on-mac/" data-count-type="comments">&nbsp;</a>
+		<a href="/2015/04/25/http-restful/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/25/http-restful/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -699,6 +704,10 @@
 			
 		
 			
+				<li><a href="/tags/restful/" title="restful">restful<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/mac-os/" title="mac os">mac os<sup>2</sup></a></li>
 			
 		
@@ -711,11 +720,7 @@
 			
 		
 			
-				<li><a href="/tags/设计模式/" title="设计模式">设计模式<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/restful/" title="restful">restful<sup>1</sup></a></li>
+				<li><a href="/tags/intelliJ/" title="intelliJ">intelliJ<sup>1</sup></a></li>
 			
 		
 			
@@ -727,7 +732,7 @@
 			
 		
 			
-				<li><a href="/tags/intelliJ/" title="intelliJ">intelliJ<sup>1</sup></a></li>
+				<li><a href="/tags/mybatis/" title="mybatis">mybatis<sup>1</sup></a></li>
 			
 		
 			
@@ -739,7 +744,7 @@
 			
 		
 			
-				<li><a href="/tags/mybatis/" title="mybatis">mybatis<sup>1</sup></a></li>
+				<li><a href="/tags/设计模式/" title="设计模式">设计模式<sup>1</sup></a></li>
 			
 		
 			
