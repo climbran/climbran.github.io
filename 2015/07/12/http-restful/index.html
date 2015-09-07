@@ -13,20 +13,23 @@
     
     <meta name="description" content="RESTful中使用HTTP协议作为应用层协议。本文主要介绍http协议的 GET、POST、PUT、PATCH、DELETE请求的语义。
 HTTP GET: 主要用于获取URI所代表的资源的表述，但不应该改变资源，是安全且幂等的。
-HTTP POST: 用于创建资源，POST对应的URI是一个表述的类型，比如创建一篇文章应该是 POST http://www.climbran.com/artic">
+HTTP POST: 用于创建资源，POST对应的URI是一个表述的类型，比如创建一篇文章应该是 
+POST http://www.climbran.com/arti">
 <meta property="og:type" content="article">
 <meta property="og:title" content="restful中http请求的语义">
-<meta property="og:url" content="http://yoursite.com/2015/04/25/http-restful/index.html">
+<meta property="og:url" content="http://yoursite.com/2015/07/12/http-restful/index.html">
 <meta property="og:site_name" content="CLIMBRAN">
 <meta property="og:description" content="RESTful中使用HTTP协议作为应用层协议。本文主要介绍http协议的 GET、POST、PUT、PATCH、DELETE请求的语义。
 HTTP GET: 主要用于获取URI所代表的资源的表述，但不应该改变资源，是安全且幂等的。
-HTTP POST: 用于创建资源，POST对应的URI是一个表述的类型，比如创建一篇文章应该是 POST http://www.climbran.com/artic">
-<meta property="og:updated_time" content="2015-09-07T02:14:33.000Z">
+HTTP POST: 用于创建资源，POST对应的URI是一个表述的类型，比如创建一篇文章应该是 
+POST http://www.climbran.com/arti">
+<meta property="og:updated_time" content="2015-09-07T02:18:46.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="restful中http请求的语义">
 <meta name="twitter:description" content="RESTful中使用HTTP协议作为应用层协议。本文主要介绍http协议的 GET、POST、PUT、PATCH、DELETE请求的语义。
 HTTP GET: 主要用于获取URI所代表的资源的表述，但不应该改变资源，是安全且幂等的。
-HTTP POST: 用于创建资源，POST对应的URI是一个表述的类型，比如创建一篇文章应该是 POST http://www.climbran.com/artic">
+HTTP POST: 用于创建资源，POST对应的URI是一个表述的类型，比如创建一篇文章应该是 
+POST http://www.climbran.com/arti">
 
     
     <link rel="alternative" href="/atom.xml" title="CLIMBRAN" type="application/atom+xml">
@@ -86,14 +89,14 @@ HTTP POST: 用于创建资源，POST对应的URI是一个表述的类型，比�
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/04/25/http-restful/" title="restful中http请求的语义" itemprop="url">restful中http请求的语义</a>
+      <a href="/2015/07/12/http-restful/" title="restful中http请求的语义" itemprop="url">restful中http请求的语义</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
 		
   <p class="article-time">
-    <time datetime="2015-04-25T01:24:50.000Z" itemprop="datePublished"> 发表于 2015-04-25</time>
+    <time datetime="2015-07-12T01:24:50.000Z" itemprop="datePublished"> 发表于 2015-07-12</time>
     
   </p>
 </header>
@@ -101,8 +104,12 @@ HTTP POST: 用于创建资源，POST对应的URI是一个表述的类型，比�
 		
 		<p>RESTful中使用HTTP协议作为应用层协议。本文主要介绍http协议的 GET、POST、PUT、PATCH、DELETE请求的语义。</p>
 <p>HTTP GET: 主要用于获取URI所代表的资源的表述，但不应该改变资源，是安全且幂等的。</p>
-<p>HTTP POST: 用于创建资源，POST对应的URI是一个表述的类型，比如创建一篇文章应该是 POST <a href="http://www.climbran.com/article,多次POST请求会创建多篇文章。" target="_blank" rel="external">http://www.climbran.com/article,多次POST请求会创建多篇文章。</a></p>
-<p>HTTP PUT: 用于创建或更新资源，创建资源时与POST相比，区别在于PUT是幂等的，例如PUT <a href="http://www.climbran.com/article/1，表示创建或更新id为1的文章。" target="_blank" rel="external">http://www.climbran.com/article/1，表示创建或更新id为1的文章。</a></p>
+<p>HTTP POST: 用于创建资源，POST对应的URI是一个表述的类型，比如创建一篇文章应该是 </p>
+<pre><code>POST <span class="string">http:</span><span class="comment">//www.climbran.com/article</span>
+</code></pre><p>多次POST请求会创建多篇文章。</p>
+<p>HTTP PUT: 用于创建或更新资源，创建资源时与POST相比，区别在于PUT是幂等的，例如:</p>
+<pre><code>PUT <span class="string">http:</span><span class="comment">//www.climbran.com/article/1</span>
+</code></pre><p>表示创建或更新id为1的文章。</p>
 <p>HTTP PATCH: 用于更新资源，与PUT相比，区别在于PUT应带有URI对应表述的全部信息，PATCH只带有部分信息，可用于表述信息量非常大，但只希望修改其中一小部分的时候。PATCH同样是幂等的。</p>
 <p>HTTP DELETE: 用于删除资源，应该是幂等的。</p>
 <p>例子：</p>
@@ -138,7 +145,7 @@ DELETE <span class="regexp">/collection/</span>resource：返回一个空文档
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/04/25/http-restful/" data-title="restful中http请求的语义 | CLIMBRAN" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/07/12/http-restful/" data-title="restful中http请求的语义 | CLIMBRAN" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -152,18 +159,18 @@ DELETE <span class="regexp">/collection/</span>resource：返回一个空文档
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/04/26/git-instructions/" title="git常用指令">
+ <a href="/2015/07/23/database-design-model/" title="数据库四种设计模式">
   <strong>上一篇：</strong><br/>
   <span>
-  git常用指令</span>
+  数据库四种设计模式</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/04/01/how-to-kill-process-on-mac/"  title="如何在mac os下根据端口号查杀进程">
+<a href="/2015/07/11/resource-and-the-representation-of-the-resource/"  title="关于资源和表述">
  <strong>下一篇：</strong><br/> 
- <span>如何在mac os下根据端口号查杀进程
+ <span>关于资源和表述
 </span>
 </a>
 </div>
@@ -172,7 +179,7 @@ DELETE <span class="regexp">/collection/</span>resource：返回一个空文档
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/04/25/http-restful/" data-title="restful中http请求的语义" data-url="http://yoursite.com/2015/04/25/http-restful/"></div>
+	<div class="ds-thread" data-thread-key="2015/07/12/http-restful/" data-title="restful中http请求的语义" data-url="http://yoursite.com/2015/07/12/http-restful/"></div>
 </section>
 
 
