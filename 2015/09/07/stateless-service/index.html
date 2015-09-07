@@ -4,23 +4,29 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>brew安装 | CLIMBRAN</title>
+    <title>服务器无状态 | CLIMBRAN</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="swe">
     
 
     
-    <meta name="description" content="网上找了好多brew的安装方式，结果都是太旧的方法，无法安装，后来发现其实直接去官方网站就有最新的安装方式，传送门">
+    <meta name="description" content="之前做听说可以不维持服务器的状态来减轻服务器压力，以为是指整个服务端都没有状态，一直没弄明白除非用cookie或者一次性的token，怎么维持客户端的状态。
+今天看到无状态服务（stateless service）才明白无状态是指对服务器集群中每台服务器(web server)来说是没有状态的。
+一般可以认为session就是有状态的，session主要用于两种情况：1、一个事务的多次请求间暂存数">
 <meta property="og:type" content="article">
-<meta property="og:title" content="brew安装">
-<meta property="og:url" content="http://yoursite.com/2015/03/20/brew-install/index.html">
+<meta property="og:title" content="服务器无状态">
+<meta property="og:url" content="http://yoursite.com/2015/09/07/stateless-service/index.html">
 <meta property="og:site_name" content="CLIMBRAN">
-<meta property="og:description" content="网上找了好多brew的安装方式，结果都是太旧的方法，无法安装，后来发现其实直接去官方网站就有最新的安装方式，传送门">
-<meta property="og:updated_time" content="2015-08-17T02:17:04.000Z">
+<meta property="og:description" content="之前做听说可以不维持服务器的状态来减轻服务器压力，以为是指整个服务端都没有状态，一直没弄明白除非用cookie或者一次性的token，怎么维持客户端的状态。
+今天看到无状态服务（stateless service）才明白无状态是指对服务器集群中每台服务器(web server)来说是没有状态的。
+一般可以认为session就是有状态的，session主要用于两种情况：1、一个事务的多次请求间暂存数">
+<meta property="og:updated_time" content="2015-09-07T05:00:42.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="brew安装">
-<meta name="twitter:description" content="网上找了好多brew的安装方式，结果都是太旧的方法，无法安装，后来发现其实直接去官方网站就有最新的安装方式，传送门">
+<meta name="twitter:title" content="服务器无状态">
+<meta name="twitter:description" content="之前做听说可以不维持服务器的状态来减轻服务器压力，以为是指整个服务端都没有状态，一直没弄明白除非用cookie或者一次性的token，怎么维持客户端的状态。
+今天看到无状态服务（stateless service）才明白无状态是指对服务器集群中每台服务器(web server)来说是没有状态的。
+一般可以认为session就是有状态的，session主要用于两种情况：1、一个事务的多次请求间暂存数">
 
     
     <link rel="alternative" href="/atom.xml" title="CLIMBRAN" type="application/atom+xml">
@@ -80,20 +86,22 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/03/20/brew-install/" title="brew安装" itemprop="url">brew安装</a>
+      <a href="/2015/09/07/stateless-service/" title="服务器无状态" itemprop="url">服务器无状态</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
 		
   <p class="article-time">
-    <time datetime="2015-03-20T07:13:35.000Z" itemprop="datePublished"> 发表于 2015-03-20</time>
+    <time datetime="2015-09-07T04:21:03.000Z" itemprop="datePublished"> 发表于 2015-09-07</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
-		<p>网上找了好多brew的安装方式，结果都是太旧的方法，无法安装，后来发现其实直接去官方网站就有最新的安装方式，<a href="http://brew.sh/" target="_blank" rel="external">传送门</a></p>
+		<p>之前做听说可以不维持服务器的状态来减轻服务器压力，以为是指整个服务端都没有状态，一直没弄明白除非用cookie或者一次性的token，怎么维持客户端的状态。</p>
+<p>今天看到<a href="http://kyfxbl.iteye.com/blog/1831869" target="_blank" rel="external">无状态服务（stateless service）</a>才明白无状态是指对服务器集群中每台服务器(web server)来说是没有状态的。</p>
+<p>一般可以认为session就是有状态的，session主要用于两种情况：<br>1、一个事务的多次请求间暂存数据<br>2、维持登陆状态<br>对于第一种情况，可以通过将数据回传到客户端，放在表单中隐藏或用sessionStorage、cookie来实现。<br>对于第二种情况，可以将session从web server中剥离，存放在共享的地方(如redis)。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -102,7 +110,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/mac-os/">mac os</a>
+  <span></span> <a href="/tags/web/">web</a>
   </div>
 
 </div>
@@ -111,7 +119,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/03/20/brew-install/" data-title="brew安装 | CLIMBRAN" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/09/07/stateless-service/" data-title="服务器无状态 | CLIMBRAN" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -124,19 +132,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/03/20/filter-get-cost-time/" title="利用Filter统计时间开销">
-  <strong>上一篇：</strong><br/>
-  <span>
-  利用Filter统计时间开销</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/03/17/linux-rename-file/"  title="linux下文件重命名">
+<a href="/2015/09/06/spring-redis-jedis/"  title="Spring与redis集成">
  <strong>下一篇：</strong><br/> 
- <span>linux下文件重命名
+ <span>Spring与redis集成
 </span>
 </a>
 </div>
@@ -145,7 +145,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/03/20/brew-install/" data-title="brew安装" data-url="http://yoursite.com/2015/03/20/brew-install/"></div>
+	<div class="ds-thread" data-thread-key="2015/09/07/stateless-service/" data-title="服务器无状态" data-url="http://yoursite.com/2015/09/07/stateless-service/"></div>
 </section>
 
 

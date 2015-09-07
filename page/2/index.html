@@ -81,6 +81,66 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/08/30/anonymous-inner-class/" title="匿名内部类学习" itemprop="url">匿名内部类学习</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
+		
+  <p class="article-time">
+    <time datetime="2015-08-30T14:04:41.000Z" itemprop="datePublished"> 发表于 2015-08-30</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>晚上看Spring-Data-Redis,别人的demo里通过对匿名内部类的回调实现set、get方法，仔细想以下，发现自己对匿名内部类掌握不是很好，就又翻了下Thinking in Java。</p>
+<p>匿名内部类的格式：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> Contents()&#123;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我对匿名内部类主要有以下几个疑问：<br><br>一、匿名内部类实现的时什么类型的对象，可以实现接口吗？<br><br>Contents()可以是调用的一个类的构造器，此时括号中可以根据构造器传入参数，将创建一个继承自Contents的匿名类对象；<br><br>Contents也可以是一个接口，将创建一个实现Contents接口的匿名类对象，此时匿名类中只有一个隐式的无参构造器，所以括号中不能传入参数；<br><br>二、如何引用匿名内部类？<br><br>回答了问题一其实就能解决这个问题了，new表达式返回的引用会被自动向上转型为对Contents的引用<br><br>三、如何实现类似构造器的效果？<br><br>通过实例初始化，就像这样：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> Contents()&#123;</span><br><span class="line">	&#123;print(<span class="string">"instance init"</span>);&#125;</span><br><span class="line">	.....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br><br><br>使用匿名内部类还需要注意以下问题：<br><br>匿名内部类中可以直接调用外部定义的对象，但编译器会要求该对象的引用必须是final的，例如：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Contents <span class="title">getContents</span><span class="params">(<span class="keyword">final</span> String param)</span></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">new</span> Contents()&#123;</span><br><span class="line">		String label = param;</span><br><span class="line">		.....</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/java/">java</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/08/30/anonymous-inner-class/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/08/30/anonymous-inner-class/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/08/29/consistent-hashing/" title="一致性哈希" itemprop="url">一致性哈希</a>
   </h1>
   <p class="article-author">By
@@ -619,73 +679,6 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/07/29/java-exception-performance/" title="Java异常开销问题" itemprop="url">Java异常开销问题</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
-		
-  <p class="article-time">
-    <time datetime="2015-07-29T06:08:10.000Z" itemprop="datePublished"> 发表于 2015-07-29</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>感觉在项目中使用异常进行逻辑控制能使代码逻辑清晰很多，但公司同事应为抛出异常开销的问题一直反对使用异常，最后代码中充斥着大量if else的逻辑判断。</p>
-<p>但是在使用一些第三方框架时发现里面很多逻辑就在用异常进行控制，所以一直对异常开销这个问题存在疑问，抽空度娘，得出结论如下：</p>
-<p>普通异常开销确实很大，但开销不在于异常的抛出，而是在异常对象创建时开销很大。<br>创建异常开销大的原因在于异常基类Throwable.java的public synchronized native Throwable fillInStackTrace()方法。</p>
-<p>方法介绍:<br>Fills in the execution stack trace. This method records within this Throwable object information about the current state of the stack frames for the current thread.<br>性能开销在于:</p>
-<ol>
-<li>是一个synchronized方法(主因)</li>
-<li>需要填充线程运行堆栈信息</li>
-</ol>
-<p>解决方法：<br>自定义异常继承Exception，并重写fillInStackTrace()<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Throwable <span class="title">fillInStackTrace</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>以该异常作为逻辑控制的异常的基类，那么异常性能将大幅度提高，和if else开销相近。</p>
-<p>参考：<a href="http://www.blogjava.net/stone2083/archive/2010/07/09/325649.html" target="_blank" rel="external">java异常性能问题</a></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/java/">java</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/07/29/java-exception-performance/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/07/29/java-exception-performance/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <a class="extend prev" rel="prev" href="/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/">Next<span></span></a>
@@ -718,7 +711,15 @@
 			
 		
 			
+				<li><a href="/tags/数据库/" title="数据库">数据库<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/tomcat/" title="tomcat">tomcat<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/web/" title="web">web<sup>2</sup></a></li>
 			
 		
 			
@@ -731,10 +732,6 @@
 		
 			
 				<li><a href="/tags/mac-os/" title="mac os">mac os<sup>2</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/数据库/" title="数据库">数据库<sup>2</sup></a></li>
 			
 		
 			
@@ -754,7 +751,7 @@
 			
 		
 			
-				<li><a href="/tags/mybatis/" title="mybatis">mybatis<sup>1</sup></a></li>
+				<li><a href="/tags/设计模式/" title="设计模式">设计模式<sup>1</sup></a></li>
 			
 		
 			
@@ -766,11 +763,7 @@
 			
 		
 			
-				<li><a href="/tags/设计模式/" title="设计模式">设计模式<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/web/" title="web">web<sup>1</sup></a></li>
+				<li><a href="/tags/mybatis/" title="mybatis">mybatis<sup>1</sup></a></li>
 			
 		
 		</ul>
