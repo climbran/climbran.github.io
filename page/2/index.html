@@ -81,6 +81,72 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/08/31/java-RTTI/" title="Java RTTI学习" itemprop="url">Java RTTI学习</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
+		
+  <p class="article-time">
+    <time datetime="2015-08-31T15:46:53.000Z" itemprop="datePublished"> 发表于 2015-08-31</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>一、什么是RTTI<br>RTTI就是Run-Time Type Information的缩写，Java使用Class对象来实现RTTI。</p>
+<p>二、如何实现RTTI<br>每当编写并且编译一个新类时，就会产生一个Class对象（保存在同名的.class文件中），获取Class对象有以下几种方式：</p>
+<p>1、Class.forName(“className”);<br>2、类字面常量：eg: User.class;<br>不光可用于普通类，也可用于接口、数字、基本数据类型。<br>特殊的，基本数据类型的类字面常亮等价于对应包装类的TYPE字段（eg:int.class和Integer.TYPE等价）；<br>3、如果已经有了一个对象的引用（非Class对象），可以通过调用该对象的.getClass()方法获取；</p>
+<p>使用类的准备工作实际包括3个步骤：<br>1、加载：这是由类加载器执行的，该步骤将查找字节码（通常在classpath所指定的路径中查找，但这并非必须的），并从这些字节码中创建一个Class对象；<br>2、链接：在链接阶段将验证类中的字节码，为静态域分配存储空间，并且如果必需的话，将创建这个类对其他类的所有引用；<br>3、初始化：如果该类具有超类，则对其初始化，执行静态初始化器和静态初始化块；</p>
+<p>通过Class.forName(“className”)方式创建Class对象的引用时会初始化Class对象，而.class方式不会初始化Class对象，具体什么时候初始化可参考：<a href="http://climbran.github.io/2015/05/29/static-block/" target="_blank" rel="external">satic块</a></p>
+<p>三、Class对象的常用方法<br>getName    获取全限定名（即带包名的类名）<br>getSimpleName()    获取不含包名的类名<br>getCononicalName()    获取全限定名<br>getInterfaces() 返回Class对象，他们表示表示调用该方法的Class对象中的全部接口<br>isInterface() 告诉你这个Class对象是否表示某个接口<br>newInstance() 实例化一个对象</p>
+<p>调用newInstance时，如果使用泛型时，用？通配、super通配或不使用泛型将返回Object类型的值，如果用extends通配或指定具体类型能返回具体类型的值，例如:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">.....</span><br><span class="line">  	Class c1 = User.class;</span><br><span class="line">  	Class&lt;?&gt; c2 = User.class;</span><br><span class="line">  	Class&lt;? <span class="keyword">super</span> User&gt; c3 = User.class; <span class="comment">//super通配父类，但不知道是具体哪个父类，所以向上转型到Object</span></span><br><span class="line">  	Class&lt;User&gt; c4 = User.class;</span><br><span class="line">  	Class&lt;? extends User&gt; c5 = User.class;</span><br><span class="line">   <span class="keyword">try</span> &#123;</span><br><span class="line">       User nu1 = (User)c1.newInstance();	<span class="comment">//返回值为Object类型，需要强制类型转换</span></span><br><span class="line">       User nu2 = (User)c2.newInstance();</span><br><span class="line">       User nu3 = (User)c3.newInstance(); <span class="comment">//直接返回User类型，不需要强制类型转换</span></span><br><span class="line">       User nu4 = c4.newInstance();</span><br><span class="line">       User nu5 = c5.newInstance();</span><br><span class="line">   &#125; <span class="keyword">catch</span> (InstantiationException e) &#123;</span><br><span class="line">       e.printStackTrace();</span><br><span class="line">   &#125; <span class="keyword">catch</span> (IllegalAccessException e) &#123;</span><br><span class="line">       e.printStackTrace();</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>四、instanceof<br>两种方式直接上示例：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span></span>&#123;&#125;</span><br><span class="line">	</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Administrator</span> <span class="title">exnteds</span> <span class="title">User</span></span>&#123;&#125;</span><br><span class="line">	</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">		Administrator admin = <span class="keyword">new</span> Administrator();</span><br><span class="line">		</span><br><span class="line">		<span class="comment">//方式一</span></span><br><span class="line">		<span class="keyword">if</span>(admn <span class="keyword">instanceof</span> User)</span><br><span class="line">			System.out.println(<span class="string">"admin is instance of User"</span>);		</span><br><span class="line">		<span class="comment">//方式二</span></span><br><span class="line">		Class c = User.class;</span><br><span class="line">		<span class="keyword">if</span>(c.isInstanceof(admin))</span><br><span class="line">			System.out.println(<span class="string">"admin is also instance of User"</span>);</span><br><span class="line">	&#125;	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>注意instanceof不仅可用于类，还可以用于接口，当对象为null时返回false</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/java/">java</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/08/31/java-RTTI/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/08/31/java-RTTI/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/08/30/anonymous-inner-class/" title="匿名内部类学习" itemprop="url">匿名内部类学习</a>
   </h1>
   <p class="article-author">By
@@ -601,71 +667,6 @@
 	
 	  	<span></span>
 		<a href="/2015/08/01/a-iterator-achieved/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/08/01/a-iterator-achieved/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/07/30/about-domain-object/" title="关于领域模型（贫血模型，充血模型）" itemprop="url">关于领域模型（贫血模型，充血模型）</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
-		
-  <p class="article-time">
-    <time datetime="2015-07-30T11:31:51.000Z" itemprop="datePublished"> 发表于 2015-07-30</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>领域模型(domain object)分为4类:<br><br>失血模型<br><br>贫血模型 service –&gt; dao –&gt; entity <br><br>充血模型 service –&gt; entity &lt;–&gt; dao <br><br>胀血模型<br></p>
-<p>简单来说，失血模型就是纯数据POJO，业务逻辑完全与entity分离；贫血模型domain object中含有与持久化无关的逻辑，不依赖于dao层；充血模型把domain object和business object合二为一，service层不依赖dao层，而entity层与dao层形成双向依赖；胀血模型直接取消service层，只剩下entity层与dao层。</p>
-<p>由于今年才开始做web开发，之前对各种模型完全没有了解，项目中的模型是由自己瞎摸索出来的。现在总结来看，应该属于贫血模型，但是把大量service层的业务逻辑推到controller层实现，这种方式前期开发相当迅速，但是后期发现严重影响代码重用，不同controller里存在大量重复代码，导致需求更改时需要修改多个controller，影响项目维护。</p>
-<p>我感觉目前使用的模型适合小项目的快速开发，但对于大点的项目还是传统的贫血模型更合适。</p>
-<p>附：不同模型的优缺点<br><br>一、贫血模型<br><br>优点：<br><br>1、各层单向依赖，结构清楚，易于实现和维护<br><br>2、设计简单易行，底层模型非常稳定<br><br>3、非常适合于软件外包和大规模软件团队的协作。每个编程个体只需要负责单一职责的小对象模块编写，不会互相影响。<br><br>缺点：<br><br>1、domain object的部分比较紧密依赖的持久化domain logic被分离到Service层，显得不够OO<br><br>2、Service层过于厚重<br><br>3、可复用的颗粒度比较 小，代码量膨胀的很厉害，最重要的是业务逻辑的描述能力比较差，一个稍微复杂的业务逻辑，就需要太多类和太多代码去表达<br><br>4、对象协作依赖于外部容器的组装，因此裸写代码是不可能的了，必须借助于外部的IoC容器。<br></p>
-<p>二、充血模型<br><br>优点：<br><br>1、更加符合OO的原则。<br>2、对象自洽程度很高，表达能力很强，因此非常适合于复杂的企业业务逻辑的实现，以及可复用程度比较高。<br><br>3、Service层很薄，只充当Facade的角色，不和DAO打交道。<br><br>4、不必依赖外部容器的组装，所以RoR没有IoC的概念。<br><br>缺点：<br><br>1、DAO和domain object形成了双向依赖，复杂的双向依赖会导致很多潜在的问题。<br><br>2、如何划分Service层逻辑和domain层逻辑是非常含混的，在实际项目中，由于设计和开发人员的水平差异，可能导致整个结构的混乱无序。<br><br>3、考虑到Service层的事务封装特性，Service层必须对所有的domain object的逻辑提供相应的事务封装方法，其结果就是Service完全重定义一遍所有的domain logic，非常烦琐，而且Service的事务化封装其意义就等于把OO的domain logic转换为过程的Service TransactionScript。该充血模型辛辛苦苦在domain层实现的OO在Service层又变成了过程式，对于Web层程序员的角度来看，和贫血模型没有什么区别了。<br><br>4、对象高度自洽的结果是不利于大规模团队分工协作。一个编程个体至少要完成一个完整业务逻辑的功能。对于单个完整业务逻辑，无法再细分下去了。<br></p>
-<p>三、胀血模型<br><br>优点：<br><br>1、简化了分层<br><br>2、也算符合OO<br><br>缺点：<br><br>1、很多不是domain logic的service逻辑也被强行放入domain object ，引起了domain ojbect模型的不稳定<br><br>2、domain object暴露给web层过多的信息，可能引起意想不到的副作用。<br></p>
-<p>参考：<br><br><a href="http://www.cnblogs.com/magiccode1023/archive/2012/11/06/2756234.html" target="_blank" rel="external">关于架构设计的“贫血模型”与“充血模型”</a><br><br><a href="http://www.oschina.net/question/54100_10400" target="_blank" rel="external">［转帖］贫血、充血模型的解释以及一些经验</a></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/web/">web</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/07/30/about-domain-object/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/07/30/about-domain-object/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
