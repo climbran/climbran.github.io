@@ -81,6 +81,70 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/09/10/singleton-pattern/" title="单例模式及懒汉式的同步优化" itemprop="url">单例模式及懒汉式的同步优化</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
+		
+  <p class="article-time">
+    <time datetime="2015-09-10T09:37:16.000Z" itemprop="datePublished"> 发表于 2015-09-10</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>单例模式分为饿汉式和懒汉式，饿汉式写起来简单，且不用考虑初始化时的同步问题；懒汉式的优点在于一开始不用初始化，可以节约内存，但需要为初始化操作进行同步。</p>
+<p>一直不理解为了这一点内存给一个方法加锁值得吗？影响并发，可能是做的项目还不够多，没有遇到需要大量内存的情况？</p>
+<p>不过昨天发现了一个比较好的方法可以在节省内存的同时减少阻塞，同样的逻辑也可以用在其他需要同步的情况下，特此记录下</p>
+<p>饿汉式标准版：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span></span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Singleton instance = <span class="keyword">new</span> Singleton();</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">private</span>	<span class="title">Singleton</span><span class="params">()</span></span>&#123;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">return</span> instance;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//other method</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>懒汉标准版：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span></span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> Singleton instance = <span class="keyword">null</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">private</span>	<span class="title">Singleton</span><span class="params">()</span></span>&#123;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">synchronized</span>(Singleton.class)&#123;</span><br><span class="line">			<span class="keyword">return</span> instance==<span class="keyword">null</span>?<span class="keyword">new</span> Singleton:instance;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//other method</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>懒汉优化版：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span></span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> Singleton instance = <span class="keyword">null</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">private</span>	<span class="title">Singleton</span><span class="params">()</span></span>&#123;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">if</span>(instance==<span class="keyword">null</span>)&#123;</span><br><span class="line">			<span class="keyword">synchronized</span>(Singleton.class)&#123;</span><br><span class="line">				<span class="keyword">if</span>(instance==<span class="keyword">null</span>)</span><br><span class="line">					<span class="keyword">return</span> <span class="keyword">new</span> Singleton();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> instance</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//other method</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>优化后，只有未初始化时才会加锁，初始化后instance不为null，直接返回单例对象，不需要再次进入同步块。</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/设计模式/">设计模式</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/09/10/singleton-pattern/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/10/singleton-pattern/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/09/10/synchronized/" title="synchronized的对象锁和类锁" itemprop="url">synchronized的对象锁和类锁</a>
   </h1>
   <p class="article-author">By
@@ -699,95 +763,6 @@ hgetall <span class="keyword">key</span>        <span class="preprocessor">#返�
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/09/02/redis-keys/" title="redis数据类型-keys" itemprop="url">redis数据类型-keys</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
-		
-  <p class="article-time">
-    <time datetime="2015-09-02T06:24:59.000Z" itemprop="datePublished"> 发表于 2015-09-02</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>redis本质上一个 key-value数据库，关于key注意以下几点：<br>1、其中key也是字符串类型,但是key中不能包括边界字符。<br>2、由于key不是二进制安全(binary safe)的字符串,所以像”my key”和”mykey\n”这样包含空格和换行的 key 是不允许的。<br>3、redis内部并不限制使用binary字符,这是redis协议限制的。”\r\n”在协议格式中会作为特殊字符。</p>
-<p>关于key的一个格式约定介绍下, object-type:id:field。比如 user:1000:password,blog:xxidxx:title。<br>key的长度最好不要太长，占内存,而且查找时候比短key慢。不过也不推荐过短的key,比如 u:1000:pwd,这的，可读性太差。</p>
-<p>下面是key相关命令：</p>
-<pre><code><span class="title">exits</span> key    
-</code></pre><p>测试指定 key 是否存在,返回 1 表示存在,0 不存在</p>
-<pre><code><span class="tag">del</span> key1 key2..<span class="class">.keyN</span>    
-</code></pre><p>删除给定 key,返回删除 key 的数目,0 表示给定 key 都不存在</p>
-<pre><code><span class="typedef"><span class="keyword">type</span> key</span>
-</code></pre><p>返回给定 key 的 value 类型。返回 none表示不存在,string字符类型,list链表类型,set无序集合类型…</p>
-<pre><code><span class="built_in">keys</span> pattern    
-</code></pre><p>返回匹配指定模式的所有 key,下面给个例子</p>
-<pre><code>randomkey
-</code></pre><p>返回从当前数据库中随机选择的一个 key,如果当前数据库是空的,返回空串</p>
-<pre><code><span class="built_in">rename</span> oldkey newkey
-</code></pre><p>原子的重命名一个 key,如果 newkey已存在,将会被覆盖,返回 1 表示成功,0 失败。可能是oldkey不存在或者oldkey和newkey相同。</p>
-<pre><code><span class="title">renamenx</span> oldkey newkey
-</code></pre><p>同上,但是如果 newkey 存在返回失败(0)</p>
-<pre><code>dbsize
-</code></pre><p>返回当前数据库的key的数量</p>
-<pre><code>expire key <span class="built_in">seconds</span>
-</code></pre><p>为key指定过期时间，单位是秒，返回1成功,0表示key已经设置过过期时间,或者key不存在</p>
-<pre><code><span class="title">ttl</span> key
-</code></pre><p>返回设置过过期时间的 key 的剩余过期秒数 -1 表示 key 不存在或者没有设置过过期时间</p>
-<pre><code><span class="keyword">select</span> db-<span class="built_in">index</span>
-</code></pre><p>通过索引选择数据库,默认连接的数据库是0,默认数据库数是16个。返回1表示切换连接成功,0表示失败</p>
-<pre><code><span class="keyword">move</span> key <span class="keyword">db</span>-index 
-</code></pre><p>将key从当前数据库移动到指定数据库。返回1成功。0如果key不存在,或者已经在指定数据库中</p>
-<pre><code>flushdb
-</code></pre><p>删除当前数据库中所有 key,此方法不会失败。慎用</p>
-<pre><code>flushall
-</code></pre><p>删除所有数据库中的所有 key,此方法不会失败。更加慎用</p>
-<p>总结：<br>1、关于select db-index,redis默认分割成16个数据库，默认连接到索引为0的数据库，每个数据库都是动态大小的，一开始非常小。分库作用只是提供一个简单的命名空间（namespace），以便将不同用途的数据分开而已，在同一个服务器进行分库不会带来任何效率上的提升。<br>2、关于move key db-index,只要目标数据库中已存在指定的key，不管value为多少都会返回失败。<br>3、关于keys pattern,例子:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">redis&gt; <span class="built_in">set</span> test dsf OKredis&gt; <span class="built_in">set</span> tast dsaf OKredis&gt; <span class="built_in">set</span> tist adff OKredis&gt; keys t*<span class="number">1.</span> <span class="string">"tist"</span><span class="number">2.</span> <span class="string">"tast"</span><span class="number">3.</span> <span class="string">"test"</span>redis&gt; keys t[ia]st</span><br><span class="line"><span class="number">1.</span> <span class="string">"tist"</span><span class="number">2.</span> <span class="string">"tast"</span>redis&gt; keys t?st<span class="number">1.</span> <span class="string">"tist"</span><span class="number">2.</span> <span class="string">"tast"</span><span class="number">3.</span> <span class="string">"test"</span></span><br></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Redis/">Redis</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/09/02/redis-keys/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/02/redis-keys/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
@@ -820,11 +795,7 @@ hgetall <span class="keyword">key</span>        <span class="preprocessor">#返�
 			
 		
 			
-				<li><a href="/tags/数据库/" title="数据库">数据库<sup>2</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/tomcat/" title="tomcat">tomcat<sup>2</sup></a></li>
+				<li><a href="/tags/设计模式/" title="设计模式">设计模式<sup>2</sup></a></li>
 			
 		
 			
@@ -832,7 +803,19 @@ hgetall <span class="keyword">key</span>        <span class="preprocessor">#返�
 			
 		
 			
+				<li><a href="/tags/mac-os/" title="mac os">mac os<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/hexo/" title="hexo">hexo<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/tomcat/" title="tomcat">tomcat<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/数据库/" title="数据库">数据库<sup>2</sup></a></li>
 			
 		
 			
@@ -840,15 +823,7 @@ hgetall <span class="keyword">key</span>        <span class="preprocessor">#返�
 			
 		
 			
-				<li><a href="/tags/mac-os/" title="mac os">mac os<sup>2</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/postgresql/" title="postgresql">postgresql<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/intelliJ/" title="intelliJ">intelliJ<sup>1</sup></a></li>
 			
 		
 			
@@ -860,7 +835,7 @@ hgetall <span class="keyword">key</span>        <span class="preprocessor">#返�
 			
 		
 			
-				<li><a href="/tags/设计模式/" title="设计模式">设计模式<sup>1</sup></a></li>
+				<li><a href="/tags/intelliJ/" title="intelliJ">intelliJ<sup>1</sup></a></li>
 			
 		
 			

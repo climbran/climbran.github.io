@@ -4,29 +4,32 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>服务器无状态 | CLIMBRAN</title>
+    <title>单例模式及懒汉式的同步优化 | CLIMBRAN</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="swe">
     
 
     
-    <meta name="description" content="之前做听说可以不维持服务器的状态来减轻服务器压力，以为是指整个服务端都没有状态，一直没弄明白除非用cookie或者一次性的token，怎么维持客户端的状态。
-今天看到无状态服务（stateless service）才明白无状态是指对服务器集群中每台服务器(web server)来说是没有状态的。
-一般可以认为session就是有状态的，session主要用于两种情况：1、一个事务的多次请求间暂存数">
+    <meta name="description" content="单例模式分为饿汉式和懒汉式，饿汉式写起来简单，且不用考虑初始化时的同步问题；懒汉式的优点在于一开始不用初始化，可以节约内存，但需要为初始化操作进行同步。
+一直不理解为了这一点内存给一个方法加锁值得吗？影响并发，可能是做的项目还不够多，没有遇到需要大量内存的情况？
+不过昨天发现了一个比较好的方法可以在节省内存的同时减少阻塞，同样的逻辑也可以用在其他需要同步的情况下，特此记录下
+饿汉式标准版：1234">
 <meta property="og:type" content="article">
-<meta property="og:title" content="服务器无状态">
-<meta property="og:url" content="http://yoursite.com/2015/09/07/stateless-service/index.html">
+<meta property="og:title" content="单例模式及懒汉式的同步优化">
+<meta property="og:url" content="http://yoursite.com/2015/09/10/singleton-pattern/index.html">
 <meta property="og:site_name" content="CLIMBRAN">
-<meta property="og:description" content="之前做听说可以不维持服务器的状态来减轻服务器压力，以为是指整个服务端都没有状态，一直没弄明白除非用cookie或者一次性的token，怎么维持客户端的状态。
-今天看到无状态服务（stateless service）才明白无状态是指对服务器集群中每台服务器(web server)来说是没有状态的。
-一般可以认为session就是有状态的，session主要用于两种情况：1、一个事务的多次请求间暂存数">
-<meta property="og:updated_time" content="2015-09-07T05:25:38.000Z">
+<meta property="og:description" content="单例模式分为饿汉式和懒汉式，饿汉式写起来简单，且不用考虑初始化时的同步问题；懒汉式的优点在于一开始不用初始化，可以节约内存，但需要为初始化操作进行同步。
+一直不理解为了这一点内存给一个方法加锁值得吗？影响并发，可能是做的项目还不够多，没有遇到需要大量内存的情况？
+不过昨天发现了一个比较好的方法可以在节省内存的同时减少阻塞，同样的逻辑也可以用在其他需要同步的情况下，特此记录下
+饿汉式标准版：1234">
+<meta property="og:updated_time" content="2015-09-10T10:19:56.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="服务器无状态">
-<meta name="twitter:description" content="之前做听说可以不维持服务器的状态来减轻服务器压力，以为是指整个服务端都没有状态，一直没弄明白除非用cookie或者一次性的token，怎么维持客户端的状态。
-今天看到无状态服务（stateless service）才明白无状态是指对服务器集群中每台服务器(web server)来说是没有状态的。
-一般可以认为session就是有状态的，session主要用于两种情况：1、一个事务的多次请求间暂存数">
+<meta name="twitter:title" content="单例模式及懒汉式的同步优化">
+<meta name="twitter:description" content="单例模式分为饿汉式和懒汉式，饿汉式写起来简单，且不用考虑初始化时的同步问题；懒汉式的优点在于一开始不用初始化，可以节约内存，但需要为初始化操作进行同步。
+一直不理解为了这一点内存给一个方法加锁值得吗？影响并发，可能是做的项目还不够多，没有遇到需要大量内存的情况？
+不过昨天发现了一个比较好的方法可以在节省内存的同时减少阻塞，同样的逻辑也可以用在其他需要同步的情况下，特此记录下
+饿汉式标准版：1234">
 
     
     <link rel="alternative" href="/atom.xml" title="CLIMBRAN" type="application/atom+xml">
@@ -86,23 +89,26 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/09/07/stateless-service/" title="服务器无状态" itemprop="url">服务器无状态</a>
+      <a href="/2015/09/10/singleton-pattern/" title="单例模式及懒汉式的同步优化" itemprop="url">单例模式及懒汉式的同步优化</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
 		
   <p class="article-time">
-    <time datetime="2015-09-07T04:21:03.000Z" itemprop="datePublished"> 发表于 2015-09-07</time>
+    <time datetime="2015-09-10T09:37:16.000Z" itemprop="datePublished"> 发表于 2015-09-10</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
-		<p>之前做听说可以不维持服务器的状态来减轻服务器压力，以为是指整个服务端都没有状态，一直没弄明白除非用cookie或者一次性的token，怎么维持客户端的状态。</p>
-<p>今天看到<a href="http://kyfxbl.iteye.com/blog/1831869" target="_blank" rel="external">无状态服务（stateless service）</a>才明白无状态是指对服务器集群中每台服务器(web server)来说是没有状态的。</p>
-<p>一般可以认为session就是有状态的，session主要用于两种情况：<br>1、一个事务的多次请求间暂存数据<br>2、维持登陆状态<br>对于第一种情况，可以通过将数据回传到客户端，放在表单中隐藏或用sessionStorage、cookie来实现。<br>对于第二种情况，可以将session从web server中剥离，存放在共享的地方(如redis)。</p>
-<p>附：<br><a href="http://book.51cto.com/art/201403/432495.htm" target="_blank" rel="external">理解服务的无状态性</a><br><a href="http://blog.csdn.net/romandion/article/details/1800025" target="_blank" rel="external">状态和无状态－－2种服务器架构之间的比较 </a></p>
+		<p>单例模式分为饿汉式和懒汉式，饿汉式写起来简单，且不用考虑初始化时的同步问题；懒汉式的优点在于一开始不用初始化，可以节约内存，但需要为初始化操作进行同步。</p>
+<p>一直不理解为了这一点内存给一个方法加锁值得吗？影响并发，可能是做的项目还不够多，没有遇到需要大量内存的情况？</p>
+<p>不过昨天发现了一个比较好的方法可以在节省内存的同时减少阻塞，同样的逻辑也可以用在其他需要同步的情况下，特此记录下</p>
+<p>饿汉式标准版：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span></span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Singleton instance = <span class="keyword">new</span> Singleton();</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">private</span>	<span class="title">Singleton</span><span class="params">()</span></span>&#123;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">return</span> instance;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//other method</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>懒汉标准版：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span></span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> Singleton instance = <span class="keyword">null</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">private</span>	<span class="title">Singleton</span><span class="params">()</span></span>&#123;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">synchronized</span>(Singleton.class)&#123;</span><br><span class="line">			<span class="keyword">return</span> instance==<span class="keyword">null</span>?<span class="keyword">new</span> Singleton:instance;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//other method</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>懒汉优化版：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span></span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> Singleton instance = <span class="keyword">null</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">private</span>	<span class="title">Singleton</span><span class="params">()</span></span>&#123;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">if</span>(instance==<span class="keyword">null</span>)&#123;</span><br><span class="line">			<span class="keyword">synchronized</span>(Singleton.class)&#123;</span><br><span class="line">				<span class="keyword">if</span>(instance==<span class="keyword">null</span>)</span><br><span class="line">					<span class="keyword">return</span> <span class="keyword">new</span> Singleton();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> instance</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//other method</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>优化后，只有未初始化时才会加锁，初始化后instance不为null，直接返回单例对象，不需要再次进入同步块。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -111,7 +117,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/web/">web</a>
+  <span></span> <a href="/tags/设计模式/">设计模式</a>
   </div>
 
 </div>
@@ -120,7 +126,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/09/07/stateless-service/" data-title="服务器无状态 | CLIMBRAN" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/09/10/singleton-pattern/" data-title="单例模式及懒汉式的同步优化 | CLIMBRAN" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -133,19 +139,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/09/09/java-collection/" title="JAVA容器复习">
-  <strong>上一篇：</strong><br/>
-  <span>
-  JAVA容器复习</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/09/06/spring-redis-jedis/"  title="Spring与redis集成">
+<a href="/2015/09/10/synchronized/"  title="synchronized的对象锁和类锁">
  <strong>下一篇：</strong><br/> 
- <span>Spring与redis集成
+ <span>synchronized的对象锁和类锁
 </span>
 </a>
 </div>
@@ -154,7 +152,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/09/07/stateless-service/" data-title="服务器无状态" data-url="http://yoursite.com/2015/09/07/stateless-service/"></div>
+	<div class="ds-thread" data-thread-key="2015/09/10/singleton-pattern/" data-title="单例模式及懒汉式的同步优化" data-url="http://yoursite.com/2015/09/10/singleton-pattern/"></div>
 </section>
 
 
