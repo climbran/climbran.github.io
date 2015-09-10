@@ -81,6 +81,68 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/09/10/synchronized/" title="synchronized的对象锁和类锁" itemprop="url">synchronized的对象锁和类锁</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
+		
+  <p class="article-time">
+    <time datetime="2015-09-10T06:52:33.000Z" itemprop="datePublished"> 发表于 2015-09-10</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>很多人都知道synchronized可以用来加锁，但对于synchronized(Object o)里的参数不太了解。</p>
+<p>java的每个对象隐含一个内部锁，这个内部锁对不同线程是互斥的。synchronized(object){}的本质就是对{}区域中的代码加上object对象的对象锁，只有获取了object的对象锁才能执行该代码块。</p>
+<p>如果有：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Object o1 = <span class="keyword">new</span> Object();</span><br><span class="line">Object o2 = <span class="keyword">new</span> Object();</span><br><span class="line"></span><br><span class="line"><span class="keyword">synchronized</span>(o1)&#123;</span><br><span class="line">	<span class="comment">//block1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">synchronized</span>(o1)&#123;</span><br><span class="line">	<span class="comment">//block2</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">synchronized</span>(o2)&#123;</span><br><span class="line">	<span class="comment">//block3</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>当有一个线程1在执行block1时，线程2想要执行block2同样会被阻塞，应为o1的对象锁已经被线程1获取；而此时线程3想执行block3则不受影响。</p>
+<p>对于类锁，其实就是Class实例的对象锁。因为一个类只有一个Class对象，所以同一个类的所有对象共享同一个类锁。</p>
+<p>还有对于方法锁：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SynchronizedDemo</span></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="keyword">synchronized</span> <span class="title">method1</span><span class="params">()</span>	</span>&#123;<span class="comment">//TODO&#125; </span></span><br><span class="line">			</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method2</span><span class="params">()</span>	</span>&#123;synchronized1(<span class="keyword">this</span>)&#123;<span class="comment">//TODO&#125; &#125;</span></span><br><span class="line">	<span class="comment">//method1效果等价于method2</span></span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="keyword">synchronized</span> <span class="title">method3</span><span class="params">()</span></span>&#123;<span class="comment">//TODO&#125; </span></span><br><span class="line">		</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">method4</span><span class="params">()</span></span>&#123;<span class="keyword">synchronized</span>(SynchronizedDemo.class)&#123;<span class="comment">//TODO&#125; &#125;</span></span><br><span class="line">	<span class="comment">//method3效果等价于method4</span></span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/java/">java</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/09/10/synchronized/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/10/synchronized/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/09/09/java-collection/" title="JAVA容器复习" itemprop="url">JAVA容器复习</a>
   </h1>
   <p class="article-author">By
@@ -725,78 +787,6 @@ hgetall <span class="keyword">key</span>        <span class="preprocessor">#返�
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/09/01/install-redis-in-Mac/" title="Mac下安装Redis" itemprop="url">Mac下安装Redis</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
-		
-  <p class="article-time">
-    <time datetime="2015-09-01T11:34:08.000Z" itemprop="datePublished"> 发表于 2015-09-01</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p><a href="http://redis.io/download" target="_blank" rel="external">http://redis.io/download</a><br>下载最新的Redis版本，我下载的是3.0.3<br>下载后将文件解压，通过进入文件夹</p>
-<pre><code>cd redis-<span class="number">3.0</span><span class="number">.3</span>
-</code></pre><p>执行</p>
-<pre><code>make <span class="keyword">install</span>
-</code></pre><p>Redis就安装好了，下面是启动指令：</p>
-<pre><code><span class="preprocessor">#启动 加上‘&amp;’使redis能在后台运行</span>
-src/redis-service &amp;
-<span class="preprocessor">#关闭</span>
-src/redis-cli shutdown
-</code></pre><p>测试</p>
-<pre><code>localhost:redis-<span class="number">3.0</span><span class="number">.3</span> ywq$ src/redis-cli 
-<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span>&gt; <span class="built_in">set</span> foo test
-OK
-<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span>&gt; get foo
-<span class="string">"test"</span>
-</code></pre>
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Redis/">Redis</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/09/01/install-redis-in-Mac/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/01/install-redis-in-Mac/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
@@ -817,7 +807,7 @@ OK
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/java/" title="java">java<sup>9</sup></a></li>
+				<li><a href="/tags/java/" title="java">java<sup>10</sup></a></li>
 			
 		
 			

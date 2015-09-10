@@ -4,23 +4,29 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>关于资源和表述 | CLIMBRAN</title>
+    <title>synchronized的对象锁和类锁 | CLIMBRAN</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="swe">
     
 
     
-    <meta name="description" content="最早通过在网上资料学习restful时，，都是说每个url代表一个资源(resource)，在项目设计时，会发现有时候为一个资源设计url时会发生冲突。比如一个教育系统中有老师和学生两种类型账号，一个班级的url为/class，而在老师账号中还有一个班级管理模块，同样使用的班级这一资源，但/class这一url已被使用。后来突然想到我们是不是能把浏览的班级和老师的班级管理模块当成两种不同资源？于是">
+    <meta name="description" content="很多人都知道synchronized可以用来加锁，但对于synchronized(Object o)里的参数不太了解。
+java的每个对象隐含一个内部锁，这个内部锁对不同线程是互斥的。synchronized(object){}的本质就是对{}区域中的代码加上object对象的对象锁，只有获取了object的对象锁才能执行该代码块。
+如果有：1234567891011121314Object o1">
 <meta property="og:type" content="article">
-<meta property="og:title" content="关于资源和表述">
-<meta property="og:url" content="http://yoursite.com/2015/07/11/resource-and-the-representation-of-the-resource/index.html">
+<meta property="og:title" content="synchronized的对象锁和类锁">
+<meta property="og:url" content="http://yoursite.com/2015/09/10/synchronized/index.html">
 <meta property="og:site_name" content="CLIMBRAN">
-<meta property="og:description" content="最早通过在网上资料学习restful时，，都是说每个url代表一个资源(resource)，在项目设计时，会发现有时候为一个资源设计url时会发生冲突。比如一个教育系统中有老师和学生两种类型账号，一个班级的url为/class，而在老师账号中还有一个班级管理模块，同样使用的班级这一资源，但/class这一url已被使用。后来突然想到我们是不是能把浏览的班级和老师的班级管理模块当成两种不同资源？于是">
-<meta property="og:updated_time" content="2015-08-19T14:18:26.000Z">
+<meta property="og:description" content="很多人都知道synchronized可以用来加锁，但对于synchronized(Object o)里的参数不太了解。
+java的每个对象隐含一个内部锁，这个内部锁对不同线程是互斥的。synchronized(object){}的本质就是对{}区域中的代码加上object对象的对象锁，只有获取了object的对象锁才能执行该代码块。
+如果有：1234567891011121314Object o1">
+<meta property="og:updated_time" content="2015-09-10T07:21:03.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="关于资源和表述">
-<meta name="twitter:description" content="最早通过在网上资料学习restful时，，都是说每个url代表一个资源(resource)，在项目设计时，会发现有时候为一个资源设计url时会发生冲突。比如一个教育系统中有老师和学生两种类型账号，一个班级的url为/class，而在老师账号中还有一个班级管理模块，同样使用的班级这一资源，但/class这一url已被使用。后来突然想到我们是不是能把浏览的班级和老师的班级管理模块当成两种不同资源？于是">
+<meta name="twitter:title" content="synchronized的对象锁和类锁">
+<meta name="twitter:description" content="很多人都知道synchronized可以用来加锁，但对于synchronized(Object o)里的参数不太了解。
+java的每个对象隐含一个内部锁，这个内部锁对不同线程是互斥的。synchronized(object){}的本质就是对{}区域中的代码加上object对象的对象锁，只有获取了object的对象锁才能执行该代码块。
+如果有：1234567891011121314Object o1">
 
     
     <link rel="alternative" href="/atom.xml" title="CLIMBRAN" type="application/atom+xml">
@@ -80,21 +86,24 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/07/11/resource-and-the-representation-of-the-resource/" title="关于资源和表述" itemprop="url">关于资源和表述</a>
+      <a href="/2015/09/10/synchronized/" title="synchronized的对象锁和类锁" itemprop="url">synchronized的对象锁和类锁</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
 		
   <p class="article-time">
-    <time datetime="2015-07-11T13:44:26.000Z" itemprop="datePublished"> 发表于 2015-07-11</time>
+    <time datetime="2015-09-10T06:52:33.000Z" itemprop="datePublished"> 发表于 2015-09-10</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
-		<p>最早通过在网上资料学习restful时，，都是说每个url代表一个资源(resource)，在项目设计时，会发现有时候为一个资源设计url时会发生冲突。<br><br><br>比如一个教育系统中有老师和学生两种类型账号，一个班级的url为/class，而在老师账号中还有一个班级管理模块，同样使用的班级这一资源，但/class这一url已被使用。<br><br><br>后来突然想到我们是不是能把浏览的班级和老师的班级管理模块当成两种不同资源？于是设计成了</p>
-<p><pre><br>/class        // 班级资源<br>/classmgr     //班级管理资源<br></pre><br>最近看《restful web APIs》时看到表述(representation of the resource)一词，突然顿悟到到其实上面两个url对应的是同一个资源的两个不同表述。每个url代表一个资源的说法也并没错，每个资源可以有多个表述，url和资源是多对一关系。在客户端看来，不同url获取的是不同表述，但最终定位的可能是同一资源。</p>
+		<p>很多人都知道synchronized可以用来加锁，但对于synchronized(Object o)里的参数不太了解。</p>
+<p>java的每个对象隐含一个内部锁，这个内部锁对不同线程是互斥的。synchronized(object){}的本质就是对{}区域中的代码加上object对象的对象锁，只有获取了object的对象锁才能执行该代码块。</p>
+<p>如果有：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Object o1 = <span class="keyword">new</span> Object();</span><br><span class="line">Object o2 = <span class="keyword">new</span> Object();</span><br><span class="line"></span><br><span class="line"><span class="keyword">synchronized</span>(o1)&#123;</span><br><span class="line">	<span class="comment">//block1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">synchronized</span>(o1)&#123;</span><br><span class="line">	<span class="comment">//block2</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">synchronized</span>(o2)&#123;</span><br><span class="line">	<span class="comment">//block3</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>当有一个线程1在执行block1时，线程2想要执行block2同样会被阻塞，应为o1的对象锁已经被线程1获取；而此时线程3想执行block3则不受影响。</p>
+<p>对于类锁，其实就是Class实例的对象锁。因为一个类只有一个Class对象，所以同一个类的所有对象共享同一个类锁。</p>
+<p>还有对于方法锁：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SynchronizedDemo</span></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="keyword">synchronized</span> <span class="title">method1</span><span class="params">()</span>	</span>&#123;<span class="comment">//TODO&#125; </span></span><br><span class="line">			</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method2</span><span class="params">()</span>	</span>&#123;synchronized1(<span class="keyword">this</span>)&#123;<span class="comment">//TODO&#125; &#125;</span></span><br><span class="line">	<span class="comment">//method1效果等价于method2</span></span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="keyword">synchronized</span> <span class="title">method3</span><span class="params">()</span></span>&#123;<span class="comment">//TODO&#125; </span></span><br><span class="line">		</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">method4</span><span class="params">()</span></span>&#123;<span class="keyword">synchronized</span>(SynchronizedDemo.class)&#123;<span class="comment">//TODO&#125; &#125;</span></span><br><span class="line">	<span class="comment">//method3效果等价于method4</span></span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -103,7 +112,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/restful/">restful</a>
+  <span></span> <a href="/tags/java/">java</a>
   </div>
 
 </div>
@@ -112,7 +121,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/07/11/resource-and-the-representation-of-the-resource/" data-title="关于资源和表述 | CLIMBRAN" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/09/10/synchronized/" data-title="synchronized的对象锁和类锁 | CLIMBRAN" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -125,19 +134,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/07/12/http-restful/" title="restful中http请求的语义">
-  <strong>上一篇：</strong><br/>
-  <span>
-  restful中http请求的语义</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/06/20/dynamic-sitemap/"  title="自定义taglib动态生成站点地图">
+<a href="/2015/09/09/java-collection/"  title="JAVA容器复习">
  <strong>下一篇：</strong><br/> 
- <span>自定义taglib动态生成站点地图
+ <span>JAVA容器复习
 </span>
 </a>
 </div>
@@ -146,7 +147,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/07/11/resource-and-the-representation-of-the-resource/" data-title="关于资源和表述" data-url="http://yoursite.com/2015/07/11/resource-and-the-representation-of-the-resource/"></div>
+	<div class="ds-thread" data-thread-key="2015/09/10/synchronized/" data-title="synchronized的对象锁和类锁" data-url="http://yoursite.com/2015/09/10/synchronized/"></div>
 </section>
 
 
