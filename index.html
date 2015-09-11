@@ -81,6 +81,68 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/09/11/start-jms/" title="JMS入门" itemprop="url">JMS入门</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
+		
+  <p class="article-time">
+    <time datetime="2015-09-11T04:16:35.000Z" itemprop="datePublished"> 发表于 2015-09-11</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>一、什么是JMS<br>JMS(java messgae service)是SUN开发的java消息系统的api,提供异步通信的服务。可用于订单处理、邮寄发送等耗时较长的操作，在减少加快响应时间的同时又能避免开多线程带来的同步问题(多线程在等待请求的io操作或其他服务器响应时一直占有临界资源，而异步调用将请求发送出去后就不用再关心)。JMS还能最大化降低应用程序与应用系统之间的耦合度。(消息发送方和接收方之间解耦)</p>
+<p>应用场景示例：<br>电商网站大量用户提交订单时，使用正常的同步方式处理订单可能受订单处理服务器性能瓶颈影响，导致用户等待时间过长，当并发量太大时甚至会导致服务器的崩溃。这时使用JMS可以将用户请求都加入到消息队列中，然后给用户返回订单处理中。然后订单处理服务器逐个的处理消息队列中的订单。</p>
+<p>二、JMS两种消息模型<br>1.点到点（P2P）模型:生产者将消息发送到队列(Queue)中，消费者从队列中取出消息（eg:订单处理中，多台订单处理服务器从消息队列中取出订单）<br>特点：<br>    (1)每条只能被接收一次，如果一条消息被一个消费者接收，那么其他的消费者就不能得到这条消息了。<br>    (2)只要消息没过期且没被其他消费者接受，消费者可能在任何时间接收消息队列中的消息，与生产者消费者运行先后无关。<br>    (3)收到消息后消费者必须确认消息已被接收，否则JMS服务提供者会认为该消息没有被接收。程序可以自动进行确认，不需要人工干预。<br>    (4)非持久的消息最多只发送一次,持久的消息严格发送一次。P2P模式默认为持久化。<br>2.发布/订阅（Pub/Sub）模型:生产者发布消息到某一主题(Topic),与主题相关的消费者都会收到消息（eg:系统发送系统邮件都某个用户组，该用户组的用户都会收到消息）<br>特点：<br>    (1)每条消息可以有多个消费者，如果报纸和杂志一样，谁订阅了谁都可以获得。<br>    (2)订阅者只能接受他们订阅之后出版的消息,即订阅者必须先运行，再等待生产者的运行。(可通过持久化来实现接收订阅前发送的消息，pub/sub模式默认为非持久化)</p>
+<p>三、主要对象<br><strong>Destination:</strong>消息发送的目的地，即Queue或Topic<br><strong>Message:</strong>被发送的消息，有StreamMessage、MapMessage、TextMessage、ObjectMessage、BytesMessage、XMLMessage,最常用的是TextMessage(普通字符串，包含一个String)和ObjectMessage(包含一个可序列化的java对象)<br><strong>Session:</strong>与JMS建立的会话，通过Session才能创建Message<br><strong>Connection:</strong>与JMS建立的连接，可以从连接创建Session<br><strong>ConnectionFactory:</strong>用来创建Connection<br><strong>Producer:</strong>消息的生产者，用来发送消息,通过Session创建<br><strong>MessageConsumer:</strong>消息的消费者，用来接收消息,通过Session创建<br>基于ActiveMQ的示例如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">ConnectionFactory factory = <span class="keyword">new</span> ActiveMQConnectionFactory(<span class="string">"vm://localhost"</span>);</span><br><span class="line">Queue queue = <span class="keyword">new</span> ActiveMQQueue(<span class="string">"demoQueue"</span>);</span><br><span class="line"></span><br><span class="line">Connection connection = factory.createConnection();</span><br><span class="line">connection.start();</span><br><span class="line"></span><br><span class="line">Session session = connection.createSession(<span class="keyword">false</span>,Session.AUTO_ACKNOWLEDGE);</span><br><span class="line"></span><br><span class="line">Message message = session.createTextMessage(<span class="string">"Hello world"</span>);</span><br><span class="line">MessageProducer producer = session.createProducer(queue);</span><br><span class="line">producer.send(message);</span><br><span class="line"></span><br><span class="line">MessageConsumer consumer = session.createConsumer(queue);</span><br><span class="line">Message receive = comsumer.receive();</span><br></pre></td></tr></table></figure></p>
+<p>四、JMS的同步调用与异步调用<br>1、同步调用<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">consumer.receive()或consumer.receive(init timeout)</span><br></pre></td></tr></table></figure><br>消息接受者会一直等待，直到有消息或超时<br>2、异步调用<br>    通过MessageListener<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">MessageConsumer comsumer = session.createConsumer(queue);  </span><br><span class="line">comsumer.setMessageListener(<span class="keyword">new</span> MessageListener()&#123;  </span><br><span class="line">          <span class="annotation">@Override</span>  </span><br><span class="line">          <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onMessage</span><span class="params">(Message m)</span> </span>&#123;  </span><br><span class="line">              TextMessage textMsg = (TextMessage) m;  </span><br><span class="line">              <span class="keyword">try</span> &#123;  </span><br><span class="line">                  System.out.println(textMsg.getText());  </span><br><span class="line">              &#125; <span class="keyword">catch</span> (JMSException e) &#123;  </span><br><span class="line">                  e.printStackTrace();  </span><br><span class="line">              &#125;  </span><br><span class="line">          &#125;           </span><br><span class="line">      &#125;);</span><br></pre></td></tr></table></figure><br>通过监听器监听，当有消息到达时调用onMessage方法 </p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/jms/">jms</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/09/11/start-jms/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/11/start-jms/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/09/10/singleton-pattern/" title="单例模式及懒汉式的同步优化" itemprop="url">单例模式及懒汉式的同步优化</a>
   </h1>
   <p class="article-author">By
@@ -676,93 +738,6 @@ hgetall <span class="keyword">key</span>        <span class="preprocessor">#返�
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/09/02/redis-string/" title="redis数据类型-string" itemprop="url">redis数据类型-string</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
-		
-  <p class="article-time">
-    <time datetime="2015-09-02T07:05:35.000Z" itemprop="datePublished"> 发表于 2015-09-02</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>1、string 是 redis 最基本的类型<br>2、string 类型是二进制安全的。意思是 redis 的 string 可以包含任何数据。比如 jpg 图片或者序列化的对象<br>3、内部实现来看其实 string 可以看作 byte 数组,最大 上限是 1G 字节<br>4、sting可以被部分命令当做int处理，如incr</p>
-<p>string类型的定义：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> sdshdr &#123;<span class="keyword">long</span> len; 		<span class="comment">//数组中剩余可用字节数</span><span class="keyword">long</span> <span class="built_in">free</span>; 		<span class="comment">//buf数组的长度</span><span class="keyword">char</span> buf[]		<span class="comment">//用于存贮实际的字符串内容的数组;</span>&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>string相关命令如下</p>
-<pre><code><span class="built_in">set</span> <span class="built_in">key</span> <span class="built_in">value</span> 
-</code></pre><p>设置 key 对应的值为 string 类型的 value,返回 1 表示成功,0 失败</p>
-<pre><code>setnx <span class="built_in">key</span> <span class="built_in">value</span>
-</code></pre><p>同上,但如果 key 已经存在,返回 0 。nx 是 not exist 的意思</p>
-<pre><code><span class="built_in">get</span> <span class="variable">key</span>
-</code></pre><p>获取 key 对应的 string 值,如果 key 不存在返回 nil</p>
-<pre><code>getset <span class="built_in">key</span> <span class="built_in">value</span>
-</code></pre><p>原子的设置 key 的值,并返回 key 的旧值。如果 key 不存在返回 nil</p>
-<pre><code>mget key1 key2 <span class="attribute">...</span> keyN
-</code></pre><p>一次获取多个 key 的值,如果对应 key 不存在,则对应返回 nil</p>
-<pre><code>mset key<span class="number">1</span> <span class="keyword">value</span><span class="number">1</span> ...keyN <span class="keyword">value</span> N
-</code></pre><p>一次设置多个 key 的值,成功返回1,表示所有的值都设置了;失败返回0,表示没有任何值被设置</p>
-<pre><code>msetnx key1 value1 ..<span class="class">.keyN</span> valueN
-</code></pre><p>同上,但是不会覆盖已经存在的 key</p>
-<pre><code><span class="title">incr</span> key
-</code></pre><p>对 key 的值做加加操作,并返回新的值。<br>注意:incr 一个不是 int 的 value 会返回错误;incr一个不存在的 key,则设置 value 为 1</p>
-<pre><code>decr
-</code></pre><p>同上,但是做的是减减操作,decr 一个不存在 key,则设置 key 为-1</p>
-<pre><code>incrby <span class="keyword">key</span> <span class="built_in">integer</span>
-</code></pre><p>同 incr,加指定值 ,key 不存在时候会设置 key,并认为原来的 value 是 0</p>
-<pre><code>decrby <span class="keyword">key</span> <span class="built_in">integer</span>
-</code></pre><p>￼同 decr,减指定值。<br>decrby完全是为了可读性,我们完全可以通过 incrby 一个负<br>值来实现同样效果,反之一样。</p>
-<pre><code><span class="built_in">append</span> <span class="variable">key</span> value
-</code></pre><p>给指定 key 的字符串值追加 value,返回新字符串值的长度。</p>
-<pre><code><span class="keyword">substr </span>key start <span class="preprocessor">end</span>
-</code></pre><p>返回截取过的 key 的字符串值。<br>注意该命令并不修改 key 的值,下标是从 0 开始的</p>
-<p>总结：<br>1、关于mget，如果某个key不存在,只有不存在的key返回nil，其他key任正常返回，例子：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">redis&gt; flushdb OKredis&gt; dbsize (integer) <span class="number">0</span></span><br><span class="line">redis&gt; <span class="built_in">set</span> k1 a OKredis&gt; <span class="built_in">set</span> k2 bOKredis&gt; mget k1 k2 k3 </span><br><span class="line"><span class="number">1.</span> <span class="string">"a"</span><span class="number">2.</span> <span class="string">"b"</span> <span class="number">3.</span> (nil)</span><br></pre></td></tr></table></figure><br>2、关于mset和msetnx<br>mset会覆盖已存在的key<br>msetnx只要有一个key已存在就返回0，表示没有任何值被设置<br>3、关于incrby、decrby<br>当value不是一个int类型时会返回失败</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Redis/">Redis</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/09/02/redis-string/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/02/redis-string/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
@@ -807,6 +782,10 @@ hgetall <span class="keyword">key</span>        <span class="preprocessor">#返�
 			
 		
 			
+				<li><a href="/tags/restful/" title="restful">restful<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/hexo/" title="hexo">hexo<sup>2</sup></a></li>
 			
 		
@@ -819,11 +798,11 @@ hgetall <span class="keyword">key</span>        <span class="preprocessor">#返�
 			
 		
 			
-				<li><a href="/tags/restful/" title="restful">restful<sup>2</sup></a></li>
+				<li><a href="/tags/postgresql/" title="postgresql">postgresql<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/postgresql/" title="postgresql">postgresql<sup>1</sup></a></li>
+				<li><a href="/tags/intelliJ/" title="intelliJ">intelliJ<sup>1</sup></a></li>
 			
 		
 			
@@ -835,7 +814,7 @@ hgetall <span class="keyword">key</span>        <span class="preprocessor">#返�
 			
 		
 			
-				<li><a href="/tags/intelliJ/" title="intelliJ">intelliJ<sup>1</sup></a></li>
+				<li><a href="/tags/jms/" title="jms">jms<sup>1</sup></a></li>
 			
 		
 			
