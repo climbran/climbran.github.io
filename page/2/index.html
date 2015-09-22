@@ -75,209 +75,697 @@
     <div id="container">
       <div id="main">
 
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2015/09/02/redis-sorted-set/" title="redis数据类型-sorted set" itemprop="url">
-  
-    <h1 itemprop="name">redis数据类型-sorted set</h1>
+   
     
-     
-           <p itemprop="description" >1、set 一样,sorted set 也是 string 类型元素的集合,不同的是每个元素都会关联一个 double 类型的 score。2、sorted set 的实现是 skip list 和 hash table 的混合体。3、sorted set 最经常的使用方式应该是</p>
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/09/02/redis-sorted-set/" title="redis数据类型-sorted set" itemprop="url">redis数据类型-sorted set</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
+		
+  <p class="article-time">
+    <time datetime="2015-09-02T08:13:04.000Z" itemprop="datePublished"> 发表于 2015-09-02</time>
+    
+  </p>
+</header>
+    <div class="article-content">
         
-    
-    <time datetime="2015-09-02T08:13:04.000Z" itemprop="datePublished">2015-09-02</time>
-  </a>
-</section>
+        <p>1、set 一样,sorted set 也是 string 类型元素的集合,不同的是每个元素都会关联一个 double 类型的 score。<br>2、sorted set 的实现是 skip list 和 hash table 的混合体。<br>3、sorted set 最经常的使用方式应该是作为索引来使用。我们可以把要排序的字段作为 score 存储,对象的 id 当元素存储。</p>
+<p>下面是 sorted set 相关命令:<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">zadd key score member	#添加元素到集合,元素在集合中存在则更新对应 score</span><br><span class="line"></span><br><span class="line">zrem key member		#删除指定元素,1 表示成功,如果元素不存在返回 <span class="operator">0</span><br><span class="line"></span><br><span class="line">zincrby <span class="keyword">key</span> incr <span class="keyword">member</span>		#增加对应 <span class="keyword">member</span> 的 score 值,然后移动元素并保持 <span class="keyword">skip</span> <span class="keyword">list</span> 保持有序。返回更新后的 score 值</span><br><span class="line"></span><br><span class="line">zrank <span class="keyword">key</span> <span class="keyword">member</span>	#返回指定元素在集合中的排名(下标),集合中元素是按 score 从小到大排序的</span><br><span class="line"></span><br><span class="line">zrevrank <span class="keyword">key</span> <span class="keyword">member</span>		#同上,但是集合中元素是按 score 从大到小排序</span><br><span class="line"></span><br><span class="line">zrange <span class="keyword">key</span> <span class="keyword">start</span> <span class="keyword">end</span>	#类似 lrange 操作从集合中去指定区间的元素。返回的是有序结果</span><br><span class="line"></span><br><span class="line">zrevrange <span class="keyword">key</span> <span class="keyword">start</span> <span class="keyword">end</span>		#同上,返回结果是按 score 逆序的</span><br><span class="line"></span><br><span class="line">zrangebyscore <span class="keyword">key</span> <span class="keyword">min</span> <span class="keyword">max</span>	#返回集合中 score 在给定区间的元素</span><br><span class="line"></span><br><span class="line">zcount <span class="keyword">key</span> <span class="keyword">min</span> <span class="keyword">max</span>		#返回集合中 score 在给定区间的数量</span><br><span class="line"></span><br><span class="line">zcard <span class="keyword">key</span>		#返回集合中元素个数</span><br><span class="line"></span><br><span class="line">zscore <span class="keyword">key</span> <span class="keyword">element</span>		#返回给定元素对应的 score</span><br><span class="line"></span><br><span class="line">zremrangebyrank <span class="keyword">key</span> <span class="keyword">min</span> <span class="keyword">max</span>		#删除集合中排名在给定区间的元素</span><br><span class="line"></span><br><span class="line">zremrangebyscore <span class="keyword">key</span> <span class="keyword">min</span> <span class="keyword">max</span>	#删除集合中 score 在给定区间的元素</span></span><br></pre></td></tr></table></figure></p>
 
-
-
-
-
-
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2015/09/02/redis-set/" title="redis数据类型-set" itemprop="url">
-  
-    <h1 itemprop="name">redis数据类型-set</h1>
-    
-     
-           <p itemprop="description" >1、redis 的 set 是 string 类型的无序集合2、set 元素最大可以包含(2的32次方-1)个元素3、set 的是通过 hash table 实现的,所以添加,删除,查找的复杂度都是 O(1)。
-相关命令：12345678910111213141516171819</p>
         
-    
-    <time datetime="2015-09-02T07:58:06.000Z" itemprop="datePublished">2015-09-02</time>
-  </a>
-</section>
-
-
-
-
-
-
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2015/09/02/redis-list/" title="redis数据类型-list" itemprop="url">
-  
-    <h1 itemprop="name">redis数据类型-list</h1>
-    
-     
-           <p itemprop="description" >1、redis 的 list 类型其实就是一个每个子元素都是 string 类型的双向链表，所以[lr]push 和[lr]pop 命 令的算法时间复杂度都是 O(1)。2、list 会记录链表的长度，所以 llen 操作也是 O(1)。3、链表的最大长度是(2的32次方-1)4</p>
         
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Redis/">Redis</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/09/02/redis-sorted-set/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/02/redis-sorted-set/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
     
-    <time datetime="2015-09-02T07:31:25.000Z" itemprop="datePublished">2015-09-02</time>
-  </a>
-</section>
-
-
-
-
-
-
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2015/09/02/redis-string/" title="redis数据类型-string" itemprop="url">
-  
-    <h1 itemprop="name">redis数据类型-string</h1>
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
     
-     
-           <p itemprop="description" >1、string 是 redis 最基本的类型2、string 类型是二进制安全的。意思是 redis 的 string 可以包含任何数据。比如 jpg 图片或者序列化的对象3、内部实现来看其实 string 可以看作 byte 数组,最大 上限是 1G 字节4、sting可以被</p>
+      <a href="/2015/09/02/redis-set/" title="redis数据类型-set" itemprop="url">redis数据类型-set</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
+		
+  <p class="article-time">
+    <time datetime="2015-09-02T07:58:06.000Z" itemprop="datePublished"> 发表于 2015-09-02</time>
+    
+  </p>
+</header>
+    <div class="article-content">
         
-    
-    <time datetime="2015-09-02T07:05:35.000Z" itemprop="datePublished">2015-09-02</time>
-  </a>
-</section>
+        <p>1、redis 的 set 是 string 类型的无序集合<br>2、set 元素最大可以包含(2的32次方-1)个元素<br>3、set 的是通过 hash table 实现的,所以添加,删除,查找的复杂度都是 O(1)。</p>
+<p>相关命令：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">sadd key member		#添加一个 string 元素到,key 对应的 <span class="operator"><span class="keyword">set</span> 集合中,成功返回 <span class="number">1</span>,如果元素已经在集合中,返回 <span class="number">0</span>,<span class="keyword">key</span> 对应的 <span class="keyword">set</span> 不存在返回错误</span><br><span class="line"></span><br><span class="line">	srem <span class="keyword">key</span> <span class="keyword">member</span>		#从 <span class="keyword">key</span> 对应 <span class="keyword">set</span> 中移除给定元素,成功返回 <span class="number">1</span>,如果 <span class="keyword">member</span> 在集合中不存在或者 <span class="keyword">key</span> 不存在返回 <span class="number">0</span>,如果 <span class="keyword">key</span> 对应的不是 <span class="keyword">set</span> 类型的值返回错误</span><br><span class="line">	</span><br><span class="line">	spop <span class="keyword">key</span>	#删除并返回 <span class="keyword">key</span> 对应 <span class="keyword">set</span> 中随机的一个元素,如果 <span class="keyword">set</span> 是空或者 <span class="keyword">key</span> 不存在返回 nil</span><br><span class="line">	</span><br><span class="line">	srandmember		#同 spop,随机取 <span class="keyword">set</span> 中的一个元素,但是不删除元素</span><br><span class="line">	</span><br><span class="line">	smove srckey dstkey <span class="keyword">member</span>		#从 srckey 对应 <span class="keyword">set</span> 中移除 <span class="keyword">member</span> 并添加到 dstkey 对应 <span class="keyword">set</span> 中,整个操作是原子的。成功返回 <span class="number">1</span>,如果 <span class="keyword">member</span> 在 srckey 中不存在返回 <span class="number">0</span>,如果 <span class="keyword">key</span> 不是 <span class="keyword">set</span> 类型返回错误</span><br><span class="line">	</span><br><span class="line">	scard <span class="keyword">key</span>		#返回 <span class="keyword">set</span> 的元素个数,如果 <span class="keyword">set</span> 是空或者 <span class="keyword">key</span> 不存在返回 <span class="number">0</span></span><br><span class="line">	</span><br><span class="line">	sismember <span class="keyword">key</span> <span class="keyword">member</span>	#判断 <span class="keyword">member</span> 是否在 <span class="keyword">set</span> 中,存在返回 <span class="number">1</span>,<span class="number">0</span> 表示不存在或者 <span class="keyword">key</span> 不存在</span><br><span class="line">	</span><br><span class="line">	sinter key1 key2...keyN		#返回所有给定 <span class="keyword">key</span> 的交集</span><br><span class="line">	</span><br><span class="line">	sinterstore dstkey key1...keyN		#同 sinter,但是会同时将交集存到 dstkey 下</span><br><span class="line">	</span><br><span class="line">	sunion key1 key2...keyN		#返回所有给定 <span class="keyword">key</span> 的并集</span><br><span class="line">	</span><br><span class="line">	sunionstore dstkey key1...keyN		#同 sunion,并同时保存并集到 dstkey 下</span><br><span class="line">	</span><br><span class="line">	sdiff key1 key2...keyN		#返回所有给定 <span class="keyword">key</span> 的差集</span><br><span class="line">	</span><br><span class="line">	sdiffstore dstkey key1...keyN	#同 sdiff,并同时保存差集到 dstkey 下</span><br><span class="line">	</span><br><span class="line">	smembers <span class="keyword">key</span>	#返回 <span class="keyword">key</span> 对应 <span class="keyword">set</span> 的所有元素,结果是无序的￼</span></span><br></pre></td></tr></table></figure></p>
 
-
-
-
-
-
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2015/09/02/redis-keys/" title="redis数据类型-keys" itemprop="url">
-  
-    <h1 itemprop="name">redis数据类型-keys</h1>
-    
-     
-           <p itemprop="description" >redis本质上一个 key-value数据库，关于key注意以下几点：1、其中key也是字符串类型,但是key中不能包括边界字符。2、由于key不是二进制安全(binary safe)的字符串,所以像”my key”和”mykey\n”这样包含空格和换行的 key 是不允许的。</p>
         
-    
-    <time datetime="2015-09-02T06:24:59.000Z" itemprop="datePublished">2015-09-02</time>
-  </a>
-</section>
-
-
-
-
-
-
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2015/09/01/install-redis-in-Mac/" title="Mac下安装Redis" itemprop="url">
-  
-    <h1 itemprop="name">Mac下安装Redis</h1>
-    
-     
-           <p itemprop="description" >http://redis.io/download下载最新的Redis版本，我下载的是3.0.3下载后将文件解压，通过进入文件夹
-cd redis-3.0.3
-执行
-make install
-Redis就安装好了，下面是启动指令：
-#启动 加上‘&amp;amp;’使redis能在后台运行</p>
         
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Redis/">Redis</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/09/02/redis-set/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/02/redis-set/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
     
-    <time datetime="2015-09-01T11:34:08.000Z" itemprop="datePublished">2015-09-01</time>
-  </a>
-</section>
-
-
-
-
-
-
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2015/08/31/java-RTTI/" title="Java RTTI学习" itemprop="url">
-  
-    <h1 itemprop="name">Java RTTI学习</h1>
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
     
-     
-           <p itemprop="description" >一、什么是RTTIRTTI就是Run-Time Type Information的缩写，Java使用Class对象来实现RTTI。
-二、如何实现RTTI每当编写并且编译一个新类时，就会产生一个Class对象（保存在同名的.class文件中），获取Class对象有以下几种方式：
-1</p>
+      <a href="/2015/09/02/redis-list/" title="redis数据类型-list" itemprop="url">redis数据类型-list</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
+		
+  <p class="article-time">
+    <time datetime="2015-09-02T07:31:25.000Z" itemprop="datePublished"> 发表于 2015-09-02</time>
+    
+  </p>
+</header>
+    <div class="article-content">
         
-    
-    <time datetime="2015-08-31T15:46:53.000Z" itemprop="datePublished">2015-08-31</time>
-  </a>
-</section>
+        <p>1、redis 的 list 类型其实就是一个每个子元素都是 string 类型的双向链表，所以[lr]push 和[lr]pop 命 令的算法时间复杂度都是 O(1)。<br>2、list 会记录链表的长度，所以 llen 操作也是 O(1)。<br>3、链表的最大长度是(2的32次方-1)<br>4、 list 的 pop 操作还有阻塞版本的。当我们[lr]pop 一个 list对象是,如果list是空,或者不存在,会立即返回nil。但是阻塞版本的b[lr]pop可以则可以阻塞, 当然可以加超时时间,超时后也会返回 nil。阻塞版本的pop主要是为了避免轮询。</p>
+<p>list相关命令:</p>
+<pre><code>lpush <span class="built_in">key</span> <span class="built_in">string</span>
+</code></pre><p>key 对应 list 的头部添加字符串元素,返回 1 表示成功,0 表示 key 存在且不是 list 类型</p>
+<pre><code>rpush <span class="built_in">key</span> <span class="built_in">string</span> 
+</code></pre><p>同上，在尾部添加</p>
+<pre><code><span class="title">llen</span> key
+</code></pre><p>返回 key 对应 list 的长度,key 不存在返回 0,如果 key 对应类型不是 list 返回错误</p>
+<pre><code><span class="keyword">lrange</span> key start end 
+</code></pre><p>返回指定区间内的元素,下标从 0 开始,负值表示从后面计算,-1 表示倒数第一个元素 ,key 不存在返回空列表</p>
+<pre><code>ltrim key <span class="built_in">start</span> <span class="keyword">end</span>
+</code></pre><p>￼截取 list,保留指定区间内元素,成功返回 1,key 不存在返回错误</p>
+<pre><code><span class="keyword">lset</span> key index value
+</code></pre><p>￼设置 list 中指定下标的元素值,成功返回 1,key 或者下标不存在返回错误</p>
+<pre><code>l<span class="comment">rem key count value</span>
+</code></pre><p>从 key 对应 list 中删除count个和value相同的元素。count 为 0 时候删除全部。返回被移除元素的数量</p>
+<pre><code><span class="title">lpop</span> key
+</code></pre><p>从 list 的头部删除元素,并返回删除元素。如果 key 对应 list 不存在或者是空返回 nil,如果 key 对应值不是 list 返回错误</p>
+<pre><code><span class="title">rpop</span> key
+</code></pre><p>同上,但是从尾部删除</p>
+<pre><code>blpop key1..<span class="class">.keyN</span> timeout
+</code></pre><p>从左到右扫描返回对第一个非空 list 进行 lpop 操作并返回,比如 blpop list1 list2 list3 0 ,如果 list 不存在,list2,list3 都是非空则对 list2 做 lpop 并返回从 list2 中删除的元素。如果所有的 list 都是空或不存在,则会阻塞 timeout 秒,timeout 为 0 表示一直阻塞。当阻塞时,如果有client 对 key1…keyN 中的任意 key 进行 push 操作,则第一在这个 key 上被阻塞的 client 会立即返回。如果超时发生,则返回 nil。有点像 unix 的 select 或者 poll。</p>
+<pre><code>brpop key1..<span class="class">.keyN</span> timeout
+</code></pre><p>同 blpop,一个是从头部删除一个是从尾部删除。</p>
+<pre><code><span class="title">rpoplpush</span> srckey destkey
+</code></pre><p>从 srckey 对应 list 的尾部移除元素并添加到 destkey 对应 list 的头部,最后返回被移除的元素值,整个操作是原子的.如果 srckey 是空或者不存在返回 nil。</p>
+<p>总结：<br>1、关于lpush和rpush<br>当key不存在时则创建key并添加<br>2、关于lrem<br>    count &gt; 0 : 从表头开始向表尾搜索，移除与 value 相等的元素，数量为 count 。<br>    count &lt; 0 : 从表尾开始向表头搜索，移除与 value 相等的元素，数量为 count 的绝对值。<br>    count = 0 : 移除表中所有与 value 相等的值。<br>    因为不存在的 key 被视作空表(empty list)，所以当 key 不存在时， LREM 命令总是返回 0 </p>
 
-
-
-
-
-
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2015/08/30/anonymous-inner-class/" title="匿名内部类学习" itemprop="url">
-  
-    <h1 itemprop="name">匿名内部类学习</h1>
-    
-     
-           <p itemprop="description" >晚上看Spring-Data-Redis,别人的demo里通过对匿名内部类的回调实现set、get方法，仔细想以下，发现自己对匿名内部类掌握不是很好，就又翻了下Thinking in Java。
-匿名内部类的格式：123new Contents()&amp;#123;	...&amp;#125;</p>
         
-    
-    <time datetime="2015-08-30T14:04:41.000Z" itemprop="datePublished">2015-08-30</time>
-  </a>
-</section>
-
-
-
-
-
-
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2015/08/29/consistent-hashing/" title="一致性哈希" itemprop="url">
-  
-    <h1 itemprop="name">一致性哈希</h1>
-    
-     
-           <p itemprop="description" >学习redis时，看到一致性哈希。一致性哈希算法在1997年由麻省理工学院提出的一种分布式哈希（DHT）实现算法，设计目标是为了解决因特网中的热点(Hot spot)问题，初衷和CARP十分类似。一致性哈希修正了CARP使用的简 单哈希算法带来的问题，使得分布式哈希（DHT）可以</p>
         
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Redis/">Redis</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/09/02/redis-list/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/02/redis-list/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
     
-    <time datetime="2015-08-29T14:30:53.000Z" itemprop="datePublished">2015-08-29</time>
-  </a>
-</section>
-
-
-
-
-
-
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2015/08/29/one-reason-to-expected-at-least-1-bean/" title="Autowired时找不到bean的一个原因" itemprop="url">
-  
-    <h1 itemprop="name">Autowired时找不到bean的一个原因</h1>
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
     
-     
-           <p itemprop="description" >今天整合spring和mybatis时，在通过@Autowired注入Dao时一直报1expected at least 1 bean which qualifies as autowire candidate for this dependency. Dependency an</p>
+      <a href="/2015/09/02/redis-string/" title="redis数据类型-string" itemprop="url">redis数据类型-string</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
+		
+  <p class="article-time">
+    <time datetime="2015-09-02T07:05:35.000Z" itemprop="datePublished"> 发表于 2015-09-02</time>
+    
+  </p>
+</header>
+    <div class="article-content">
         
+        <p>1、string 是 redis 最基本的类型<br>2、string 类型是二进制安全的。意思是 redis 的 string 可以包含任何数据。比如 jpg 图片或者序列化的对象<br>3、内部实现来看其实 string 可以看作 byte 数组,最大 上限是 1G 字节<br>4、sting可以被部分命令当做int处理，如incr</p>
+<p>string类型的定义：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> sdshdr &#123;<span class="keyword">long</span> len; 		<span class="comment">//数组中剩余可用字节数</span><span class="keyword">long</span> <span class="built_in">free</span>; 		<span class="comment">//buf数组的长度</span><span class="keyword">char</span> buf[]		<span class="comment">//用于存贮实际的字符串内容的数组;</span>&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>string相关命令如下</p>
+<pre><code><span class="built_in">set</span> <span class="built_in">key</span> <span class="built_in">value</span> 
+</code></pre><p>设置 key 对应的值为 string 类型的 value,返回 1 表示成功,0 失败</p>
+<pre><code>setnx <span class="built_in">key</span> <span class="built_in">value</span>
+</code></pre><p>同上,但如果 key 已经存在,返回 0 。nx 是 not exist 的意思</p>
+<pre><code><span class="built_in">get</span> <span class="variable">key</span>
+</code></pre><p>获取 key 对应的 string 值,如果 key 不存在返回 nil</p>
+<pre><code>getset <span class="built_in">key</span> <span class="built_in">value</span>
+</code></pre><p>原子的设置 key 的值,并返回 key 的旧值。如果 key 不存在返回 nil</p>
+<pre><code>mget key1 key2 <span class="attribute">...</span> keyN
+</code></pre><p>一次获取多个 key 的值,如果对应 key 不存在,则对应返回 nil</p>
+<pre><code>mset key<span class="number">1</span> <span class="keyword">value</span><span class="number">1</span> ...keyN <span class="keyword">value</span> N
+</code></pre><p>一次设置多个 key 的值,成功返回1,表示所有的值都设置了;失败返回0,表示没有任何值被设置</p>
+<pre><code>msetnx key1 value1 ..<span class="class">.keyN</span> valueN
+</code></pre><p>同上,但是不会覆盖已经存在的 key</p>
+<pre><code><span class="title">incr</span> key
+</code></pre><p>对 key 的值做加加操作,并返回新的值。<br>注意:incr 一个不是 int 的 value 会返回错误;incr一个不存在的 key,则设置 value 为 1</p>
+<pre><code>decr
+</code></pre><p>同上,但是做的是减减操作,decr 一个不存在 key,则设置 key 为-1</p>
+<pre><code>incrby <span class="keyword">key</span> <span class="built_in">integer</span>
+</code></pre><p>同 incr,加指定值 ,key 不存在时候会设置 key,并认为原来的 value 是 0</p>
+<pre><code>decrby <span class="keyword">key</span> <span class="built_in">integer</span>
+</code></pre><p>￼同 decr,减指定值。<br>decrby完全是为了可读性,我们完全可以通过 incrby 一个负<br>值来实现同样效果,反之一样。</p>
+<pre><code><span class="built_in">append</span> <span class="variable">key</span> value
+</code></pre><p>给指定 key 的字符串值追加 value,返回新字符串值的长度。</p>
+<pre><code><span class="keyword">substr </span>key start <span class="preprocessor">end</span>
+</code></pre><p>返回截取过的 key 的字符串值。<br>注意该命令并不修改 key 的值,下标是从 0 开始的</p>
+<p>总结：<br>1、关于mget，如果某个key不存在,只有不存在的key返回nil，其他key任正常返回，例子：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">redis&gt; flushdb OKredis&gt; dbsize (integer) <span class="number">0</span></span><br><span class="line">redis&gt; <span class="built_in">set</span> k1 a OKredis&gt; <span class="built_in">set</span> k2 bOKredis&gt; mget k1 k2 k3 </span><br><span class="line"><span class="number">1.</span> <span class="string">"a"</span><span class="number">2.</span> <span class="string">"b"</span> <span class="number">3.</span> (nil)</span><br></pre></td></tr></table></figure><br>2、关于mset和msetnx<br>mset会覆盖已存在的key<br>msetnx只要有一个key已存在就返回0，表示没有任何值被设置<br>3、关于incrby、decrby<br>当value不是一个int类型时会返回失败</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Redis/">Redis</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/09/02/redis-string/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/02/redis-string/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
     
-    <time datetime="2015-08-29T07:20:30.000Z" itemprop="datePublished">2015-08-29</time>
-  </a>
-</section>
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/09/02/redis-keys/" title="redis数据类型-keys" itemprop="url">redis数据类型-keys</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
+		
+  <p class="article-time">
+    <time datetime="2015-09-02T06:24:59.000Z" itemprop="datePublished"> 发表于 2015-09-02</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>redis本质上一个 key-value数据库，关于key注意以下几点：<br>1、其中key也是字符串类型,但是key中不能包括边界字符。<br>2、由于key不是二进制安全(binary safe)的字符串,所以像”my key”和”mykey\n”这样包含空格和换行的 key 是不允许的。<br>3、redis内部并不限制使用binary字符,这是redis协议限制的。”\r\n”在协议格式中会作为特殊字符。</p>
+<p>关于key的一个格式约定介绍下, object-type:id:field。比如 user:1000:password,blog:xxidxx:title。<br>key的长度最好不要太长，占内存,而且查找时候比短key慢。不过也不推荐过短的key,比如 u:1000:pwd,这的，可读性太差。</p>
+<p>下面是key相关命令：</p>
+<pre><code><span class="title">exits</span> key    
+</code></pre><p>测试指定 key 是否存在,返回 1 表示存在,0 不存在</p>
+<pre><code><span class="tag">del</span> key1 key2..<span class="class">.keyN</span>    
+</code></pre><p>删除给定 key,返回删除 key 的数目,0 表示给定 key 都不存在</p>
+<pre><code><span class="typedef"><span class="keyword">type</span> key</span>
+</code></pre><p>返回给定 key 的 value 类型。返回 none表示不存在,string字符类型,list链表类型,set无序集合类型…</p>
+<pre><code><span class="built_in">keys</span> pattern    
+</code></pre><p>返回匹配指定模式的所有 key,下面给个例子</p>
+<pre><code>randomkey
+</code></pre><p>返回从当前数据库中随机选择的一个 key,如果当前数据库是空的,返回空串</p>
+<pre><code><span class="built_in">rename</span> oldkey newkey
+</code></pre><p>原子的重命名一个 key,如果 newkey已存在,将会被覆盖,返回 1 表示成功,0 失败。可能是oldkey不存在或者oldkey和newkey相同。</p>
+<pre><code><span class="title">renamenx</span> oldkey newkey
+</code></pre><p>同上,但是如果 newkey 存在返回失败(0)</p>
+<pre><code>dbsize
+</code></pre><p>返回当前数据库的key的数量</p>
+<pre><code>expire key <span class="built_in">seconds</span>
+</code></pre><p>为key指定过期时间，单位是秒，返回1成功,0表示key已经设置过过期时间,或者key不存在</p>
+<pre><code><span class="title">ttl</span> key
+</code></pre><p>返回设置过过期时间的 key 的剩余过期秒数 -1 表示 key 不存在或者没有设置过过期时间</p>
+<pre><code><span class="keyword">select</span> db-<span class="built_in">index</span>
+</code></pre><p>通过索引选择数据库,默认连接的数据库是0,默认数据库数是16个。返回1表示切换连接成功,0表示失败</p>
+<pre><code><span class="keyword">move</span> key <span class="keyword">db</span>-index 
+</code></pre><p>将key从当前数据库移动到指定数据库。返回1成功。0如果key不存在,或者已经在指定数据库中</p>
+<pre><code>flushdb
+</code></pre><p>删除当前数据库中所有 key,此方法不会失败。慎用</p>
+<pre><code>flushall
+</code></pre><p>删除所有数据库中的所有 key,此方法不会失败。更加慎用</p>
+<p>总结：<br>1、关于select db-index,redis默认分割成16个数据库，默认连接到索引为0的数据库，每个数据库都是动态大小的，一开始非常小。分库作用只是提供一个简单的命名空间（namespace），以便将不同用途的数据分开而已，在同一个服务器进行分库不会带来任何效率上的提升。<br>2、关于move key db-index,只要目标数据库中已存在指定的key，不管value为多少都会返回失败。<br>3、关于keys pattern,例子:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">redis&gt; <span class="built_in">set</span> test dsf OKredis&gt; <span class="built_in">set</span> tast dsaf OKredis&gt; <span class="built_in">set</span> tist adff OKredis&gt; keys t*<span class="number">1.</span> <span class="string">"tist"</span><span class="number">2.</span> <span class="string">"tast"</span><span class="number">3.</span> <span class="string">"test"</span>redis&gt; keys t[ia]st</span><br><span class="line"><span class="number">1.</span> <span class="string">"tist"</span><span class="number">2.</span> <span class="string">"tast"</span>redis&gt; keys t?st<span class="number">1.</span> <span class="string">"tist"</span><span class="number">2.</span> <span class="string">"tast"</span><span class="number">3.</span> <span class="string">"test"</span></span><br></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Redis/">Redis</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/09/02/redis-keys/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/02/redis-keys/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/09/01/install-redis-in-Mac/" title="Mac下安装Redis" itemprop="url">Mac下安装Redis</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
+		
+  <p class="article-time">
+    <time datetime="2015-09-01T11:34:08.000Z" itemprop="datePublished"> 发表于 2015-09-01</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p><a href="http://redis.io/download" target="_blank" rel="external">http://redis.io/download</a><br>下载最新的Redis版本，我下载的是3.0.3<br>下载后将文件解压，通过进入文件夹</p>
+<pre><code>cd redis-<span class="number">3.0</span><span class="number">.3</span>
+</code></pre><p>执行</p>
+<pre><code>make <span class="keyword">install</span>
+</code></pre><p>Redis就安装好了，下面是启动指令：</p>
+<pre><code><span class="preprocessor">#启动 加上‘&amp;’使redis能在后台运行</span>
+src/redis-service &amp;
+<span class="preprocessor">#关闭</span>
+src/redis-cli shutdown
+</code></pre><p>测试</p>
+<pre><code>localhost:redis-<span class="number">3.0</span><span class="number">.3</span> ywq$ src/redis-cli 
+<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span>&gt; <span class="built_in">set</span> foo test
+OK
+<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span>&gt; get foo
+<span class="string">"test"</span>
+</code></pre>
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Redis/">Redis</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/09/01/install-redis-in-Mac/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/01/install-redis-in-Mac/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/08/31/java-RTTI/" title="Java RTTI学习" itemprop="url">Java RTTI学习</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
+		
+  <p class="article-time">
+    <time datetime="2015-08-31T15:46:53.000Z" itemprop="datePublished"> 发表于 2015-08-31</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>一、什么是RTTI<br>RTTI就是Run-Time Type Information的缩写，Java使用Class对象来实现RTTI。</p>
+<p>二、如何实现RTTI<br>每当编写并且编译一个新类时，就会产生一个Class对象（保存在同名的.class文件中），获取Class对象有以下几种方式：</p>
+<p>1、Class.forName(“className”);<br>2、类字面常量：eg: User.class;<br>不光可用于普通类，也可用于接口、数字、基本数据类型。<br>特殊的，基本数据类型的类字面常亮等价于对应包装类的TYPE字段（eg:int.class和Integer.TYPE等价）；<br>3、如果已经有了一个对象的引用（非Class对象），可以通过调用该对象的.getClass()方法获取；</p>
+<p>使用类的准备工作实际包括3个步骤：<br>1、加载：这是由类加载器执行的，该步骤将查找字节码（通常在classpath所指定的路径中查找，但这并非必须的），并从这些字节码中创建一个Class对象；<br>2、链接：在链接阶段将验证类中的字节码，为静态域分配存储空间，并且如果必需的话，将创建这个类对其他类的所有引用；<br>3、初始化：如果该类具有超类，则对其初始化，执行静态初始化器和静态初始化块；</p>
+<p>通过Class.forName(“className”)方式创建Class对象的引用时会初始化Class对象，而.class方式不会初始化Class对象，具体什么时候初始化可参考：<a href="http://climbran.github.io/2015/05/29/static-block/" target="_blank" rel="external">satic块</a></p>
+<p>三、Class对象的常用方法<br>getName    获取全限定名（即带包名的类名）<br>getSimpleName()    获取不含包名的类名<br>getCononicalName()    获取全限定名<br>getInterfaces() 返回Class对象，他们表示表示调用该方法的Class对象中的全部接口<br>isInterface() 告诉你这个Class对象是否表示某个接口<br>newInstance() 实例化一个对象</p>
+<p>调用newInstance时，如果使用泛型时，用？通配、super通配或不使用泛型将返回Object类型的值，如果用extends通配或指定具体类型能返回具体类型的值，例如:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">.....</span><br><span class="line">  	Class c1 = User.class;</span><br><span class="line">  	Class&lt;?&gt; c2 = User.class;</span><br><span class="line">  	Class&lt;? <span class="keyword">super</span> User&gt; c3 = User.class; <span class="comment">//super通配父类，但不知道是具体哪个父类，所以向上转型到Object</span></span><br><span class="line">  	Class&lt;User&gt; c4 = User.class;</span><br><span class="line">  	Class&lt;? extends User&gt; c5 = User.class;</span><br><span class="line">   <span class="keyword">try</span> &#123;</span><br><span class="line">       User nu1 = (User)c1.newInstance();	<span class="comment">//返回值为Object类型，需要强制类型转换</span></span><br><span class="line">       User nu2 = (User)c2.newInstance();</span><br><span class="line">       User nu3 = (User)c3.newInstance(); <span class="comment">//直接返回User类型，不需要强制类型转换</span></span><br><span class="line">       User nu4 = c4.newInstance();</span><br><span class="line">       User nu5 = c5.newInstance();</span><br><span class="line">   &#125; <span class="keyword">catch</span> (InstantiationException e) &#123;</span><br><span class="line">       e.printStackTrace();</span><br><span class="line">   &#125; <span class="keyword">catch</span> (IllegalAccessException e) &#123;</span><br><span class="line">       e.printStackTrace();</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>四、instanceof<br>两种方式直接上示例：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span></span>&#123;&#125;</span><br><span class="line">	</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Administrator</span> <span class="title">exnteds</span> <span class="title">User</span></span>&#123;&#125;</span><br><span class="line">	</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">		Administrator admin = <span class="keyword">new</span> Administrator();</span><br><span class="line">		</span><br><span class="line">		<span class="comment">//方式一</span></span><br><span class="line">		<span class="keyword">if</span>(admn <span class="keyword">instanceof</span> User)</span><br><span class="line">			System.out.println(<span class="string">"admin is instance of User"</span>);		</span><br><span class="line">		<span class="comment">//方式二</span></span><br><span class="line">		Class c = User.class;</span><br><span class="line">		<span class="keyword">if</span>(c.isInstanceof(admin))</span><br><span class="line">			System.out.println(<span class="string">"admin is also instance of User"</span>);</span><br><span class="line">	&#125;	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>注意instanceof不仅可用于类，还可以用于接口，当对象为null时返回false</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/java/">java</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/08/31/java-RTTI/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/08/31/java-RTTI/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/08/30/anonymous-inner-class/" title="匿名内部类学习" itemprop="url">匿名内部类学习</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
+		
+  <p class="article-time">
+    <time datetime="2015-08-30T14:04:41.000Z" itemprop="datePublished"> 发表于 2015-08-30</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>晚上看Spring-Data-Redis,别人的demo里通过对匿名内部类的回调实现set、get方法，仔细想以下，发现自己对匿名内部类掌握不是很好，就又翻了下Thinking in Java。</p>
+<p>匿名内部类的格式：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> Contents()&#123;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我对匿名内部类主要有以下几个疑问：<br><br>一、匿名内部类实现的时什么类型的对象，可以实现接口吗？<br><br>Contents()可以是调用的一个类的构造器，此时括号中可以根据构造器传入参数，将创建一个继承自Contents的匿名类对象；<br><br>Contents也可以是一个接口，将创建一个实现Contents接口的匿名类对象，此时匿名类中只有一个隐式的无参构造器，所以括号中不能传入参数；<br><br>二、如何引用匿名内部类？<br><br>回答了问题一其实就能解决这个问题了，new表达式返回的引用会被自动向上转型为对Contents的引用<br><br>三、如何实现类似构造器的效果？<br><br>通过实例初始化，就像这样：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> Contents()&#123;</span><br><span class="line">	&#123;print(<span class="string">"instance init"</span>);&#125;</span><br><span class="line">	.....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br><br><br>使用匿名内部类还需要注意以下问题：<br><br>匿名内部类中可以直接调用外部定义的对象，但编译器会要求该对象的引用必须是final的，例如：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Contents <span class="title">getContents</span><span class="params">(<span class="keyword">final</span> String param)</span></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">new</span> Contents()&#123;</span><br><span class="line">		String label = param;</span><br><span class="line">		.....</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/java/">java</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/08/30/anonymous-inner-class/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/08/30/anonymous-inner-class/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/08/29/consistent-hashing/" title="一致性哈希" itemprop="url">一致性哈希</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
+		
+  <p class="article-time">
+    <time datetime="2015-08-29T14:30:53.000Z" itemprop="datePublished"> 发表于 2015-08-29</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>学习redis时，看到一致性哈希。<br><br><br>一致性哈希算法在1997年由麻省理工学院提出的一种分布式哈希（DHT）实现算法，设计目标是为了解决因特网中的热点(Hot spot)问题，初衷和CARP十分类似。一致性哈希修正了CARP使用的简 单哈希算法带来的问题，使得分布式哈希（DHT）可以在P2P环境中真正得到应用。一致性hash算法提出了在动态变化的Cache环境中，判定哈希算法好坏的四个定义：</p>
+<p>  1、平衡性(Balance)：平衡性是指哈希的结果能够尽可能分布到所有的node中去，这样可以使得所有的node都得到利用。很多哈希算法都能够满足这一条件(即hash的结果应该平均分配到各个node, 这样从算法上就解决了负载均衡问题)。</p>
+<p>  2、单调性(Monotonicity)：单调性是指如果已经有一些内容通过哈希分派到了相应的node中，又有新的node加入到系统中。哈希的结果应能够保证原有已分配的内容可以被映射到原有的或者新的node中去，而不会被映射到旧的node集合中的其他node（即在新增或者删减节点时, 同一个key访问到的值总是一样的）。 </p>
+<p>  3、分散性(Spread)：在分布式环境中，终端有可能看不到所有的node，而是只能看到其中的一部分。当终端希望通过哈希过程将内容映射到node上时，由于不同终端所见的node集合有可能不同，从而导致哈希的结果不一致，最终的结果是相同的内容被不同的终端映射到不同的缓冲区中。这种情况显然是应该避免的，因为它导致相同内容被存储到不同node中去，降低了系统存储的效率。分散性的定义就是上述情况发生的严重程度。好的哈希算法应能够尽量避免不一致的情况发生，也就是尽量降低分散性（即数据应该分散的存放在 分布式集群中的各个节点(节点自己可以有备份), 不必要每个节点都存储所有的数据）。 </p>
+<p>  4、负载(Load)：负载问题实际上是从另一个角度看待分散性问题。既然不同的终端可能将相同的内容映射到不同的node中，那么对于一个特定的node而言，也可能被不同的用户映射为不同的内容。导致同一个node被大量访问。与分散性一样，这种情况也是应当避免的，因此好的哈希算法应能够尽量降低node的负荷(即尽量将访问分散到不同node)。<br><br><br>为什么要一致性哈希?(why)<br><br>不使用一致性哈希时（不使用哈希或使用普通哈希），增减node几乎所有key的映射要重新维护。<br><br><br>使用一致性哈希时，key映射到固定数量的虚拟节点上，然后将虚拟节点的 哈希值mod(虚拟节点总数/节点数)，来选取node，例如一个key哈希后值为28，虚拟节点40个，节点有5个，节点编号从1开始，则应该存放在node4 (28mod(40/5)+1=4),key值为39时则存放在node1,如下图所示：<br><br><img width="600" src="/img/consistent-hashing/1.png"><br><br>使用一致性哈希后，用节点将虚拟节点等分作为分割点，每次增减节点时只需要迁移每个分割点移动范围内的数据。</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/数据库/">数据库</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/08/29/consistent-hashing/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/08/29/consistent-hashing/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/08/29/one-reason-to-expected-at-least-1-bean/" title="Autowired时找不到bean的一个原因" itemprop="url">Autowired时找不到bean的一个原因</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
+		
+  <p class="article-time">
+    <time datetime="2015-08-29T07:20:30.000Z" itemprop="datePublished"> 发表于 2015-08-29</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>今天整合spring和mybatis时，在通过@Autowired注入Dao时一直报<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">expected at least <span class="number">1</span> bean which qualifies <span class="literal">as</span> autowire candidate <span class="keyword">for</span> <span class="keyword">this</span> dependency. Dependency annotations: &#123;<span class="annotation">@org</span>.springframework.beans.<span class="literal">factory</span>.annotation.Autowired(required=<span class="keyword">true</span>)&#125;</span><br></pre></td></tr></table></figure><br>查看了很久applicationContext.xml中的配置没有找出问题，最后对照以前项目的web.xml配置时发现少了一个：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">listener</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">listener-class</span>&gt;</span>org.springframework.web.context.ContextLoaderListener<span class="tag">&lt;/<span class="title">listener-class</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">listener</span>&gt;</span></span><br></pre></td></tr></table></figure><br>加上后问题解决。<br></p>
+<p>ContextLoaderListener通过读取contextConfigLocation参数来读取配置参数，一般来说它配置的是Spring项目的中间层,服务层组件的注入，装配，AOP。</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Spring-MVC/">Spring MVC</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/08/29/one-reason-to-expected-at-least-1-bean/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/08/29/one-reason-to-expected-at-least-1-bean/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
 
 
 
@@ -285,7 +773,7 @@ Redis就安装好了，下面是启动指令：
 
 
 
-  <nav id="page-nav" class="clearfix unexpand">
+  <nav id="page-nav" class="clearfix">
     <a class="extend prev" rel="prev" href="/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/">Next<span></span></a>
   </nav>
 
