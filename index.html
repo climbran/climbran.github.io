@@ -75,702 +75,218 @@
     <div id="container">
       <div id="main">
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/09/22/dynamic-proxy-and-aop/" title="动态代理及简单的AOP框架的实现" itemprop="url">动态代理及简单的AOP框架的实现</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
-		
-  <p class="article-time">
-    <time datetime="2015-09-22T06:43:37.000Z" itemprop="datePublished"> 发表于 2015-09-22</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>面向切面编程（AOP = Aspect Oriented Programming）核心就是动态代理机制。动态代理在实现阶段不需要关系代理哪一个类，不用实现具体某个类的代理类。本文通过AOP框架的实现来学习动态代理。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.climbran.designPatterns.proxy;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * Created by swe on 15/9/22.</span><br><span class="line"> * 业务接口</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Subject</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">(String str)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.climbran.designPatterns.proxy;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * Created by swe on 15/9/22.</span><br><span class="line"> * 被代理类</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RealSubject</span> <span class="keyword">implements</span> <span class="title">Subject</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//实际业务</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">(String str)</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"do something: "</span> +str);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.climbran.designPatterns.proxy;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.InvocationHandler;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Method;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * Created by swe on 15/9/22.</span><br><span class="line"> * 业务处理类，对被代理对象操作进行处理</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DynamicProxyHandle</span> <span class="keyword">implements</span> <span class="title">InvocationHandler</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Object targer = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">DynamicProxyHandle</span><span class="params">(Object obj)</span></span>&#123;</span><br><span class="line">        targer = obj;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span> <span class="keyword">throws</span> Throwable</span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(method.getName().equalsIgnoreCase(<span class="string">"doSomething"</span>)) <span class="comment">//设置point cut</span></span><br><span class="line">            <span class="keyword">new</span> BeforeAdvice().exec();      <span class="comment">//执行前置通知(advie)</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> method.invoke(targer, args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.climbran.designPatterns.proxy;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.InvocationHandler;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Proxy;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * Created by ywq on 15/9/22.</span><br><span class="line"> * 代理类</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DynamicProxy</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">T <span class="title">newProxyInstance</span><span class="params">(ClassLoader loader, Class&lt;?&gt;[] interfaces, InvocationHandler handler)</span></span>&#123;</span><br><span class="line">        <span class="comment">//这里也可以设置一个aspect(aspect = point cut + advice)</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//根据传入的loader和interfaces生成代理对象的方法,并且生成的方法通过handler的invoke函数处理,返回代理对象</span></span><br><span class="line">        <span class="keyword">return</span> (T) Proxy.newProxyInstance(loader, interfaces, handler);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.climbran.designPatterns.proxy;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * Created by ywq on 15/9/22.</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IAdvice</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">exec</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.climbran.designPatterns.proxy;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * Created by ywq on 15/9/22.</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BeforeAdvice</span> <span class="keyword">implements</span> <span class="title">IAdvice</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">exec</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"do before advice"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>最后客户端进行调用：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.climbran.designPatterns.proxy;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.InvocationHandler;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * Created by swe on 15/9/22.</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        Subject subject = <span class="keyword">new</span> RealSubject();</span><br><span class="line"></span><br><span class="line">        InvocationHandler handler = <span class="keyword">new</span> DynamicProxyHandle(subject);</span><br><span class="line"></span><br><span class="line">        Class&lt;?&gt; cla = subject.getClass();</span><br><span class="line">        Subject proxy = DynamicProxy.newProxyInstance(cla.getClassLoader(), cla.getInterfaces(),handler);</span><br><span class="line"></span><br><span class="line">        proxy.doSomething(<span class="string">"test"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
   
-  <span></span> <a href="/tags/AOP/">AOP</a><a href="/tags/设计模式/">设计模式</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/09/22/dynamic-proxy-and-aop/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/22/dynamic-proxy-and-aop/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/09/21/design-patterns-proxy/" title="代理模式" itemprop="url">代理模式</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
-		
-  <p class="article-time">
-    <time datetime="2015-09-21T13:00:49.000Z" itemprop="datePublished"> 发表于 2015-09-21</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>一、代理模式</p>
-<p>代理模式是通过一个代理类来控制对象的操作，下面是代理模式的一个简单实现：<br><figure class="highlight cs"><figcaption><span>Subject.java</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">Subject</span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span>(<span class="params"></span>)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br><figure class="highlight java"><figcaption><span>RealSubject.java</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RealSubject</span> <span class="keyword">implements</span> <span class="title">Subject</span></span>&#123;</span><br><span class="line">	<span class="keyword">private</span> String topic = <span class="string">""</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">RealSubject</span><span class="params">(String topic)</span></span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.topic = topic;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span></span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"do "</span> + topic);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br><figure class="highlight java"><figcaption><span>Proxy.java</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Proxy</span> <span class="keyword">implements</span> <span class="title">Subject</span></span>&#123;</span><br><span class="line">	<span class="keyword">private</span> Subject subject = <span class="keyword">null</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">Proxy</span><span class="params">(Subject subject)</span></span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.subject = subject;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.before();</span><br><span class="line">		<span class="keyword">this</span>.subject.doSomething();</span><br><span class="line">		<span class="keyword">this</span>.after();</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">before</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="comment">//<span class="doctag">TODO:</span> do something</span></span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">after</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="comment">//<span class="doctag">TODO:</span> do something</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br><figure class="highlight cs"><figcaption><span>Client.java</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Client</span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">main</span>(<span class="params">String[] args</span>)</span>&#123;</span><br><span class="line">		Subject subject = <span class="keyword">new</span> RealSubject(<span class="string">"test"</span>);</span><br><span class="line">		Subject proxy = <span class="keyword">new</span> Proxy(subject);</span><br><span class="line">		proxy.doSomething();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>代理模式中真实角色只负责实际的业务逻辑，不用关心其他非本职的事务（如权限、日志等），其他事务都有代理类去实现(这就是一个简单的aop，更完善的aop实现可以使用动态代理)而且由于实现了接口，可以随时替换真实角色</p>
-<p>二、普通代理</p>
-<p>普通代理是代理模式的一个扩展，普通代理只要关注代理类，调用者不用关注被代理对象，因此被代理类只需要实现接口就可以随便修改，具有很高的扩展性，其实现对RealSubject和Proxy类做出如下修改：<br><figure class="highlight java"><figcaption><span>RealSubject.java</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RealSubject</span> <span class="keyword">implements</span> <span class="title">Subject</span></span>&#123;</span><br><span class="line">	<span class="keyword">private</span> String topic = <span class="string">""</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">RealSubject</span><span class="params">(Subject _subject,String topic)</span></span>&#123;</span><br><span class="line">		<span class="keyword">if</span>(_subject == <span class="keyword">null</span>)&#123;</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> Exception(<span class="string">"不能创建真实角色"</span>);<span class="comment">//传入参数用来约束不能直接new一个实力，也可以通过团队内约定来实现</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span></span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"do "</span> + topic);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br><figure class="highlight java"><figcaption><span>Proxy.java</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Proxy</span> <span class="keyword">implements</span> <span class="title">Subject</span></span>&#123;</span><br><span class="line">	<span class="keyword">private</span> Subject subject = <span class="keyword">null</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">Proxy</span><span class="params">(String topic)</span></span>&#123;</span><br><span class="line">		<span class="keyword">try</span>&#123;</span><br><span class="line">			subject = <span class="keyword">new</span> RealSubject(<span class="keyword">this</span>,topic);</span><br><span class="line">		&#125;<span class="keyword">catch</span>(Exception e)&#123;</span><br><span class="line">			<span class="comment">//<span class="doctag">TODO:</span> 异常处理 </span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.before();</span><br><span class="line">		<span class="keyword">this</span>.subject.doSomething();</span><br><span class="line">		<span class="keyword">this</span>.after();</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">before</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="comment">//<span class="doctag">TODO:</span> do something</span></span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">after</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="comment">//<span class="doctag">TODO:</span> do something</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br><figure class="highlight cs"><figcaption><span>Client.java</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Client</span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">main</span>(<span class="params">String[] args</span>)</span>&#123;</span><br><span class="line">		Subject proxy = <span class="keyword">new</span> Proxy(<span class="string">"test"</span>);</span><br><span class="line">		proxy.doSomething();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>三、强制代理</p>
-<p>强制代理也是代理模式的一个扩展，是通过被代理对象获取对应的代理，并且必须通过代理来访问方法。另外代理类可以实现多个接口，完成不同模块整合，在下面强制代理的示例中一起展示多接口的实现：<br><figure class="highlight cs"><figcaption><span>Subject.java</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">Subject</span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span>(<span class="params"></span>)</span>;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> Subject <span class="title">getProxy</span>(<span class="params"></span>)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br><figure class="highlight axapta"><figcaption><span>Accountant.java</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Accountant</span></span>&#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="keyword">count</span>(); <span class="comment">//计算花费</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br><figure class="highlight java"><figcaption><span>RealSubject.java</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RealSubject</span> <span class="keyword">implements</span> <span class="title">Subject</span></span>&#123;</span><br><span class="line">	<span class="keyword">private</span> String topic = <span class="string">""</span>;</span><br><span class="line">	<span class="keyword">private</span> Subject proxy = <span class="keyword">null</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">RealSubject</span><span class="params">(String topic)</span></span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.topic = topic;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> Subject <span class="title">getProxy</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.proxy = <span class="keyword">new</span> Proxy(<span class="keyword">this</span>);</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">this</span>.proxy;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">if</span>(isProxy())</span><br><span class="line">			System.out.println(<span class="string">"do "</span> + topic);</span><br><span class="line">		<span class="keyword">else</span></span><br><span class="line">			System.out.println(<span class="string">"error: please use proxy"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//判断是否是通过代理调用，其实调用getProxy方法后不通过代理也可以直接调用其他方法，和普通代理不能直接new一个被代理对象的约束一样，可通过团队内约定来约束</span></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">isProxy</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">return</span> proxy==<span class="keyword">null</span>?<span class="keyword">false</span>:<span class="keyword">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br><figure class="highlight java"><figcaption><span>Proxy.java</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Proxy</span> <span class="keyword">implements</span> <span class="title">Subject</span>,<span class="title">Accountant</span></span>&#123;</span><br><span class="line">	<span class="keyword">private</span> Subject subject = <span class="keyword">null</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">Proxy</span><span class="params">(Subject subject)</span></span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.subject = subject;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">doSomething</span><span class="params">()</span></span>&#123;</span><br><span class="line">		subject.doSomething();</span><br><span class="line">		<span class="keyword">this</span>.count();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function">publiv Subject <span class="title">getProxy</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">count</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="comment">//<span class="doctag">TODO:</span> do something</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br><figure class="highlight cs"><figcaption><span>Client.java</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Client</span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">main</span>(<span class="params">String[] args</span>)</span>&#123;</span><br><span class="line">		Subject subject = <span class="keyword">new</span> RealSubject(<span class="string">"test"</span>);</span><br><span class="line">		Subject proxy = subject.getProxy();</span><br><span class="line">		proxy.doSomething();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>四、动态代理</p>
-<p> 和AOP编程密切相关，见<a href="/2015/09/22/dynamic-proxy-and-aop/">《动态代理及简单的AOP框架的实现》</a></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
+<section class="post" itemscope itemprop="blogitem">
   
-  <span></span> <a href="/tags/设计模式/">设计模式</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/09/21/design-patterns-proxy/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/21/design-patterns-proxy/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/09/11/spring-jms/" title="spring集成JMS(ActiveMQ)" itemprop="url">spring集成JMS(ActiveMQ)</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
-		
-  <p class="article-time">
-    <time datetime="2015-09-11T09:59:10.000Z" itemprop="datePublished"> 发表于 2015-09-11</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>一、下载与安装ActiveMQ<br>    <a href="http://activemq.apache.org/download.html" target="_blank" rel="external">http://activemq.apache.org/download.html</a><br>    我下载的是最新的5.12.0版，解压后安装目录下运行bin/activemq start </p>
-<p>二、配置POM文件<br>    看包括springside在内的很多demo的时候看到都是配置的active-core的依赖，而官网5.12.0下面推荐的配置是activemq-all,没太弄明白，后来突然发现页面有一行小字:</p>
-<blockquote>
-<p>If you need more fine grained control of your dependencies (activemq-all is an uber jar) pick and choose from the various components activemq-client, activemq-broker, activemq-xx-store etc.</p>
-</blockquote>
-<p>英文不好惹的祸啊，如果是中文早就看到了…往前几个版本的文档看了下，从5.8就开始用activemq-client + activemq-broker替代activemq-core了，大概看了一下active-all,把几个不同版本的active-xx-store包含进去了。</p>
-<p>最后我的配置：<br><figure class="highlight xml"><figcaption><span>pom.xml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">activemq.version</span>&gt;</span>5.12.0<span class="tag">&lt;/<span class="title">activemq.version</span>&gt;</span></span><br><span class="line">	</span><br><span class="line">	......</span><br><span class="line"> </span><br><span class="line">      <span class="tag">&lt;<span class="title">dependency</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>spring-jms<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 我配置了slf4j和logback,所以把log4j的依赖exclusion --&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="title">dependency</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.apache.activemq<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>activemq-client<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="title">version</span>&gt;</span>$&#123;activemq.version&#125;<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="title">exclusions</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span></span><br><span class="line">                  <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.slf4j<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">                  <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>slf4j-log4j12<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span></span><br><span class="line">                  <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.slf4j<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">                  <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>slf4j-api<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;/<span class="title">exclusions</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">      <span class="tag">&lt;<span class="title">dependency</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.apache.activemq<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>activemq-broker<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="title">version</span>&gt;</span>$&#123;activemq.version&#125;<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="title">exclusions</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span></span><br><span class="line">                  <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.slf4j<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">                  <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>slf4j-log4j12<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;/<span class="title">exclusions</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span></span><br><span class="line">      </span><br><span class="line">      <span class="tag">&lt;<span class="title">dependency</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.apache.activemq<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>activemq-jdbc-store<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="title">version</span>&gt;</span>$&#123;activemq.version&#125;<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span></span><br><span class="line">      </span><br><span class="line">      ......</span><br></pre></td></tr></table></figure></p>
-<p>接下来要实现Producer和Consumer</p>
-<p>首先是Producer,可以实现MessageProducer接口，但接口中有很多方法不需要实现，所以没有继承该接口：<br><figure class="highlight java"><figcaption><span>Producer.java</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.climbran.jms;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.jms.Destination;</span><br><span class="line"><span class="keyword">import</span> org.springframework.jms.core.JmsTemplate;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * JMS消息生产者.</span><br><span class="line"> * <span class="doctag">@author</span> swe</span><br><span class="line"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Producer</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> JmsTemplate jmsTemplate;</span><br><span class="line">	<span class="keyword">private</span> Destination notifyQueue;</span><br><span class="line">	<span class="keyword">private</span> Destination notifyTopic;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sendQueue</span><span class="params">(<span class="keyword">final</span> String message)</span> </span>&#123;</span><br><span class="line">		sendMessage(message, notifyQueue);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sendTopic</span><span class="params">(<span class="keyword">final</span> String message)</span> </span>&#123;</span><br><span class="line">		sendMessage(message, notifyTopic);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">sendMessage</span><span class="params">(String message, Destination destination)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">		jmsTemplate.convertAndSend(destination, message);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setJmsTemplate</span><span class="params">(JmsTemplate jmsTemplate)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.jmsTemplate = jmsTemplate;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setNotifyQueue</span><span class="params">(Destination notifyQueue)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.notifyQueue = notifyQueue;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setNotifyTopic</span><span class="params">(Destination nodifyTopic)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.notifyTopic = nodifyTopic;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>接下来实现消费者(Consumer),Spring通过DefaultMessageListenerContainer内部初始化一个taskExecutor来执行监听的任务，这里实现监听器就好了：</p>
-<figure class="highlight aspectj"><figcaption><span>MyMessageListener.java</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.climbran.jms;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.jms.MapMessage;</span><br><span class="line"><span class="keyword">import</span> javax.jms.Message;</span><br><span class="line"><span class="keyword">import</span> javax.jms.MessageListener;</span><br><span class="line"><span class="keyword">import</span> javax.jms.TextMessage;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.slf4j.Logger;</span><br><span class="line"><span class="keyword">import</span> org.slf4j.LoggerFactory;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * 消息的异步被动接收者.</span><br><span class="line"> * <span class="doctag">@author</span> swe</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyMessageListener</span> <span class="keyword">implements</span> <span class="title">MessageListener</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> Logger logger = LoggerFactory.getLogger(NotifyMessageListener.class);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span><br><span class="line">	 * MessageListener回调函数.</span><br><span class="line">	 */</span></span><br><span class="line">	<span class="annotation">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">onMessage</span><span class="params">(Message message)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">		</span><br><span class="line">			TextMessage textMessage = (TextMessage) message;</span><br><span class="line">			<span class="comment">// 打印消息详情</span></span><br><span class="line">			logger.info(<span class="string">""</span>+textMessage.getText());</span><br><span class="line"></span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			logger.<span class="keyword">error</span>(<span class="string">"处理消息时发生异常."</span>, e);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>接下来就是配置文件，配置了1个生产者，3个消费者，其中一个监听queue，两个监听topic：<br><figure class="highlight xml"><figcaption><span>applicationContext-jms.xml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">beans</span> <span class="attribute">xmlns</span>=<span class="value">"http://www.springframework.org/schema/beans"</span> <span class="attribute">xmlns:xsi</span>=<span class="value">"http://www.w3.org/2001/XMLSchema-instance"</span></span><br><span class="line">       <span class="attribute">xsi:schemaLocation</span>=<span class="value">"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">description</span>&gt;</span>JMS配置<span class="tag">&lt;/<span class="title">description</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- ActiveMQ 连接工厂 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">bean</span> <span class="attribute">id</span>=<span class="value">"connectionFactory"</span> <span class="attribute">class</span>=<span class="value">"org.apache.activemq.ActiveMQConnectionFactory"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"brokerURL"</span> <span class="attribute">value</span>=<span class="value">"tcp://localhost:61616"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">bean</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- Spring Caching 连接工厂 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">bean</span> <span class="attribute">id</span>=<span class="value">"cachingConnectionFactory"</span> <span class="attribute">class</span>=<span class="value">"org.springframework.jms.connection.CachingConnectionFactory"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"targetConnectionFactory"</span> <span class="attribute">ref</span>=<span class="value">"connectionFactory"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"sessionCacheSize"</span> <span class="attribute">value</span>=<span class="value">"10"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">bean</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- Queue定义 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">bean</span> <span class="attribute">id</span>=<span class="value">"notifyQueue"</span> <span class="attribute">class</span>=<span class="value">"org.apache.activemq.command.ActiveMQQueue"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">constructor-arg</span> <span class="attribute">value</span>=<span class="value">"q.notify"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">bean</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- Topic定义 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">bean</span> <span class="attribute">id</span>=<span class="value">"notifyTopic"</span> <span class="attribute">class</span>=<span class="value">"org.apache.activemq.command.ActiveMQTopic"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">constructor-arg</span> <span class="attribute">value</span>=<span class="value">"t.notify"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">bean</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- Spring JMS Template --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">bean</span> <span class="attribute">id</span>=<span class="value">"jmsTemplate"</span> <span class="attribute">class</span>=<span class="value">"org.springframework.jms.core.JmsTemplate"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"connectionFactory"</span> <span class="attribute">ref</span>=<span class="value">"cachingConnectionFactory"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">bean</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- 使用Spring JmsTemplate的消息生产者 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">bean</span> <span class="attribute">id</span>=<span class="value">"notifyMessageProducer"</span> <span class="attribute">class</span>=<span class="value">"com.climbran.jms.Producer"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"jmsTemplate"</span> <span class="attribute">ref</span>=<span class="value">"jmsTemplate"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"notifyQueue"</span> <span class="attribute">ref</span>=<span class="value">"notifyQueue"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"notifyTopic"</span> <span class="attribute">ref</span>=<span class="value">"notifyTopic"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">bean</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- 异步接收Queue消息Container,DefaultMessageListenerContainer内部初始化建立的一个taskExecutor执行监听的任务--&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 相当于配置Consumer,并为Consumer设置了Listenser,同时为Consumer设置了destination--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">bean</span> <span class="attribute">id</span>=<span class="value">"queueContainer"</span> <span class="attribute">class</span>=<span class="value">"org.springframework.jms.listener.DefaultMessageListenerContainer"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"connectionFactory"</span> <span class="attribute">ref</span>=<span class="value">"connectionFactory"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"destination"</span> <span class="attribute">ref</span>=<span class="value">"notifyQueue"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"messageListener"</span> <span class="attribute">ref</span>=<span class="value">"notifyMessageListener"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"concurrentConsumers"</span> <span class="attribute">value</span>=<span class="value">"10"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">bean</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- 异步接收Topic消息Container --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">bean</span> <span class="attribute">id</span>=<span class="value">"topicContainer"</span> <span class="attribute">class</span>=<span class="value">"org.springframework.jms.listener.DefaultMessageListenerContainer"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"connectionFactory"</span> <span class="attribute">ref</span>=<span class="value">"connectionFactory"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"destination"</span> <span class="attribute">ref</span>=<span class="value">"notifyTopic"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"messageListener"</span> <span class="attribute">ref</span>=<span class="value">"notifyMessageListener"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">bean</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">bean</span> <span class="attribute">id</span>=<span class="value">"topicContainer2"</span> <span class="attribute">class</span>=<span class="value">"org.springframework.jms.listener.DefaultMessageListenerContainer"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"connectionFactory"</span> <span class="attribute">ref</span>=<span class="value">"connectionFactory"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"destination"</span> <span class="attribute">ref</span>=<span class="value">"notifyTopic"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"messageListener"</span> <span class="attribute">ref</span>=<span class="value">"notifyMessageListener"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">bean</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- 异步接收消息处理类 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">bean</span> <span class="attribute">id</span>=<span class="value">"notifyMessageListener"</span> <span class="attribute">class</span>=<span class="value">"com.climbran.jms.MyMessageListener"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">beans</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>最后业务层调用：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">producer.sendTopic(<span class="string">"a topic message"</span>);</span><br><span class="line">   producer.sendQueue(<span class="string">"a queue message"</span>);</span><br></pre></td></tr></table></figure></p>
-<p>结果打印出2条”a topic message”，1条”a queue message”</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
+    <a href="/2015/09/22/dynamic-proxy-and-aop/" title="动态代理及简单的AOP框架的实现" itemprop="url">
   
-  <span></span> <a href="/tags/Spring-MVC/">Spring MVC</a><a href="/tags/jms/">jms</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/09/11/spring-jms/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/11/spring-jms/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
+    <h1 itemprop="name">动态代理及简单的AOP框架的实现</h1>
     
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
+     
+           <p itemprop="description" >面向切面编程（AOP = Aspect Oriented Programming）核心就是动态代理机制。动态代理在实现阶段不需要关系代理哪一个类，不用实现具体某个类的代理类。本文通过AOP框架的实现来学习动态代理。
+12345678910package com.climbran.</p>
+        
     
-      <a href="/2015/09/11/start-jms/" title="JMS入门" itemprop="url">JMS入门</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
-		
-  <p class="article-time">
-    <time datetime="2015-09-11T04:16:35.000Z" itemprop="datePublished"> 发表于 2015-09-11</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>一、什么是JMS</p>
-<p>JMS(java messgae service)是SUN开发的java消息系统的api,提供异步通信的服务。可用于订单处理、邮寄发送等耗时较长的操作，在减少加快响应时间的同时又能避免开多线程带来的同步问题(多线程在等待请求的io操作或其他服务器响应时一直占有临界资源，而异步调用将请求发送出去后就不用再关心)。JMS还能最大化降低应用程序与应用系统之间的耦合度。(消息发送方和接收方之间解耦)</p>
-<p>应用场景示例：<br>电商网站大量用户提交订单时，使用正常的同步方式处理订单可能受订单处理服务器性能瓶颈影响，导致用户等待时间过长，当并发量太大时甚至会导致服务器的崩溃。这时使用JMS可以将用户请求都加入到消息队列中，然后给用户返回订单处理中。然后订单处理服务器逐个的处理消息队列中的订单。</p>
-<p>二、JMS两种消息模型</p>
-<ol>
-<li>点到点（P2P）模型<br>生产者将消息发送到队列(Queue)中，消费者从队列中取出消息（eg:订单处理中，多台订单处理服务器从消息队列中取出订单）</li>
-</ol>
-<blockquote>
-<p>特点：<br>    (1)每条只能被接收一次，如果一条消息被一个消费者接收，那么其他的消费者就不能得到这条消息了。<br>    (2)只要消息没过期且没被其他消费者接受，消费者可能在任何时间接收消息队列中的消息，与生产者消费者运行先后无关。<br>    (3)收到消息后消费者必须确认消息已被接收，否则JMS服务提供者会认为该消息没有被接收。程序可以自动进行确认，不需要人工干预。<br>    (4)非持久的消息最多只发送一次,持久的消息严格发送一次。    </p>
-<ol>
-<li>发布/订阅（Pub/Sub）模型<br>生产者发布消息到某一主题(Topic),与主题相关的消费者都会收到消息（eg:系统发送系统邮件都某个用户组，该用户组的用户都会收到消息）</li>
-</ol>
-<p>特点：<br>    (1)每条消息可以有多个消费者，如果报纸和杂志一样，谁订阅了谁都可以获得。<br>    (2)订阅者只能接受他们订阅之后出版的消息,即订阅者必须先运行，再等待生产者的运行。</p>
-</blockquote>
-<p>三、主要对象</p>
-<ul>
-<li><strong>Destination:</strong>消息发送的目的地，即Queue或Topic</li>
-<li><strong>Message:</strong>被发送的消息，有StreamMessage、MapMessage、TextMessage、ObjectMessage、BytesMessage、XMLMessage,最常用的是<em>TextMessage</em>(普通字符串，包含一个String)和<em>ObjectMessage</em>(包含一个可序列化的java对象)</li>
-<li><strong>Session:</strong>与JMS建立的会话，通过Session才能创建Message</li>
-<li><strong>Connection:</strong>与JMS建立的连接，可以从连接创建Session</li>
-<li><strong>ConnectionFactory:</strong>用来创建Connection</li>
-<li><strong>Producer:</strong>消息的生产者，用来发送消息,通过Session创建</li>
-<li><strong>MessageConsumer:</strong>消息的消费者，用来接收消息,通过Session创建</li>
-</ul>
-<p>基于ActiveMQ的示例如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">ConnectionFactory factory = <span class="keyword">new</span> ActiveMQConnectionFactory(<span class="string">"vm://localhost"</span>);</span><br><span class="line">Queue queue = <span class="keyword">new</span> ActiveMQQueue(<span class="string">"demoQueue"</span>);</span><br><span class="line"></span><br><span class="line">Connection connection = factory.createConnection();</span><br><span class="line">connection.start();</span><br><span class="line"></span><br><span class="line">Session session = connection.createSession(<span class="keyword">false</span>,Session.AUTO_ACKNOWLEDGE);</span><br><span class="line"></span><br><span class="line">Message message = session.createTextMessage(<span class="string">"Hello world"</span>);</span><br><span class="line">MessageProducer producer = session.createProducer(queue);</span><br><span class="line">producer.send(message);</span><br><span class="line"></span><br><span class="line">MessageConsumer consumer = session.createConsumer(queue);</span><br><span class="line">Message receive = comsumer.receive();</span><br></pre></td></tr></table></figure></p>
-<p>四、JMS的同步调用与异步调用</p>
-<ol>
-<li><p>同步调用</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">consumer.receive()或consumer.receive(init timeout)</span><br></pre></td></tr></table></figure>
-<p>消息接受者会一直等待，直到有消息或超时</p>
-</li>
-<li><p>异步调用<br> 通过MessageListener</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">MessageConsumer comsumer = session.createConsumer(queue);  </span><br><span class="line">comsumer.setMessageListener(<span class="keyword">new</span> MessageListener()&#123;  </span><br><span class="line">          <span class="annotation">@Override</span>  </span><br><span class="line">          <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onMessage</span><span class="params">(Message m)</span> </span>&#123;  </span><br><span class="line">              TextMessage textMsg = (TextMessage) m;  </span><br><span class="line">              <span class="keyword">try</span> &#123;  </span><br><span class="line">                  System.out.println(textMsg.getText());  </span><br><span class="line">              &#125; <span class="keyword">catch</span> (JMSException e) &#123;  </span><br><span class="line">                  e.printStackTrace();  </span><br><span class="line">              &#125;  </span><br><span class="line">          &#125;           </span><br><span class="line">   &#125;);</span><br></pre></td></tr></table></figure>   
-<p>通过监听器监听，当有消息到达时调用onMessage方法 </p>
-</li>
-</ol>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
+    <time datetime="2015-09-22T06:43:37.000Z" itemprop="datePublished">2015-09-22</time>
+  </a>
+</section>
 
 
-  <div class="article-tags">
+
+
+
+
   
-  <span></span> <a href="/tags/jms/">jms</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/09/11/start-jms/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/11/start-jms/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/09/10/singleton-pattern/" title="单例模式及懒汉式的同步优化" itemprop="url">单例模式及懒汉式的同步优化</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
-		
-  <p class="article-time">
-    <time datetime="2015-09-10T09:37:16.000Z" itemprop="datePublished"> 发表于 2015-09-10</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>单例模式分为饿汉式和懒汉式，饿汉式写起来简单，且不用考虑初始化时的同步问题；懒汉式的优点在于一开始不用初始化，可以节约内存，但需要为初始化操作进行同步。</p>
-<p>一直不理解为了这一点内存给一个方法加锁值得吗？影响并发，可能是做的项目还不够多，没有遇到需要大量内存的情况？</p>
-<p>不过昨天发现了一个比较好的方法可以在节省内存的同时减少阻塞，同样的逻辑也可以用在其他需要同步的情况下，特此记录下</p>
-<p>饿汉式标准版：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span></span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Singleton instance = <span class="keyword">new</span> Singleton();</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">private</span>	<span class="title">Singleton</span><span class="params">()</span></span>&#123;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">return</span> instance;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//other method</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>懒汉标准版：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span></span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> Singleton instance = <span class="keyword">null</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">private</span>	<span class="title">Singleton</span><span class="params">()</span></span>&#123;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">synchronized</span>(Singleton.class)&#123;</span><br><span class="line">			<span class="keyword">return</span> instance==<span class="keyword">null</span>?<span class="keyword">new</span> Singleton:instance;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//other method</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>懒汉优化版：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span></span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> Singleton instance = <span class="keyword">null</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">private</span>	<span class="title">Singleton</span><span class="params">()</span></span>&#123;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">if</span>(instance==<span class="keyword">null</span>)&#123;</span><br><span class="line">			<span class="keyword">synchronized</span>(Singleton.class)&#123;</span><br><span class="line">				<span class="keyword">if</span>(instance==<span class="keyword">null</span>)</span><br><span class="line">					<span class="keyword">return</span> <span class="keyword">new</span> Singleton();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> instance</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//other method</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>优化后，只有未初始化时才会加锁，初始化后instance不为null，直接返回单例对象，不需要再次进入同步块。</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
+<section class="post" itemscope itemprop="blogitem">
   
-  <span></span> <a href="/tags/设计模式/">设计模式</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/09/10/singleton-pattern/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/10/singleton-pattern/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/09/10/synchronized/" title="synchronized的对象锁和类锁" itemprop="url">synchronized的对象锁和类锁</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
-		
-  <p class="article-time">
-    <time datetime="2015-09-10T06:52:33.000Z" itemprop="datePublished"> 发表于 2015-09-10</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>很多人都知道synchronized可以用来加锁，但对于synchronized(Object o)里的参数不太了解。</p>
-<p>java的每个对象隐含一个内部锁，这个内部锁对不同线程是互斥的。synchronized(object){}的本质就是对{}区域中的代码加上object对象的对象锁，只有获取了object的对象锁才能执行该代码块。</p>
-<p>如果有：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Object o1 = <span class="keyword">new</span> Object();</span><br><span class="line">Object o2 = <span class="keyword">new</span> Object();</span><br><span class="line"></span><br><span class="line"><span class="keyword">synchronized</span>(o1)&#123;</span><br><span class="line">	<span class="comment">//block1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">synchronized</span>(o1)&#123;</span><br><span class="line">	<span class="comment">//block2</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">synchronized</span>(o2)&#123;</span><br><span class="line">	<span class="comment">//block3</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>当有一个线程1在执行block1时，线程2想要执行block2同样会被阻塞，应为o1的对象锁已经被线程1获取；而此时线程3想执行block3则不受影响。</p>
-<p>对于类锁，其实就是Class实例的对象锁。因为一个类只有一个Class对象，所以同一个类的所有对象共享同一个类锁。</p>
-<p>还有对于方法锁：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SynchronizedDemo</span></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="keyword">synchronized</span> <span class="title">method1</span><span class="params">()</span>	</span>&#123;<span class="comment">//TODO&#125; </span></span><br><span class="line">			</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method2</span><span class="params">()</span>	</span>&#123;synchronized1(<span class="keyword">this</span>)&#123;<span class="comment">//TODO&#125; &#125;</span></span><br><span class="line">	<span class="comment">//method1效果等价于method2</span></span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="keyword">synchronized</span> <span class="title">method3</span><span class="params">()</span></span>&#123;<span class="comment">//TODO&#125; </span></span><br><span class="line">		</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">method4</span><span class="params">()</span></span>&#123;<span class="keyword">synchronized</span>(SynchronizedDemo.class)&#123;<span class="comment">//TODO&#125; &#125;</span></span><br><span class="line">	<span class="comment">//method3效果等价于method4</span></span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>总结：<br>大多数情况下同步代码块比同步方法要好，因为一个同步方法被执行完之前，该对象的所有同步方法都会被阻塞，而同步代码块可以通过加不同的对象锁来减少阻塞。</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
+    <a href="/2015/09/21/design-patterns-proxy/" title="代理模式" itemprop="url">
   
-  <span></span> <a href="/tags/java/">java</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/09/10/synchronized/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/10/synchronized/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
+    <h1 itemprop="name">代理模式</h1>
     
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
+     
+           <p itemprop="description" >一、代理模式
+代理模式是通过一个代理类来控制对象的操作，下面是代理模式的一个简单实现：Subject.java123public interface Subject&amp;#123;	public void doSomething();&amp;#125;RealSubject.java123</p>
+        
     
-      <a href="/2015/09/09/java-collection/" title="JAVA容器复习" itemprop="url">JAVA容器复习</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
-		
-  <p class="article-time">
-    <time datetime="2015-09-09T12:51:01.000Z" itemprop="datePublished"> 发表于 2015-09-09</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>一、Collection接口<br>首先是Collection接口，继承Collection接口的有List、Set和Queue接口，Collection接口又继承自Iterable接口,所以List、Set、Queue的实现类都可以使用迭代器。</p>
-<p>Interable中使用interator()方法返回一个Iterator接口类型的对象，Iterator<e>有三个方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">hasNext</span><span class="params">()</span></span>; <span class="comment">//是否有下一个元素</span></span><br><span class="line"><span class="function">E <span class="title">next</span><span class="params">()</span></span>;	<span class="comment">//返回的下一个元素</span></span><br><span class="line">remove()  <span class="comment">//移除迭代器返回的最后一个元素</span></span><br></pre></td></tr></table></figure><br>Collection增加以下方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">size</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">isEmpty</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">contains</span><span class="params">(Object o)</span></span>;</span><br><span class="line">Object[] toArray();</span><br><span class="line">&lt;T&gt; T[] toArray(T[] a); </span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">remove</span><span class="params">(Object o)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">containsAll</span><span class="params">(Collection&lt;?&gt; c)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">addAll</span><span class="params">(Collection&lt;? extends E&gt; c)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">removeAll</span><span class="params">(Collection&lt;?&gt; c)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">retainAll</span><span class="params">(Collection&lt;?&gt; c)</span></span>;</span><br><span class="line"><span class="comment">/*retainAll于从列表中移除未包含在指定collection中的所有元素</span><br><span class="line">如果List集合对象由于调用retainAll方法而发生更改，则返回 true*/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">clear</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object o)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure><br>set对Collection基本没有新增方法</e></p>
-<p>List比Collection增加了以下方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">get(<span class="keyword">int</span> index);</span><br><span class="line"><span class="function">E <span class="title">set</span><span class="params">(<span class="keyword">int</span> index, E element)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> index, E element)</span></span>;</span><br><span class="line"><span class="function">E <span class="title">remove</span><span class="params">(<span class="keyword">int</span> index)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">indexOf</span><span class="params">(Object o)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">lastIndexOf</span><span class="params">(Object o)</span></span>;</span><br><span class="line"><span class="function">ListIterator&lt;E&gt; <span class="title">listIterator</span><span class="params">()</span></span>;	  <span class="comment">//比Interator多了hasPrevious、previous、nextIndex、previousIndex、set、add;</span></span><br><span class="line"><span class="function">List&lt;E&gt; <span class="title">subList</span><span class="params">(<span class="keyword">int</span> fromIndex, <span class="keyword">int</span> toIndex)</span></span>;	<span class="comment">//返回一个子list，注意对子list的操作会影响到原来的list</span></span><br></pre></td></tr></table></figure></p>
-<p>Queue比Collection增加以下方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">offer</span><span class="params">(E e)</span></span>;		<span class="comment">//添加一个元素并返回true       如果队列已满，则返回false</span></span><br><span class="line"><span class="function">E <span class="title">remove</span><span class="params">()</span></span>;	<span class="comment">// 移除并返问队列头部的元素,如果队列为空，则抛出一个NoSuchElementException</span></span><br><span class="line"><span class="function">E <span class="title">poll</span><span class="params">()</span></span>;	<span class="comment">//移除并返问队列头部的元素,如果队列为空，则返回null</span></span><br><span class="line"><span class="function">E <span class="title">element</span><span class="params">()</span></span>;	<span class="comment">//返回队列头部的元素,如果队列为空，则抛出一个NoSuchElementException异常</span></span><br><span class="line"><span class="function">E <span class="title">peek</span><span class="params">()</span></span>;		<span class="comment">//返回队列头部的元素,如果队列为空，则返回null</span></span><br></pre></td></tr></table></figure><br>二、Map接口<br>然后是Map接口，Map接口没有继承自任何接口。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">size</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">isEmpty</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">containsKey</span><span class="params">(Object key)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">containsValue</span><span class="params">(Object value)</span></span>;</span><br><span class="line"><span class="function">V <span class="title">get</span><span class="params">(Object key)</span></span>;</span><br><span class="line"><span class="function">V <span class="title">put</span><span class="params">(K key, V value)</span></span>;</span><br><span class="line"><span class="function">V <span class="title">remove</span><span class="params">(Object key)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">putAll</span><span class="params">(Map&lt;? extends K, ? extends V&gt; m)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">clear</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function">Set&lt;K&gt; <span class="title">keySet</span><span class="params">()</span></span>;	<span class="comment">//返回key组成的一个set,多次调用返回同一个引用,该Set支持删除操作，不支持add、addAll，能影响到Map;</span></span><br><span class="line"><span class="function">Collection&lt;V&gt; <span class="title">values</span><span class="params">()</span></span>;</span><br><span class="line">Set&lt;Map.Entry&lt;K, V&gt;&gt; entrySet();</span><br><span class="line"><span class="function"><span class="keyword">default</span> <span class="keyword">boolean</span> <span class="title">replace</span><span class="params">(K key, V oldValue, V newValue)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">default</span> V <span class="title">replace</span><span class="params">(K key, V value)</span>	<span class="comment">//如果map中已有key则覆盖，没有则返回null</span></span></span><br></pre></td></tr></table></figure></p>
-<p>三、常用容器<br>(1)List<br>    ArrayList    非线程安全，能快速进行随机访问，顺序添加效率也高于LinkedList<br>    LinkedList    非线程安全，底层是双向链表，增删比ArrayList快，能更好的支持栈，同时实现了Queue接口，能支持队列操作,适合变动较为频繁的存储。<br>    Vector    相当于线程安全版ArrayList,如果不考虑并发，ArrayList效率较高，当数组长度不够时，Vector增加100%，ArrayList增加50%</p>
-<p>其中LinkedList有些独有的方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">E <span class="title">getFirst</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function">E <span class="title">getLast</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function">E <span class="title">removeFirst</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function">E <span class="title">removeLast</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">addFirst</span><span class="params">(E e)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">addLast</span><span class="params">(E e)</span></span>;</span><br></pre></td></tr></table></figure><br>(2)Map<br>    HashMap 非线程安全，基于散列表实现，时间开销为O(1)，一般效率比TreeMap高<br>    TreeMap 非线程安全，基于红黑树实现，时间开销为O(logN),效率比HashMap低，但内部是有序的，TreeMap是唯一带有subMap()方法的Map，可以返回一个子树<br>    ConcurrentHashMap 线程安全，基于散列表实现ConcurrentMap接口，根据hash值来桶加锁。<br>    WeakHashMap 非线程安全，基于散列表是实现，其中的键是弱键，当map外没有引用时可能被GC回收。<br>四、优化<br>1、ArrayList默认生成一个长度为10的数组，当超过会生成一个更长的数组对象，然后将数据复制过去，如果估计使用ArrayList时将是很大一个数组可以预先设置数组大小来提高效率， eg: List list = new ArrayList(1000);<br>2、（备注：后来查看ArrayList和LinkedList的代码后发现size()方法只直接return size字段的值，所以两种方法应该效率没差别）<br>    通过循环遍历List时，如果没有add、remove操作改变数组大小，不用每次都读取数组大小,eg:</p>
-<pre><code><span class="keyword">for</span> (int <span class="built_in">i</span> = <span class="number">0</span>; <span class="built_in">i</span> &lt; vector.<span class="built_in">size</span> (); <span class="built_in">i</span>++) 
-改为 
-<span class="keyword">for</span> (int <span class="built_in">i</span> = <span class="number">0</span>,n=list.<span class="built_in">size</span> (); <span class="built_in">i</span> &lt; n; <span class="built_in">i</span>++) 
-</code></pre><p>3、ArrayList用get遍历，用iterator遍历也可以<br>       LinkedList应避免用get遍历(随机存取效率低)，尽量用iterator</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
+    <time datetime="2015-09-21T13:00:49.000Z" itemprop="datePublished">2015-09-21</time>
+  </a>
+</section>
 
 
-  <div class="article-tags">
+
+
+
+
   
-  <span></span> <a href="/tags/java/">java</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/09/09/java-collection/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/09/java-collection/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/09/07/stateless-service/" title="服务器无状态" itemprop="url">服务器无状态</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
-		
-  <p class="article-time">
-    <time datetime="2015-09-07T04:21:03.000Z" itemprop="datePublished"> 发表于 2015-09-07</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>之前做听说可以不维持服务器的状态来减轻服务器压力，以为是指整个服务端都没有状态，一直没弄明白除非用cookie或者一次性的token，怎么维持客户端的状态。</p>
-<p>今天看到<a href="http://kyfxbl.iteye.com/blog/1831869" target="_blank" rel="external">无状态服务（stateless service）</a>才明白无状态是指对服务器集群中每台服务器(web server)来说是没有状态的。</p>
-<p>一般可以认为session就是有状态的，session主要用于两种情况：<br>1、一个事务的多次请求间暂存数据<br>2、维持登陆状态<br>对于第一种情况，可以通过将数据回传到客户端，放在表单中隐藏或用sessionStorage、cookie来实现。<br>对于第二种情况，可以将session从web server中剥离，存放在共享的地方(如redis)。</p>
-<p>附：<br><a href="http://book.51cto.com/art/201403/432495.htm" target="_blank" rel="external">理解服务的无状态性</a><br><a href="http://blog.csdn.net/romandion/article/details/1800025" target="_blank" rel="external">状态和无状态－－2种服务器架构之间的比较 </a></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
+<section class="post" itemscope itemprop="blogitem">
   
-  <span></span> <a href="/tags/web/">web</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/09/07/stateless-service/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/07/stateless-service/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/09/06/spring-redis-jedis/" title="Spring与redis集成" itemprop="url">Spring与redis集成</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
-		
-  <p class="article-time">
-    <time datetime="2015-09-06T05:06:53.000Z" itemprop="datePublished"> 发表于 2015-09-06</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>首先安装redis：<a href="http://climbran.github.io/2015/09/01/install-redis-in-Mac/" target="_blank" rel="external">Mac下安装Redis</a></p>
-<p>java客户端选用Jedis，加入pom文件依赖<br><figure class="highlight xml"><figcaption><span>pom.xml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">groupId</span>&gt;</span>redis.clients<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>jedis<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">version</span>&gt;</span>2.7.3<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure><br>下面是一个简化的Template Demo,用来实现redis各种命令的映射:<br><figure class="highlight java"><figcaption><span>com.climbran.redis.JedisTemplate</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.climbran.redis;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.slf4j.Logger;</span><br><span class="line"><span class="keyword">import</span> org.slf4j.LoggerFactory;</span><br><span class="line"><span class="keyword">import</span> redis.clients.jedis.JedisPool;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> redis.clients.jedis.Jedis;</span><br><span class="line"><span class="keyword">import</span> redis.clients.jedis.Pipeline;</span><br><span class="line"><span class="keyword">import</span> redis.clients.jedis.Tuple;</span><br><span class="line"><span class="keyword">import</span> redis.clients.jedis.exceptions.JedisConnectionException;</span><br><span class="line"><span class="keyword">import</span> redis.clients.jedis.exceptions.JedisDataException;</span><br><span class="line"><span class="keyword">import</span> redis.clients.jedis.exceptions.JedisException;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * JedisTemplate 提供了一个template方法，负责对Jedis连接的获取与归还。</span><br><span class="line"> * JedisAction&lt;T&gt; 和 JedisActionNoResult两种回调接口，适用于有无返回值两种情况。</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JedisTemplate</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Logger logger = LoggerFactory.getLogger(JedisTemplate.class);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> JedisPool jedisPool;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">JedisTemplate</span><span class="params">(JedisPool jedisPool)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.jedisPool = jedisPool;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * Callback interface for template.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">JedisAction</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">        <span class="function">T <span class="title">action</span><span class="params">(Jedis jedis)</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * Callback interface for template without result.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">JedisActionNoResult</span> </span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">action</span><span class="params">(Jedis jedis)</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * Execute with a call back action with result.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">public</span> &lt;T&gt; <span class="function">T <span class="title">execute</span><span class="params">(JedisAction&lt;T&gt; jedisAction)</span> <span class="keyword">throws</span> JedisException </span>&#123;</span><br><span class="line">        Jedis jedis = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">boolean</span> broken = <span class="keyword">false</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            jedis = jedisPool.getResource();</span><br><span class="line">            <span class="keyword">return</span> jedisAction.action(jedis);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (JedisException e) &#123;</span><br><span class="line">            broken = handleJedisException(e);</span><br><span class="line">            <span class="keyword">throw</span> e;</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            closeResource(jedis, broken);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * Execute with a call back action without result.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(JedisActionNoResult jedisAction)</span> <span class="keyword">throws</span> JedisException </span>&#123;</span><br><span class="line">        Jedis jedis = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">boolean</span> broken = <span class="keyword">false</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            jedis = jedisPool.getResource();</span><br><span class="line">            jedisAction.action(jedis);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (JedisException e) &#123;</span><br><span class="line">            broken = handleJedisException(e);</span><br><span class="line">            <span class="keyword">throw</span> e;</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            closeResource(jedis, broken);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * Handle jedisException, write log and return whether the connection is broken.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">boolean</span> <span class="title">handleJedisException</span><span class="params">(JedisException jedisException)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (jedisException <span class="keyword">instanceof</span> JedisConnectionException) &#123;</span><br><span class="line">            logger.error(<span class="string">"Redis connection "</span> + jedisPool + <span class="string">" lost."</span>, jedisException);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (jedisException <span class="keyword">instanceof</span> JedisDataException) &#123;</span><br><span class="line">            <span class="keyword">if</span> ((jedisException.getMessage() != <span class="keyword">null</span>) &amp;&amp; (jedisException.getMessage().indexOf(<span class="string">"READONLY"</span>) != -<span class="number">1</span>)) &#123;</span><br><span class="line">                logger.error(<span class="string">"Redis connection "</span> + jedisPool + <span class="string">" are read-only slave."</span>, jedisException);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// dataException, isBroken=false</span></span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            logger.error(<span class="string">"Jedis exception happen."</span>, jedisException);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * Return jedis connection to the pool, call different return methods depends on the conectionBroken status.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">closeResource</span><span class="params">(Jedis jedis, <span class="keyword">boolean</span> conectionBroken)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (conectionBroken) &#123;</span><br><span class="line">                jedisPool.returnBrokenResource(jedis);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                jedisPool.returnResource(jedis);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            logger.error(<span class="string">"return back jedis failed, will fore close the jedis."</span>, e);</span><br><span class="line">            JedisUtils.destroyJedis(jedis);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// / Common Actions ///</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Boolean <span class="title">del</span><span class="params">(<span class="keyword">final</span> String... keys)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> execute(<span class="keyword">new</span> JedisAction&lt;Boolean&gt;() &#123;</span><br><span class="line"></span><br><span class="line">            <span class="annotation">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> Boolean <span class="title">action</span><span class="params">(Jedis jedis)</span> </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> jedis.del(keys) == keys.length ? <span class="keyword">true</span> : <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">flushDB</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        execute(<span class="keyword">new</span> JedisActionNoResult() &#123;</span><br><span class="line"></span><br><span class="line">            <span class="annotation">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">action</span><span class="params">(Jedis jedis)</span> </span>&#123;</span><br><span class="line">                jedis.flushDB();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// / String Actions ///</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">get</span><span class="params">(<span class="keyword">final</span> String key)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> execute(<span class="keyword">new</span> JedisAction&lt;String&gt;() &#123;</span><br><span class="line"></span><br><span class="line">            <span class="annotation">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> String <span class="title">action</span><span class="params">(Jedis jedis)</span> </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> jedis.get(key);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">set</span><span class="params">(<span class="keyword">final</span> String key, <span class="keyword">final</span> String value)</span> </span>&#123;</span><br><span class="line">        execute(<span class="keyword">new</span> JedisActionNoResult() &#123;</span><br><span class="line"></span><br><span class="line">            <span class="annotation">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">action</span><span class="params">(Jedis jedis)</span> </span>&#123;</span><br><span class="line">                jedis.set(key, value);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//Other Actions</span></span><br><span class="line">	</span><br><span class="line">	......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight java"><figcaption><span>com.climbran.redis.JedisUtils</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.climbran.redis;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.climbran.redis.JedisTemplate.JedisAction;</span><br><span class="line"><span class="comment">//import com.climbran.redis.pool.JedisPool;</span></span><br><span class="line"><span class="keyword">import</span> redis.clients.jedis.JedisPool;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> redis.clients.jedis.Jedis;</span><br><span class="line"><span class="keyword">import</span> redis.clients.jedis.exceptions.JedisException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JedisUtils</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String OK_CODE = <span class="string">"OK"</span>;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String OK_MULTI_CODE = <span class="string">"+OK"</span>;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span><br><span class="line">	 * 判断 返回值是否ok.</span><br><span class="line">	 */</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">isStatusOk</span><span class="params">(String status)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> (status != <span class="keyword">null</span>) &amp;&amp; (OK_CODE.equals(status) || OK_MULTI_CODE.equals(status));</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span><br><span class="line">	 * 在Pool以外强行销毁Jedis.</span><br><span class="line">	 */</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">destroyJedis</span><span class="params">(Jedis jedis)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> ((jedis != <span class="keyword">null</span>) &amp;&amp; jedis.isConnected()) &#123;</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				<span class="keyword">try</span> &#123;</span><br><span class="line">					jedis.quit();</span><br><span class="line">				&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">				&#125;</span><br><span class="line">				jedis.disconnect();</span><br><span class="line">			&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>启动redis服务，执行main函数：<br><figure class="highlight java"><figcaption><span>com.climbran.redis.JedisUtils</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.climbran.redis.JedisTemplate;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> redis.clients.jedis.JedisPool;</span><br><span class="line"><span class="keyword">import</span> redis.clients.jedis.JedisPoolConfig;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RedisTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        JedisPool pool = <span class="keyword">new</span> JedisPool(<span class="keyword">new</span> JedisPoolConfig(),<span class="string">"localhost"</span>,<span class="number">6379</span>);</span><br><span class="line">        JedisTemplate template = <span class="keyword">new</span> JedisTemplate(pool);</span><br><span class="line">        template.set(<span class="string">"foo"</span>,<span class="string">"bar"</span>);</span><br><span class="line">        System.out.println(template.get(<span class="string">"foo"</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>如果将JedisTemplate注入dao层调用方法则可对entity层与redis进行映射。</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
+    <a href="/2015/09/11/spring-jms/" title="spring集成JMS(ActiveMQ)" itemprop="url">
   
-  <span></span> <a href="/tags/Redis/">Redis</a><a href="/tags/Spring-MVC/">Spring MVC</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/09/06/spring-redis-jedis/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/06/spring-redis-jedis/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
+    <h1 itemprop="name">spring集成JMS(ActiveMQ)</h1>
     
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
+     
+           <p itemprop="description" >一、下载与安装ActiveMQ    http://activemq.apache.org/download.html    我下载的是最新的5.12.0版，解压后安装目录下运行bin/activemq start 
+二、配置POM文件    看包括springside在内的很多</p>
+        
     
-      <a href="/2015/09/02/redis-hash/" title="redis数据类型-hash" itemprop="url">redis数据类型-hash</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
-		
-  <p class="article-time">
-    <time datetime="2015-09-02T08:28:34.000Z" itemprop="datePublished"> 发表于 2015-09-02</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>1、redishash是一个string类型的field和value的映射表。<br>2、hash特别适合用于存储对象。相较于将对象的每个字段存成单个 string 类型。将一个对象存储在hash类 型中会占用更少的内存,并且可以更方便的存取整个对象。<br>3、新建一个 hash 对象时开始是用 zipmap(又称为 small hash)来存储的。<br>4、如果 field 或者 value 的大小超出一定限制后,redis会在内部自动将zipmap替换成正常的 hash 实现. 这个限制可以在配置文件中指定：</p>
-<pre><code>hash-max-zipmap-entries <span class="number">64</span> <span class="preprocessor">#配置字段最多 <span class="number">64</span> 个</span>
-hash-max-zipmap-value <span class="number">512</span> <span class="preprocessor">#配置 value 最大为 <span class="number">512</span> 字节</span>
-</code></pre><p>下面介绍 hash 相关命令：</p>
-<pre><code>hset <span class="keyword">key</span> field value    <span class="preprocessor">#设置 hash field 为指定值,如果 key 不存在,则先创建</span>
-
-hget <span class="keyword">key</span> field        <span class="preprocessor">#获取指定的 hash field</span>
-
-hmget <span class="keyword">key</span> filed1....fieldN        <span class="preprocessor">#获取全部指定的 hash filed</span>
-
-hmset <span class="keyword">key</span> filed1 value1 ... filedN valueN        <span class="preprocessor">#同时设置 hash 的多个 field</span>
-
-hincrby <span class="keyword">key</span> field <span class="built_in">integer</span>        <span class="preprocessor">#将指定的 hash filed 加上给定值</span>
-
-hexists <span class="keyword">key</span> field        <span class="preprocessor">#测试指定 field 是否存在</span>
-
-hdel <span class="keyword">key</span> field        <span class="preprocessor">#删除指定的 hash field</span>
-
-hlen <span class="keyword">key</span>    <span class="preprocessor">#返回指定 hash 的 field 数量</span>
-
-hkeys <span class="keyword">key</span>    <span class="preprocessor">#返回 hash 的所有 field</span>
-
-hvals <span class="keyword">key</span>    <span class="preprocessor">#返回 hash 的所有 value</span>
-
-hgetall <span class="keyword">key</span>        <span class="preprocessor">#返回 hash 的所有 filed 和 value</span>
-</code></pre>
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
+    <time datetime="2015-09-11T09:59:10.000Z" itemprop="datePublished">2015-09-11</time>
+  </a>
+</section>
 
 
-  <div class="article-tags">
+
+
+
+
   
-  <span></span> <a href="/tags/Redis/">Redis</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/09/02/redis-hash/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/02/redis-hash/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2015/09/11/start-jms/" title="JMS入门" itemprop="url">
+  
+    <h1 itemprop="name">JMS入门</h1>
+    
+     
+           <p itemprop="description" >一、什么是JMS
+JMS(java messgae service)是SUN开发的java消息系统的api,提供异步通信的服务。可用于订单处理、邮寄发送等耗时较长的操作，在减少加快响应时间的同时又能避免开多线程带来的同步问题(多线程在等待请求的io操作或其他服务器响应时一直占有临</p>
+        
+    
+    <time datetime="2015-09-11T04:16:35.000Z" itemprop="datePublished">2015-09-11</time>
+  </a>
+</section>
 
 
 
 
 
 
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2015/09/10/singleton-pattern/" title="单例模式及懒汉式的同步优化" itemprop="url">
+  
+    <h1 itemprop="name">单例模式及懒汉式的同步优化</h1>
+    
+     
+           <p itemprop="description" >单例模式分为饿汉式和懒汉式，饿汉式写起来简单，且不用考虑初始化时的同步问题；懒汉式的优点在于一开始不用初始化，可以节约内存，但需要为初始化操作进行同步。
+一直不理解为了这一点内存给一个方法加锁值得吗？影响并发，可能是做的项目还不够多，没有遇到需要大量内存的情况？
+不过昨天发现了一</p>
+        
+    
+    <time datetime="2015-09-10T09:37:16.000Z" itemprop="datePublished">2015-09-10</time>
+  </a>
+</section>
 
-  <nav id="page-nav" class="clearfix">
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2015/09/10/synchronized/" title="synchronized的对象锁和类锁" itemprop="url">
+  
+    <h1 itemprop="name">synchronized的对象锁和类锁</h1>
+    
+     
+           <p itemprop="description" >很多人都知道synchronized可以用来加锁，但对于synchronized(Object o)里的参数不太了解。
+java的每个对象隐含一个内部锁，这个内部锁对不同线程是互斥的。synchronized(object){}的本质就是对{}区域中的代码加上object对象的对</p>
+        
+    
+    <time datetime="2015-09-10T06:52:33.000Z" itemprop="datePublished">2015-09-10</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2015/09/09/java-collection/" title="JAVA容器复习" itemprop="url">
+  
+    <h1 itemprop="name">JAVA容器复习</h1>
+    
+     
+           <p itemprop="description" >一、Collection接口首先是Collection接口，继承Collection接口的有List、Set和Queue接口，Collection接口又继承自Iterable接口,所以List、Set、Queue的实现类都可以使用迭代器。
+Interable中使用interato</p>
+        
+    
+    <time datetime="2015-09-09T12:51:01.000Z" itemprop="datePublished">2015-09-09</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2015/09/07/stateless-service/" title="服务器无状态" itemprop="url">
+  
+    <h1 itemprop="name">服务器无状态</h1>
+    
+     
+           <p itemprop="description" >之前做听说可以不维持服务器的状态来减轻服务器压力，以为是指整个服务端都没有状态，一直没弄明白除非用cookie或者一次性的token，怎么维持客户端的状态。
+今天看到无状态服务（stateless service）才明白无状态是指对服务器集群中每台服务器(web server)来</p>
+        
+    
+    <time datetime="2015-09-07T04:21:03.000Z" itemprop="datePublished">2015-09-07</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2015/09/06/spring-redis-jedis/" title="Spring与redis集成" itemprop="url">
+  
+    <h1 itemprop="name">Spring与redis集成</h1>
+    
+     
+           <p itemprop="description" >首先安装redis：Mac下安装Redis
+java客户端选用Jedis，加入pom文件依赖pom.xml12345&amp;lt;dependency&amp;gt;	&amp;lt;groupId&amp;gt;redis.clients&amp;lt;/groupId&amp;gt;	&amp;lt;artifactId&amp;gt;</p>
+        
+    
+    <time datetime="2015-09-06T05:06:53.000Z" itemprop="datePublished">2015-09-06</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2015/09/02/redis-hash/" title="redis数据类型-hash" itemprop="url">
+  
+    <h1 itemprop="name">redis数据类型-hash</h1>
+    
+     
+           <p itemprop="description" >1、redishash是一个string类型的field和value的映射表。2、hash特别适合用于存储对象。相较于将对象的每个字段存成单个 string 类型。将一个对象存储在hash类 型中会占用更少的内存,并且可以更方便的存取整个对象。3、新建一个 hash 对象时开始是</p>
+        
+    
+    <time datetime="2015-09-02T08:28:34.000Z" itemprop="datePublished">2015-09-02</time>
+  </a>
+</section>
+
+
+
+
+
+
+
+  <nav id="page-nav" class="clearfix unexpand">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
   </nav>
 
