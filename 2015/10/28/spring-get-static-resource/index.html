@@ -19,7 +19,7 @@
 <meta property="og:site_name" content="CLIMBRAN">
 <meta property="og:description" content="在一个新搭建的spring测试框架中，执行ajax时没有返回，发现是jquery的js文件加载时返回404错误，猜测是spring配置文件中缺少静态文件路径的相关配置，查看后果然是如此。查找后了解到静态文件有3种配置方式：
 ####方法一：在web.xml中增加静态资源的url该方法是通过web容器来访问静态资源，需要写再DispatcherServlet前面，让web容器的servlet在spr">
-<meta property="og:updated_time" content="2015-10-28T04:25:34.000Z">
+<meta property="og:updated_time" content="2015-10-28T05:11:17.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring访问静态资源(js、css、图片等)">
 <meta name="twitter:description" content="在一个新搭建的spring测试框架中，执行ajax时没有返回，发现是jquery的js文件加载时返回404错误，猜测是spring配置文件中缺少静态文件路径的相关配置，查看后果然是如此。查找后了解到静态文件有3种配置方式：
@@ -103,8 +103,9 @@
 </blockquote>
 <p>####方法二：Spring MVC中配置<mvc:resources><br>spring3.0.4后提供的方式<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">mvc:resources</span> <span class="attribute">mapping</span>=<span class="value">"/images/**"</span> <span class="attribute">location</span>=<span class="value">"/images/"</span> /&gt;</span></span><br></pre></td></tr></table></figure><br>将mapping的url映射到ResourceHttpRequestHandler进行处理，location指定静态资源位置，可以使webapp根目录下，也可以使WEB-INF目录和jar包里面，这样可以把静态资源压缩到jar包种</mvc:resources></p>
 <p>####方法三：Spring MVC中配置使用<mvc:default-servlet-handler><br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">mvc:default-servlet-handler</span>/&gt;</span></span><br></pre></td></tr></table></figure><br>这种方式只需要一行代码，但也不能访问WEB-INF目录下</mvc:default-servlet-handler></p>
-<p>方法二和方法三还需要同时配置<mvc:annotation-driven></mvc:annotation-driven></p>
-  
+<p>方法二和方法三还需要同时配置</p>
+<pre><code><span class="tag">&lt;mvc:annotation-driven/&gt;</span>
+</code></pre>  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
