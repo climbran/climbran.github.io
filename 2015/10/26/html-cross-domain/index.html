@@ -11,20 +11,20 @@
     
 
     
-    <meta name="description" content="上周接到一个需求，需要在页面中获取另一个html页面后迁入当前页面，由于直接用iframe直接请求会多出一些乱起八糟的表情并且不方便编辑样式，于是选择使用ajax。
+    <meta name="description" content="上周接到一个需求，需要在页面中获取另一个html页面后嵌入当前页面，由于直接用iframe直接请求会多出一些乱起八糟的标签并且不方便编辑样式，于是选择使用ajax。
 最初直接通过ajax请求，firefox中查看返回的状态码是200，但一直静入ajax的error分支，通过firebug查看发现是跨域问题，如果是跨域请求json用jsonp处理就好，可以跨域请求html还没有遇到过。
 百度后了解到">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ajax跨域请求html">
-<meta property="og:url" content="http://yoursite.com/2015/10/28/html-cross-domain/index.html">
+<meta property="og:url" content="http://yoursite.com/2015/10/26/html-cross-domain/index.html">
 <meta property="og:site_name" content="CLIMBRAN">
-<meta property="og:description" content="上周接到一个需求，需要在页面中获取另一个html页面后迁入当前页面，由于直接用iframe直接请求会多出一些乱起八糟的表情并且不方便编辑样式，于是选择使用ajax。
+<meta property="og:description" content="上周接到一个需求，需要在页面中获取另一个html页面后嵌入当前页面，由于直接用iframe直接请求会多出一些乱起八糟的标签并且不方便编辑样式，于是选择使用ajax。
 最初直接通过ajax请求，firefox中查看返回的状态码是200，但一直静入ajax的error分支，通过firebug查看发现是跨域问题，如果是跨域请求json用jsonp处理就好，可以跨域请求html还没有遇到过。
 百度后了解到">
-<meta property="og:updated_time" content="2015-10-28T05:08:03.000Z">
+<meta property="og:updated_time" content="2015-10-28T05:12:53.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ajax跨域请求html">
-<meta name="twitter:description" content="上周接到一个需求，需要在页面中获取另一个html页面后迁入当前页面，由于直接用iframe直接请求会多出一些乱起八糟的表情并且不方便编辑样式，于是选择使用ajax。
+<meta name="twitter:description" content="上周接到一个需求，需要在页面中获取另一个html页面后嵌入当前页面，由于直接用iframe直接请求会多出一些乱起八糟的标签并且不方便编辑样式，于是选择使用ajax。
 最初直接通过ajax请求，firefox中查看返回的状态码是200，但一直静入ajax的error分支，通过firebug查看发现是跨域问题，如果是跨域请求json用jsonp处理就好，可以跨域请求html还没有遇到过。
 百度后了解到">
 
@@ -86,20 +86,20 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/10/28/html-cross-domain/" title="ajax跨域请求html" itemprop="url">ajax跨域请求html</a>
+      <a href="/2015/10/26/html-cross-domain/" title="ajax跨域请求html" itemprop="url">ajax跨域请求html</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
 		
   <p class="article-time">
-    <time datetime="2015-10-28T05:06:01.000Z" itemprop="datePublished"> 发表于 2015-10-28</time>
+    <time datetime="2015-10-26T05:06:01.000Z" itemprop="datePublished"> 发表于 2015-10-26</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
-		<p>上周接到一个需求，需要在页面中获取另一个html页面后迁入当前页面，由于直接用iframe直接请求会多出一些乱起八糟的表情并且不方便编辑样式，于是选择使用ajax。</p>
+		<p>上周接到一个需求，需要在页面中获取另一个html页面后嵌入当前页面，由于直接用iframe直接请求会多出一些乱起八糟的标签并且不方便编辑样式，于是选择使用ajax。</p>
 <p>最初直接通过ajax请求，firefox中查看返回的状态码是200，但一直静入ajax的error分支，通过firebug查看发现是跨域问题，如果是跨域请求json用jsonp处理就好，可以跨域请求html还没有遇到过。</p>
 <p>百度后了解到需要通过后台来使跨域请求变成同域，但没找到具体实施方案，于是先尝试直接后台redirect目标页面，再ajax请求后台，结果ajax接收302状态码，进入error分支，接着把ajax换成用complete接收，接收到一个object对象，打印出来是一堆js，便放弃这一方案，不知道有没变法通过ajax正确处理302？</p>
 <p>最后是通过HttpClient请求页面，再通过response.getWriter获取PrintWriter输出到前段（没有使用Spring框架），在Spring中对应的实现如下<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.climbran.spring.controller;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.http.HttpEntity;</span><br><span class="line"><span class="keyword">import</span> org.apache.http.HttpResponse;</span><br><span class="line"><span class="keyword">import</span> org.apache.http.client.methods.HttpGet;</span><br><span class="line"><span class="keyword">import</span> org.apache.http.impl.client.DefaultHttpClient;</span><br><span class="line"><span class="keyword">import</span> org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;</span><br><span class="line"><span class="keyword">import</span> org.apache.http.util.EntityUtils;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Controller;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.ResponseBody;</span><br><span class="line"><span class="keyword">import</span> org.apache.http.client.HttpClient;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletResponse;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * Created by swe on 15/10/26.</span><br><span class="line"> */</span></span><br><span class="line"><span class="annotation">@Controller</span></span><br><span class="line"><span class="annotation">@RequestMapping</span>(<span class="string">"ajax"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AjaxTestController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@RequestMapping</span>(<span class="string">"getHTML"</span>)</span><br><span class="line">    <span class="annotation">@ResponseBody</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getHTML</span><span class="params">(HttpServletResponse response)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        HttpClient httpclient = <span class="keyword">new</span> DefaultHttpClient(<span class="keyword">new</span> ThreadSafeClientConnManager());<span class="comment">//创建一个客户端，类似打开一个浏览器</span></span><br><span class="line">        HttpGet httpGet = <span class="keyword">new</span> HttpGet(<span class="string">"http://404.58.com/"</span>);</span><br><span class="line">        String html = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            HttpResponse res = httpclient.execute(httpGet);</span><br><span class="line">            HttpEntity entity = res.getEntity();</span><br><span class="line">            html = EntityUtils.toString(entity);</span><br><span class="line">            System.out.println(res.getStatusLine().getStatusCode());</span><br><span class="line">            System.out.println(html);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        response.setContentType(<span class="string">"text/html;charset=UTF-8"</span>);</span><br><span class="line">        <span class="keyword">return</span> html;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
@@ -122,7 +122,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/10/28/html-cross-domain/" data-title="ajax跨域请求html | CLIMBRAN" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/10/26/html-cross-domain/" data-title="ajax跨域请求html | CLIMBRAN" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -135,11 +135,19 @@
 	
 <nav class="article-nav clearfix">
  
+ <div class="prev" >
+ <a href="/2015/10/28/spring-get-static-resource/" title="Spring访问静态资源(js、css、图片等)">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Spring访问静态资源(js、css、图片等)</span>
+</a>
+</div>
+
 
 <div class="next">
-<a href="/2015/10/28/spring-get-static-resource/"  title="Spring访问静态资源(js、css、图片等)">
+<a href="/2015/09/22/dynamic-proxy-and-aop/"  title="动态代理及简单的AOP框架的实现">
  <strong>下一篇：</strong><br/> 
- <span>Spring访问静态资源(js、css、图片等)
+ <span>动态代理及简单的AOP框架的实现
 </span>
 </a>
 </div>
@@ -148,7 +156,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/10/28/html-cross-domain/" data-title="ajax跨域请求html" data-url="http://yoursite.com/2015/10/28/html-cross-domain/"></div>
+	<div class="ds-thread" data-thread-key="2015/10/26/html-cross-domain/" data-title="ajax跨域请求html" data-url="http://yoursite.com/2015/10/26/html-cross-domain/"></div>
 </section>
 
 
