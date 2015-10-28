@@ -81,6 +81,150 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/09/06/spring-redis-jedis/" title="Spring与redis集成" itemprop="url">Spring与redis集成</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
+		
+  <p class="article-time">
+    <time datetime="2015-09-06T05:06:53.000Z" itemprop="datePublished"> 发表于 2015-09-06</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>首先安装redis：<a href="http://climbran.github.io/2015/09/01/install-redis-in-Mac/" target="_blank" rel="external">Mac下安装Redis</a></p>
+<p>java客户端选用Jedis，加入pom文件依赖<br><figure class="highlight xml"><figcaption><span>pom.xml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">groupId</span>&gt;</span>redis.clients<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>jedis<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">version</span>&gt;</span>2.7.3<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure><br>下面是一个简化的Template Demo,用来实现redis各种命令的映射:<br><figure class="highlight java"><figcaption><span>com.climbran.redis.JedisTemplate</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.climbran.redis;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.slf4j.Logger;</span><br><span class="line"><span class="keyword">import</span> org.slf4j.LoggerFactory;</span><br><span class="line"><span class="keyword">import</span> redis.clients.jedis.JedisPool;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> redis.clients.jedis.Jedis;</span><br><span class="line"><span class="keyword">import</span> redis.clients.jedis.Pipeline;</span><br><span class="line"><span class="keyword">import</span> redis.clients.jedis.Tuple;</span><br><span class="line"><span class="keyword">import</span> redis.clients.jedis.exceptions.JedisConnectionException;</span><br><span class="line"><span class="keyword">import</span> redis.clients.jedis.exceptions.JedisDataException;</span><br><span class="line"><span class="keyword">import</span> redis.clients.jedis.exceptions.JedisException;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * JedisTemplate 提供了一个template方法，负责对Jedis连接的获取与归还。</span><br><span class="line"> * JedisAction&lt;T&gt; 和 JedisActionNoResult两种回调接口，适用于有无返回值两种情况。</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JedisTemplate</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Logger logger = LoggerFactory.getLogger(JedisTemplate.class);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> JedisPool jedisPool;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">JedisTemplate</span><span class="params">(JedisPool jedisPool)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.jedisPool = jedisPool;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * Callback interface for template.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">JedisAction</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">        <span class="function">T <span class="title">action</span><span class="params">(Jedis jedis)</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * Callback interface for template without result.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">JedisActionNoResult</span> </span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">action</span><span class="params">(Jedis jedis)</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * Execute with a call back action with result.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">public</span> &lt;T&gt; <span class="function">T <span class="title">execute</span><span class="params">(JedisAction&lt;T&gt; jedisAction)</span> <span class="keyword">throws</span> JedisException </span>&#123;</span><br><span class="line">        Jedis jedis = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">boolean</span> broken = <span class="keyword">false</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            jedis = jedisPool.getResource();</span><br><span class="line">            <span class="keyword">return</span> jedisAction.action(jedis);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (JedisException e) &#123;</span><br><span class="line">            broken = handleJedisException(e);</span><br><span class="line">            <span class="keyword">throw</span> e;</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            closeResource(jedis, broken);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * Execute with a call back action without result.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(JedisActionNoResult jedisAction)</span> <span class="keyword">throws</span> JedisException </span>&#123;</span><br><span class="line">        Jedis jedis = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">boolean</span> broken = <span class="keyword">false</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            jedis = jedisPool.getResource();</span><br><span class="line">            jedisAction.action(jedis);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (JedisException e) &#123;</span><br><span class="line">            broken = handleJedisException(e);</span><br><span class="line">            <span class="keyword">throw</span> e;</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            closeResource(jedis, broken);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * Handle jedisException, write log and return whether the connection is broken.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">boolean</span> <span class="title">handleJedisException</span><span class="params">(JedisException jedisException)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (jedisException <span class="keyword">instanceof</span> JedisConnectionException) &#123;</span><br><span class="line">            logger.error(<span class="string">"Redis connection "</span> + jedisPool + <span class="string">" lost."</span>, jedisException);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (jedisException <span class="keyword">instanceof</span> JedisDataException) &#123;</span><br><span class="line">            <span class="keyword">if</span> ((jedisException.getMessage() != <span class="keyword">null</span>) &amp;&amp; (jedisException.getMessage().indexOf(<span class="string">"READONLY"</span>) != -<span class="number">1</span>)) &#123;</span><br><span class="line">                logger.error(<span class="string">"Redis connection "</span> + jedisPool + <span class="string">" are read-only slave."</span>, jedisException);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// dataException, isBroken=false</span></span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            logger.error(<span class="string">"Jedis exception happen."</span>, jedisException);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * Return jedis connection to the pool, call different return methods depends on the conectionBroken status.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">closeResource</span><span class="params">(Jedis jedis, <span class="keyword">boolean</span> conectionBroken)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (conectionBroken) &#123;</span><br><span class="line">                jedisPool.returnBrokenResource(jedis);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                jedisPool.returnResource(jedis);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            logger.error(<span class="string">"return back jedis failed, will fore close the jedis."</span>, e);</span><br><span class="line">            JedisUtils.destroyJedis(jedis);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// / Common Actions ///</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Boolean <span class="title">del</span><span class="params">(<span class="keyword">final</span> String... keys)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> execute(<span class="keyword">new</span> JedisAction&lt;Boolean&gt;() &#123;</span><br><span class="line"></span><br><span class="line">            <span class="annotation">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> Boolean <span class="title">action</span><span class="params">(Jedis jedis)</span> </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> jedis.del(keys) == keys.length ? <span class="keyword">true</span> : <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">flushDB</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        execute(<span class="keyword">new</span> JedisActionNoResult() &#123;</span><br><span class="line"></span><br><span class="line">            <span class="annotation">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">action</span><span class="params">(Jedis jedis)</span> </span>&#123;</span><br><span class="line">                jedis.flushDB();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// / String Actions ///</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">get</span><span class="params">(<span class="keyword">final</span> String key)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> execute(<span class="keyword">new</span> JedisAction&lt;String&gt;() &#123;</span><br><span class="line"></span><br><span class="line">            <span class="annotation">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> String <span class="title">action</span><span class="params">(Jedis jedis)</span> </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> jedis.get(key);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">set</span><span class="params">(<span class="keyword">final</span> String key, <span class="keyword">final</span> String value)</span> </span>&#123;</span><br><span class="line">        execute(<span class="keyword">new</span> JedisActionNoResult() &#123;</span><br><span class="line"></span><br><span class="line">            <span class="annotation">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">action</span><span class="params">(Jedis jedis)</span> </span>&#123;</span><br><span class="line">                jedis.set(key, value);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//Other Actions</span></span><br><span class="line">	</span><br><span class="line">	......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight java"><figcaption><span>com.climbran.redis.JedisUtils</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.climbran.redis;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.climbran.redis.JedisTemplate.JedisAction;</span><br><span class="line"><span class="comment">//import com.climbran.redis.pool.JedisPool;</span></span><br><span class="line"><span class="keyword">import</span> redis.clients.jedis.JedisPool;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> redis.clients.jedis.Jedis;</span><br><span class="line"><span class="keyword">import</span> redis.clients.jedis.exceptions.JedisException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JedisUtils</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String OK_CODE = <span class="string">"OK"</span>;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String OK_MULTI_CODE = <span class="string">"+OK"</span>;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span><br><span class="line">	 * 判断 返回值是否ok.</span><br><span class="line">	 */</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">isStatusOk</span><span class="params">(String status)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> (status != <span class="keyword">null</span>) &amp;&amp; (OK_CODE.equals(status) || OK_MULTI_CODE.equals(status));</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span><br><span class="line">	 * 在Pool以外强行销毁Jedis.</span><br><span class="line">	 */</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">destroyJedis</span><span class="params">(Jedis jedis)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> ((jedis != <span class="keyword">null</span>) &amp;&amp; jedis.isConnected()) &#123;</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				<span class="keyword">try</span> &#123;</span><br><span class="line">					jedis.quit();</span><br><span class="line">				&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">				&#125;</span><br><span class="line">				jedis.disconnect();</span><br><span class="line">			&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>启动redis服务，执行main函数：<br><figure class="highlight java"><figcaption><span>com.climbran.redis.JedisUtils</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.climbran.redis.JedisTemplate;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> redis.clients.jedis.JedisPool;</span><br><span class="line"><span class="keyword">import</span> redis.clients.jedis.JedisPoolConfig;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RedisTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        JedisPool pool = <span class="keyword">new</span> JedisPool(<span class="keyword">new</span> JedisPoolConfig(),<span class="string">"localhost"</span>,<span class="number">6379</span>);</span><br><span class="line">        JedisTemplate template = <span class="keyword">new</span> JedisTemplate(pool);</span><br><span class="line">        template.set(<span class="string">"foo"</span>,<span class="string">"bar"</span>);</span><br><span class="line">        System.out.println(template.get(<span class="string">"foo"</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>如果将JedisTemplate注入dao层调用方法则可对entity层与redis进行映射。</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Redis/">Redis</a><a href="/tags/Spring-MVC/">Spring MVC</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/09/06/spring-redis-jedis/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/06/spring-redis-jedis/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/09/02/redis-hash/" title="redis数据类型-hash" itemprop="url">redis数据类型-hash</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
+		
+  <p class="article-time">
+    <time datetime="2015-09-02T08:28:34.000Z" itemprop="datePublished"> 发表于 2015-09-02</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>1、redishash是一个string类型的field和value的映射表。<br>2、hash特别适合用于存储对象。相较于将对象的每个字段存成单个 string 类型。将一个对象存储在hash类 型中会占用更少的内存,并且可以更方便的存取整个对象。<br>3、新建一个 hash 对象时开始是用 zipmap(又称为 small hash)来存储的。<br>4、如果 field 或者 value 的大小超出一定限制后,redis会在内部自动将zipmap替换成正常的 hash 实现. 这个限制可以在配置文件中指定：</p>
+<pre><code>hash-max-zipmap-entries <span class="number">64</span> <span class="preprocessor">#配置字段最多 <span class="number">64</span> 个</span>
+hash-max-zipmap-value <span class="number">512</span> <span class="preprocessor">#配置 value 最大为 <span class="number">512</span> 字节</span>
+</code></pre><p>下面介绍 hash 相关命令：</p>
+<pre><code>hset <span class="keyword">key</span> field value    <span class="preprocessor">#设置 hash field 为指定值,如果 key 不存在,则先创建</span>
+
+hget <span class="keyword">key</span> field        <span class="preprocessor">#获取指定的 hash field</span>
+
+hmget <span class="keyword">key</span> filed1....fieldN        <span class="preprocessor">#获取全部指定的 hash filed</span>
+
+hmset <span class="keyword">key</span> filed1 value1 ... filedN valueN        <span class="preprocessor">#同时设置 hash 的多个 field</span>
+
+hincrby <span class="keyword">key</span> field <span class="built_in">integer</span>        <span class="preprocessor">#将指定的 hash filed 加上给定值</span>
+
+hexists <span class="keyword">key</span> field        <span class="preprocessor">#测试指定 field 是否存在</span>
+
+hdel <span class="keyword">key</span> field        <span class="preprocessor">#删除指定的 hash field</span>
+
+hlen <span class="keyword">key</span>    <span class="preprocessor">#返回指定 hash 的 field 数量</span>
+
+hkeys <span class="keyword">key</span>    <span class="preprocessor">#返回 hash 的所有 field</span>
+
+hvals <span class="keyword">key</span>    <span class="preprocessor">#返回 hash 的所有 value</span>
+
+hgetall <span class="keyword">key</span>        <span class="preprocessor">#返回 hash 的所有 filed 和 value</span>
+</code></pre>
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Redis/">Redis</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/09/02/redis-hash/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/02/redis-hash/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/09/02/redis-sorted-set/" title="redis数据类型-sorted set" itemprop="url">redis数据类型-sorted set</a>
   </h1>
   <p class="article-author">By
@@ -651,127 +795,6 @@ OK
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/08/29/consistent-hashing/" title="一致性哈希" itemprop="url">一致性哈希</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
-		
-  <p class="article-time">
-    <time datetime="2015-08-29T14:30:53.000Z" itemprop="datePublished"> 发表于 2015-08-29</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>学习redis时，看到一致性哈希。<br><br><br>一致性哈希算法在1997年由麻省理工学院提出的一种分布式哈希（DHT）实现算法，设计目标是为了解决因特网中的热点(Hot spot)问题，初衷和CARP十分类似。一致性哈希修正了CARP使用的简 单哈希算法带来的问题，使得分布式哈希（DHT）可以在P2P环境中真正得到应用。一致性hash算法提出了在动态变化的Cache环境中，判定哈希算法好坏的四个定义：</p>
-<p>  1、平衡性(Balance)：平衡性是指哈希的结果能够尽可能分布到所有的node中去，这样可以使得所有的node都得到利用。很多哈希算法都能够满足这一条件(即hash的结果应该平均分配到各个node, 这样从算法上就解决了负载均衡问题)。</p>
-<p>  2、单调性(Monotonicity)：单调性是指如果已经有一些内容通过哈希分派到了相应的node中，又有新的node加入到系统中。哈希的结果应能够保证原有已分配的内容可以被映射到原有的或者新的node中去，而不会被映射到旧的node集合中的其他node（即在新增或者删减节点时, 同一个key访问到的值总是一样的）。 </p>
-<p>  3、分散性(Spread)：在分布式环境中，终端有可能看不到所有的node，而是只能看到其中的一部分。当终端希望通过哈希过程将内容映射到node上时，由于不同终端所见的node集合有可能不同，从而导致哈希的结果不一致，最终的结果是相同的内容被不同的终端映射到不同的缓冲区中。这种情况显然是应该避免的，因为它导致相同内容被存储到不同node中去，降低了系统存储的效率。分散性的定义就是上述情况发生的严重程度。好的哈希算法应能够尽量避免不一致的情况发生，也就是尽量降低分散性（即数据应该分散的存放在 分布式集群中的各个节点(节点自己可以有备份), 不必要每个节点都存储所有的数据）。 </p>
-<p>  4、负载(Load)：负载问题实际上是从另一个角度看待分散性问题。既然不同的终端可能将相同的内容映射到不同的node中，那么对于一个特定的node而言，也可能被不同的用户映射为不同的内容。导致同一个node被大量访问。与分散性一样，这种情况也是应当避免的，因此好的哈希算法应能够尽量降低node的负荷(即尽量将访问分散到不同node)。<br><br><br>为什么要一致性哈希?(why)<br><br>不使用一致性哈希时（不使用哈希或使用普通哈希），增减node几乎所有key的映射要重新维护。<br><br><br>使用一致性哈希时，key映射到固定数量的虚拟节点上，然后将虚拟节点的 哈希值mod(虚拟节点总数/节点数)，来选取node，例如一个key哈希后值为28，虚拟节点40个，节点有5个，节点编号从1开始，则应该存放在node4 (28mod(40/5)+1=4),key值为39时则存放在node1,如下图所示：<br><br><img width="600" src="/img/consistent-hashing/1.png"><br><br>使用一致性哈希后，用节点将虚拟节点等分作为分割点，每次增减节点时只需要迁移每个分割点移动范围内的数据。</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/数据库/">数据库</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/08/29/consistent-hashing/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/08/29/consistent-hashing/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/08/29/one-reason-to-expected-at-least-1-bean/" title="Autowired时找不到bean的一个原因" itemprop="url">Autowired时找不到bean的一个原因</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
-		
-  <p class="article-time">
-    <time datetime="2015-08-29T07:20:30.000Z" itemprop="datePublished"> 发表于 2015-08-29</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>今天整合spring和mybatis时，在通过@Autowired注入Dao时一直报<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">expected at least <span class="number">1</span> bean which qualifies <span class="literal">as</span> autowire candidate <span class="keyword">for</span> <span class="keyword">this</span> dependency. Dependency annotations: &#123;<span class="annotation">@org</span>.springframework.beans.<span class="literal">factory</span>.annotation.Autowired(required=<span class="keyword">true</span>)&#125;</span><br></pre></td></tr></table></figure><br>查看了很久applicationContext.xml中的配置没有找出问题，最后对照以前项目的web.xml配置时发现少了一个：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">listener</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">listener-class</span>&gt;</span>org.springframework.web.context.ContextLoaderListener<span class="tag">&lt;/<span class="title">listener-class</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">listener</span>&gt;</span></span><br></pre></td></tr></table></figure><br>加上后问题解决。<br></p>
-<p>ContextLoaderListener通过读取contextConfigLocation参数来读取配置参数，一般来说它配置的是Spring项目的中间层,服务层组件的注入，装配，AOP。</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Spring-MVC/">Spring MVC</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/08/29/one-reason-to-expected-at-least-1-bean/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/08/29/one-reason-to-expected-at-least-1-bean/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <a class="extend prev" rel="prev" href="/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/">Next<span></span></a>
@@ -796,7 +819,7 @@ OK
 			
 		
 			
-				<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>8</sup></a></li>
+				<li><a href="/tags/Spring-MVC/" title="Spring MVC">Spring MVC<sup>9</sup></a></li>
 			
 		
 			
@@ -808,7 +831,7 @@ OK
 			
 		
 			
-				<li><a href="/tags/web/" title="web">web<sup>2</sup></a></li>
+				<li><a href="/tags/web/" title="web">web<sup>3</sup></a></li>
 			
 		
 			
@@ -824,10 +847,6 @@ OK
 			
 		
 			
-				<li><a href="/tags/tomcat/" title="tomcat">tomcat<sup>2</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/数据库/" title="数据库">数据库<sup>2</sup></a></li>
 			
 		
@@ -836,7 +855,11 @@ OK
 			
 		
 			
-				<li><a href="/tags/postgresql/" title="postgresql">postgresql<sup>1</sup></a></li>
+				<li><a href="/tags/tomcat/" title="tomcat">tomcat<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/mybatis/" title="mybatis">mybatis<sup>1</sup></a></li>
 			
 		
 			
@@ -845,6 +868,10 @@ OK
 		
 			
 				<li><a href="/tags/linux/" title="linux">linux<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/ajax/" title="ajax">ajax<sup>1</sup></a></li>
 			
 		
 			
@@ -864,7 +891,7 @@ OK
 			
 		
 			
-				<li><a href="/tags/mybatis/" title="mybatis">mybatis<sup>1</sup></a></li>
+				<li><a href="/tags/postgresql/" title="postgresql">postgresql<sup>1</sup></a></li>
 			
 		
 		</ul>

@@ -4,23 +4,26 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Autowired时找不到bean的一个原因 | CLIMBRAN</title>
+    <title>Spring访问静态资源(js、css、图片等) | CLIMBRAN</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="swe">
     
 
     
-    <meta name="description" content="今天整合spring和mybatis时，在通过@Autowired注入Dao时一直报1expected at least 1 bean which qualifies as autowire candidate for this dependency. Dependency annotations: &amp;#123;@org.springframework.beans.factory.annotati">
+    <meta name="description" content="在一个新搭建的spring测试框架中，执行ajax时没有返回，发现是jquery的js文件加载时返回404错误，猜测是spring配置文件中缺少静态文件路径的相关配置，查看后果然是如此。查找后了解到静态文件有3种配置方式：
+####方法一：在web.xml中增加静态资源的url该方法是通过web容器来访问静态资源，需要写再DispatcherServlet前面，让web容器的servlet在spr">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Autowired时找不到bean的一个原因">
-<meta property="og:url" content="http://yoursite.com/2015/08/29/one-reason-to-expected-at-least-1-bean/index.html">
+<meta property="og:title" content="Spring访问静态资源(js、css、图片等)">
+<meta property="og:url" content="http://yoursite.com/2015/10/28/spring-get-static-resource/index.html">
 <meta property="og:site_name" content="CLIMBRAN">
-<meta property="og:description" content="今天整合spring和mybatis时，在通过@Autowired注入Dao时一直报1expected at least 1 bean which qualifies as autowire candidate for this dependency. Dependency annotations: &amp;#123;@org.springframework.beans.factory.annotati">
-<meta property="og:updated_time" content="2015-08-29T07:40:55.000Z">
+<meta property="og:description" content="在一个新搭建的spring测试框架中，执行ajax时没有返回，发现是jquery的js文件加载时返回404错误，猜测是spring配置文件中缺少静态文件路径的相关配置，查看后果然是如此。查找后了解到静态文件有3种配置方式：
+####方法一：在web.xml中增加静态资源的url该方法是通过web容器来访问静态资源，需要写再DispatcherServlet前面，让web容器的servlet在spr">
+<meta property="og:updated_time" content="2015-10-28T04:25:34.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Autowired时找不到bean的一个原因">
-<meta name="twitter:description" content="今天整合spring和mybatis时，在通过@Autowired注入Dao时一直报1expected at least 1 bean which qualifies as autowire candidate for this dependency. Dependency annotations: &amp;#123;@org.springframework.beans.factory.annotati">
+<meta name="twitter:title" content="Spring访问静态资源(js、css、图片等)">
+<meta name="twitter:description" content="在一个新搭建的spring测试框架中，执行ajax时没有返回，发现是jquery的js文件加载时返回404错误，猜测是spring配置文件中缺少静态文件路径的相关配置，查看后果然是如此。查找后了解到静态文件有3种配置方式：
+####方法一：在web.xml中增加静态资源的url该方法是通过web容器来访问静态资源，需要写再DispatcherServlet前面，让web容器的servlet在spr">
 
     
     <link rel="alternative" href="/atom.xml" title="CLIMBRAN" type="application/atom+xml">
@@ -80,21 +83,27 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/08/29/one-reason-to-expected-at-least-1-bean/" title="Autowired时找不到bean的一个原因" itemprop="url">Autowired时找不到bean的一个原因</a>
+      <a href="/2015/10/28/spring-get-static-resource/" title="Spring访问静态资源(js、css、图片等)" itemprop="url">Spring访问静态资源(js、css、图片等)</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
 		
   <p class="article-time">
-    <time datetime="2015-08-29T07:20:30.000Z" itemprop="datePublished"> 发表于 2015-08-29</time>
+    <time datetime="2015-10-28T03:23:52.000Z" itemprop="datePublished"> 发表于 2015-10-28</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
-		<p>今天整合spring和mybatis时，在通过@Autowired注入Dao时一直报<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">expected at least <span class="number">1</span> bean which qualifies <span class="literal">as</span> autowire candidate <span class="keyword">for</span> <span class="keyword">this</span> dependency. Dependency annotations: &#123;<span class="annotation">@org</span>.springframework.beans.<span class="literal">factory</span>.annotation.Autowired(required=<span class="keyword">true</span>)&#125;</span><br></pre></td></tr></table></figure><br>查看了很久applicationContext.xml中的配置没有找出问题，最后对照以前项目的web.xml配置时发现少了一个：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">listener</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">listener-class</span>&gt;</span>org.springframework.web.context.ContextLoaderListener<span class="tag">&lt;/<span class="title">listener-class</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">listener</span>&gt;</span></span><br></pre></td></tr></table></figure><br>加上后问题解决。<br></p>
-<p>ContextLoaderListener通过读取contextConfigLocation参数来读取配置参数，一般来说它配置的是Spring项目的中间层,服务层组件的注入，装配，AOP。</p>
+		<p>在一个新搭建的spring测试框架中，执行ajax时没有返回，发现是jquery的js文件加载时返回404错误，猜测是spring配置文件中缺少静态文件路径的相关配置，查看后果然是如此。查找后了解到静态文件有3种配置方式：</p>
+<p>####方法一：在web.xml中增加静态资源的url<br>该方法是通过web容器来访问静态资源，需要写再DispatcherServlet前面，让web容器的servlet在spring之前先拦截，这种那个方式不能访问WEB-INF目录，只能访问web根目录下的路径（webapp、webContent等）：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">servlet-mapping</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">servlet-name</span>&gt;</span>default<span class="tag">&lt;/<span class="title">servlet-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">url-pattern</span>&gt;</span>*.jpg<span class="tag">&lt;/<span class="title">url-pattern</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">servlet-mapping</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">servlet-mapping</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">servlet-name</span>&gt;</span>default<span class="tag">&lt;/<span class="title">servlet-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">url-pattern</span>&gt;</span>*.js<span class="tag">&lt;/<span class="title">url-pattern</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">servlet-mapping</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">servlet-mapping</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">servlet-name</span>&gt;</span>default<span class="tag">&lt;/<span class="title">servlet-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">url-pattern</span>&gt;</span>*.css<span class="tag">&lt;/<span class="title">url-pattern</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">servlet-mapping</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>各种常见web容器的servlet名称如下：<br><br>Tomcat、Jetty、JBoss、GlassFish    : “default”<br><br>Google App Engine    :    “_ah_default”<br><br>Resin    :    “resin-file”<br><br>WebLogic    :    “FileServlet”<br><br>WebSphere    :    “SimpleFileServlet”</p>
+</blockquote>
+<p>####方法二：Spring MVC中配置<mvc:resources><br>spring3.0.4后提供的方式<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">mvc:resources</span> <span class="attribute">mapping</span>=<span class="value">"/images/**"</span> <span class="attribute">location</span>=<span class="value">"/images/"</span> /&gt;</span></span><br></pre></td></tr></table></figure><br>将mapping的url映射到ResourceHttpRequestHandler进行处理，location指定静态资源位置，可以使webapp根目录下，也可以使WEB-INF目录和jar包里面，这样可以把静态资源压缩到jar包种</mvc:resources></p>
+<p>####方法三：Spring MVC中配置使用<mvc:default-servlet-handler><br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">mvc:default-servlet-handler</span>/&gt;</span></span><br></pre></td></tr></table></figure><br>这种方式只需要一行代码，但也不能访问WEB-INF目录下</mvc:default-servlet-handler></p>
+<p>方法二和方法三还需要同时配置<mvc:annotation-driven></mvc:annotation-driven></p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -112,7 +121,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/08/29/one-reason-to-expected-at-least-1-bean/" data-title="Autowired时找不到bean的一个原因 | CLIMBRAN" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/10/28/spring-get-static-resource/" data-title="Spring访问静态资源(js、css、图片等) | CLIMBRAN" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -126,18 +135,18 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/08/29/consistent-hashing/" title="一致性哈希">
+ <a href="/2015/10/28/html-cross-domain/" title="ajax跨域请求html">
   <strong>上一篇：</strong><br/>
   <span>
-  一致性哈希</span>
+  ajax跨域请求html</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/08/29/spring-mybatis-postgresql/"  title="spring、mybatis、postgresql整合">
+<a href="/2015/09/22/dynamic-proxy-and-aop/"  title="动态代理及简单的AOP框架的实现">
  <strong>下一篇：</strong><br/> 
- <span>spring、mybatis、postgresql整合
+ <span>动态代理及简单的AOP框架的实现
 </span>
 </a>
 </div>
@@ -146,7 +155,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/08/29/one-reason-to-expected-at-least-1-bean/" data-title="Autowired时找不到bean的一个原因" data-url="http://yoursite.com/2015/08/29/one-reason-to-expected-at-least-1-bean/"></div>
+	<div class="ds-thread" data-thread-key="2015/10/28/spring-get-static-resource/" data-title="Spring访问静态资源(js、css、图片等)" data-url="http://yoursite.com/2015/10/28/spring-get-static-resource/"></div>
 </section>
 
 
