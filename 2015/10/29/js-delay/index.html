@@ -4,23 +4,32 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>git常用指令 | CLIMBRAN</title>
+    <title>javascript延时（setTimeout()） | CLIMBRAN</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="swe">
     
 
     
-    <meta name="description" content="123456789101112131415161718git config --global user.name &quot;name&quot;git config --global user.email email@email.comgit config --global alias.co checkout git initgit add -A git commit -m &quot;message&quot;git remote">
+    <meta name="description" content="window.setTimeout(code,millisec)window.setTimeout(code,millisec,lang)
+code:传入函数或代码millisec:时间，单位毫秒，1秒=1000毫秒lang:脚本语言类型(JScript | VBScript | JavaScript)
+
+window.setTimeout(“alert(1);”,2000)window.setT">
 <meta property="og:type" content="article">
-<meta property="og:title" content="git常用指令">
-<meta property="og:url" content="http://yoursite.com/2015/04/26/git-instructions/index.html">
+<meta property="og:title" content="javascript延时（setTimeout()）">
+<meta property="og:url" content="http://yoursite.com/2015/10/29/js-delay/index.html">
 <meta property="og:site_name" content="CLIMBRAN">
-<meta property="og:description" content="123456789101112131415161718git config --global user.name &quot;name&quot;git config --global user.email email@email.comgit config --global alias.co checkout git initgit add -A git commit -m &quot;message&quot;git remote">
-<meta property="og:updated_time" content="2015-08-28T06:22:37.000Z">
+<meta property="og:description" content="window.setTimeout(code,millisec)window.setTimeout(code,millisec,lang)
+code:传入函数或代码millisec:时间，单位毫秒，1秒=1000毫秒lang:脚本语言类型(JScript | VBScript | JavaScript)
+
+window.setTimeout(“alert(1);”,2000)window.setT">
+<meta property="og:updated_time" content="2015-10-29T14:21:02.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="git常用指令">
-<meta name="twitter:description" content="123456789101112131415161718git config --global user.name &quot;name&quot;git config --global user.email email@email.comgit config --global alias.co checkout git initgit add -A git commit -m &quot;message&quot;git remote">
+<meta name="twitter:title" content="javascript延时（setTimeout()）">
+<meta name="twitter:description" content="window.setTimeout(code,millisec)window.setTimeout(code,millisec,lang)
+code:传入函数或代码millisec:时间，单位毫秒，1秒=1000毫秒lang:脚本语言类型(JScript | VBScript | JavaScript)
+
+window.setTimeout(“alert(1);”,2000)window.setT">
 
     
     <link rel="alternative" href="/atom.xml" title="CLIMBRAN" type="application/atom+xml">
@@ -80,20 +89,26 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/04/26/git-instructions/" title="git常用指令" itemprop="url">git常用指令</a>
+      <a href="/2015/10/29/js-delay/" title="javascript延时（setTimeout()）" itemprop="url">javascript延时（setTimeout()）</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
 		
   <p class="article-time">
-    <time datetime="2015-04-26T08:10:15.000Z" itemprop="datePublished"> 发表于 2015-04-26</time>
+    <time datetime="2015-10-29T09:31:11.000Z" itemprop="datePublished"> 发表于 2015-10-29</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
-		<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">git config <span class="comment">--global user.name "name"</span></span><br><span class="line">git config <span class="comment">--global user.email email@email.com</span></span><br><span class="line">git config <span class="comment">--global alias.co checkout </span></span><br><span class="line">git init</span><br><span class="line">git add -A </span><br><span class="line">git <span class="operator"><span class="keyword">commit</span> -<span class="keyword">m</span> <span class="string">"message"</span></span><br><span class="line"></span><br><span class="line">git remote <span class="keyword">add</span> origin git@gitservicename:username/reponame.git</span><br><span class="line"></span><br><span class="line">git remote rm origin</span><br><span class="line"></span><br><span class="line">git push -u origin <span class="keyword">master</span> 推送<span class="keyword">master</span>分支</span><br><span class="line">git push -u origin <span class="comment">--all  推送所有分支</span></span><br><span class="line">-u表示追踪分支，下次可无参使用git push</span><br><span class="line"></span><br><span class="line">git <span class="keyword">clone</span> <span class="keyword">url</span></span><br><span class="line"></span><br><span class="line">ssh-keygen 三次空格，.ssh/id_rsa.pub下为<span class="keyword">key</span></span></span><br></pre></td></tr></table></figure>  
+		<p>window.setTimeout(code,millisec)<br>window.setTimeout(code,millisec,lang)</p>
+<p>code:传入函数或代码<br>millisec:时间，单位毫秒，1秒=1000毫秒<br>lang:脚本语言类型(JScript | VBScript | JavaScript)</p>
+<blockquote>
+<p>window.setTimeout(“alert(1);”,2000)<br><br>window.setTimeout(function(){alert(“hello”)},2000)<br></p>
+</blockquote>
+<p>由于javascript是单线程，所以下面函数会进入死循环：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">flag = <span class="literal">true</span>;</span><br><span class="line"><span class="built_in">window</span>.setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;flag = <span class="literal">false</span>;&#125;,<span class="number">3000</span>);</span><br><span class="line"><span class="keyword">while</span>(flag)&#123;	</span><br><span class="line">&#125;</span><br><span class="line">alert(ok);</span><br></pre></td></tr></table></figure></p>
+  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
@@ -101,7 +116,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/git/">git</a>
+  <span></span> <a href="/tags/javascript/">javascript</a>
   </div>
 
 </div>
@@ -110,7 +125,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/04/26/git-instructions/" data-title="git常用指令 | CLIMBRAN" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/10/29/js-delay/" data-title="javascript延时（setTimeout()） | CLIMBRAN" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -123,19 +138,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/04/28/callback-functions-about-java/" title="java中回调函数的用法">
-  <strong>上一篇：</strong><br/>
-  <span>
-  java中回调函数的用法</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/04/01/how-to-kill-process-on-mac/"  title="如何在mac os下根据端口号查杀进程">
+<a href="/2015/10/28/spring-get-static-resource/"  title="Spring访问静态资源(js、css、图片等)">
  <strong>下一篇：</strong><br/> 
- <span>如何在mac os下根据端口号查杀进程
+ <span>Spring访问静态资源(js、css、图片等)
 </span>
 </a>
 </div>
@@ -144,7 +151,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/04/26/git-instructions/" data-title="git常用指令" data-url="http://yoursite.com/2015/04/26/git-instructions/"></div>
+	<div class="ds-thread" data-thread-key="2015/10/29/js-delay/" data-title="javascript延时（setTimeout()）" data-url="http://yoursite.com/2015/10/29/js-delay/"></div>
 </section>
 
 

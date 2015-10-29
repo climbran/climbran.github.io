@@ -81,6 +81,69 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/10/29/js-delay/" title="javascript延时（setTimeout()）" itemprop="url">javascript延时（setTimeout()）</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
+		
+  <p class="article-time">
+    <time datetime="2015-10-29T09:31:11.000Z" itemprop="datePublished"> 发表于 2015-10-29</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>window.setTimeout(code,millisec)<br>window.setTimeout(code,millisec,lang)</p>
+<p>code:传入函数或代码<br>millisec:时间，单位毫秒，1秒=1000毫秒<br>lang:脚本语言类型(JScript | VBScript | JavaScript)</p>
+<blockquote>
+<p>window.setTimeout(“alert(1);”,2000)<br><br>window.setTimeout(function(){alert(“hello”)},2000)<br></p>
+</blockquote>
+<p>由于javascript是单线程，所以下面函数会进入死循环：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">flag = <span class="literal">true</span>;</span><br><span class="line"><span class="built_in">window</span>.setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;flag = <span class="literal">false</span>;&#125;,<span class="number">3000</span>);</span><br><span class="line"><span class="keyword">while</span>(flag)&#123;	</span><br><span class="line">&#125;</span><br><span class="line">alert(ok);</span><br></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/javascript/">javascript</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/10/29/js-delay/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/29/js-delay/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/10/28/spring-get-static-resource/" title="Spring访问静态资源(js、css、图片等)" itemprop="url">Spring访问静态资源(js、css、图片等)</a>
   </h1>
   <p class="article-author">By
@@ -693,67 +756,6 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/09/07/stateless-service/" title="服务器无状态" itemprop="url">服务器无状态</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
-		
-  <p class="article-time">
-    <time datetime="2015-09-07T04:21:03.000Z" itemprop="datePublished"> 发表于 2015-09-07</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>之前做听说可以不维持服务器的状态来减轻服务器压力，以为是指整个服务端都没有状态，一直没弄明白除非用cookie或者一次性的token，怎么维持客户端的状态。</p>
-<p>今天看到<a href="http://kyfxbl.iteye.com/blog/1831869" target="_blank" rel="external">无状态服务（stateless service）</a>才明白无状态是指对服务器集群中每台服务器(web server)来说是没有状态的。</p>
-<p>一般可以认为session就是有状态的，session主要用于两种情况：<br>1、一个事务的多次请求间暂存数据<br>2、维持登陆状态<br>对于第一种情况，可以通过将数据回传到客户端，放在表单中隐藏或用sessionStorage、cookie来实现。<br>对于第二种情况，可以将session从web server中剥离，存放在共享的地方(如redis)。</p>
-<p>附：<br><a href="http://book.51cto.com/art/201403/432495.htm" target="_blank" rel="external">理解服务的无状态性</a><br><a href="http://blog.csdn.net/romandion/article/details/1800025" target="_blank" rel="external">状态和无状态－－2种服务器架构之间的比较 </a></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/web/">web</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/09/07/stateless-service/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/07/stateless-service/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
@@ -830,6 +832,10 @@
 			
 		
 			
+				<li><a href="/tags/javascript/" title="javascript">javascript<sup>1</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/ajax/" title="ajax">ajax<sup>1</sup></a></li>
 			
 		
@@ -847,10 +853,6 @@
 		
 			
 				<li><a href="/tags/AOP/" title="AOP">AOP<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/postgresql/" title="postgresql">postgresql<sup>1</sup></a></li>
 			
 		
 		</ul>
