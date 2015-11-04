@@ -81,6 +81,73 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/09/09/java-collection/" title="JAVA容器复习" itemprop="url">JAVA容器复习</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
+		
+  <p class="article-time">
+    <time datetime="2015-09-09T12:51:01.000Z" itemprop="datePublished"> 发表于 2015-09-09</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>一、Collection接口<br>首先是Collection接口，继承Collection接口的有List、Set和Queue接口，Collection接口又继承自Iterable接口,所以List、Set、Queue的实现类都可以使用迭代器。</p>
+<p>Interable中使用interator()方法返回一个Iterator接口类型的对象，Iterator<e>有三个方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">hasNext</span><span class="params">()</span></span>; <span class="comment">//是否有下一个元素</span></span><br><span class="line"><span class="function">E <span class="title">next</span><span class="params">()</span></span>;	<span class="comment">//返回的下一个元素</span></span><br><span class="line">remove()  <span class="comment">//移除迭代器返回的最后一个元素</span></span><br></pre></td></tr></table></figure><br>Collection增加以下方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">size</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">isEmpty</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">contains</span><span class="params">(Object o)</span></span>;</span><br><span class="line">Object[] toArray();</span><br><span class="line">&lt;T&gt; T[] toArray(T[] a); </span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">remove</span><span class="params">(Object o)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">containsAll</span><span class="params">(Collection&lt;?&gt; c)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">addAll</span><span class="params">(Collection&lt;? extends E&gt; c)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">removeAll</span><span class="params">(Collection&lt;?&gt; c)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">retainAll</span><span class="params">(Collection&lt;?&gt; c)</span></span>;</span><br><span class="line"><span class="comment">/*retainAll于从列表中移除未包含在指定collection中的所有元素</span><br><span class="line">如果List集合对象由于调用retainAll方法而发生更改，则返回 true*/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">clear</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object o)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure><br>set对Collection基本没有新增方法</e></p>
+<p>List比Collection增加了以下方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">get(<span class="keyword">int</span> index);</span><br><span class="line"><span class="function">E <span class="title">set</span><span class="params">(<span class="keyword">int</span> index, E element)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> index, E element)</span></span>;</span><br><span class="line"><span class="function">E <span class="title">remove</span><span class="params">(<span class="keyword">int</span> index)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">indexOf</span><span class="params">(Object o)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">lastIndexOf</span><span class="params">(Object o)</span></span>;</span><br><span class="line"><span class="function">ListIterator&lt;E&gt; <span class="title">listIterator</span><span class="params">()</span></span>;	  <span class="comment">//比Interator多了hasPrevious、previous、nextIndex、previousIndex、set、add;</span></span><br><span class="line"><span class="function">List&lt;E&gt; <span class="title">subList</span><span class="params">(<span class="keyword">int</span> fromIndex, <span class="keyword">int</span> toIndex)</span></span>;	<span class="comment">//返回一个子list，注意对子list的操作会影响到原来的list</span></span><br></pre></td></tr></table></figure></p>
+<p>Queue比Collection增加以下方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">offer</span><span class="params">(E e)</span></span>;		<span class="comment">//添加一个元素并返回true       如果队列已满，则返回false</span></span><br><span class="line"><span class="function">E <span class="title">remove</span><span class="params">()</span></span>;	<span class="comment">// 移除并返问队列头部的元素,如果队列为空，则抛出一个NoSuchElementException</span></span><br><span class="line"><span class="function">E <span class="title">poll</span><span class="params">()</span></span>;	<span class="comment">//移除并返问队列头部的元素,如果队列为空，则返回null</span></span><br><span class="line"><span class="function">E <span class="title">element</span><span class="params">()</span></span>;	<span class="comment">//返回队列头部的元素,如果队列为空，则抛出一个NoSuchElementException异常</span></span><br><span class="line"><span class="function">E <span class="title">peek</span><span class="params">()</span></span>;		<span class="comment">//返回队列头部的元素,如果队列为空，则返回null</span></span><br></pre></td></tr></table></figure><br>二、Map接口<br>然后是Map接口，Map接口没有继承自任何接口。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">size</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">isEmpty</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">containsKey</span><span class="params">(Object key)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">containsValue</span><span class="params">(Object value)</span></span>;</span><br><span class="line"><span class="function">V <span class="title">get</span><span class="params">(Object key)</span></span>;</span><br><span class="line"><span class="function">V <span class="title">put</span><span class="params">(K key, V value)</span></span>;</span><br><span class="line"><span class="function">V <span class="title">remove</span><span class="params">(Object key)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">putAll</span><span class="params">(Map&lt;? extends K, ? extends V&gt; m)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">clear</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function">Set&lt;K&gt; <span class="title">keySet</span><span class="params">()</span></span>;	<span class="comment">//返回key组成的一个set,多次调用返回同一个引用,该Set支持删除操作，不支持add、addAll，能影响到Map;</span></span><br><span class="line"><span class="function">Collection&lt;V&gt; <span class="title">values</span><span class="params">()</span></span>;</span><br><span class="line">Set&lt;Map.Entry&lt;K, V&gt;&gt; entrySet();</span><br><span class="line"><span class="function"><span class="keyword">default</span> <span class="keyword">boolean</span> <span class="title">replace</span><span class="params">(K key, V oldValue, V newValue)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">default</span> V <span class="title">replace</span><span class="params">(K key, V value)</span>	<span class="comment">//如果map中已有key则覆盖，没有则返回null</span></span></span><br></pre></td></tr></table></figure></p>
+<p>三、常用容器<br>(1)List<br>    ArrayList    非线程安全，能快速进行随机访问，顺序添加效率也高于LinkedList<br>    LinkedList    非线程安全，底层是双向链表，增删比ArrayList快，能更好的支持栈，同时实现了Queue接口，能支持队列操作,适合变动较为频繁的存储。<br>    Vector    相当于线程安全版ArrayList,如果不考虑并发，ArrayList效率较高，当数组长度不够时，Vector增加100%，ArrayList增加50%</p>
+<p>其中LinkedList有些独有的方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">E <span class="title">getFirst</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function">E <span class="title">getLast</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function">E <span class="title">removeFirst</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function">E <span class="title">removeLast</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">addFirst</span><span class="params">(E e)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">addLast</span><span class="params">(E e)</span></span>;</span><br></pre></td></tr></table></figure><br>(2)Map<br>    HashMap 非线程安全，基于散列表实现，时间开销为O(1)，一般效率比TreeMap高<br>    TreeMap 非线程安全，基于红黑树实现，时间开销为O(logN),效率比HashMap低，但内部是有序的，TreeMap是唯一带有subMap()方法的Map，可以返回一个子树<br>    ConcurrentHashMap 线程安全，基于散列表实现ConcurrentMap接口，根据hash值来桶加锁。<br>    WeakHashMap 非线程安全，基于散列表是实现，其中的键是弱键，当map外没有引用时可能被GC回收。<br>四、优化<br>1、ArrayList默认生成一个长度为10的数组，当超过会生成一个更长的数组对象，然后将数据复制过去，如果估计使用ArrayList时将是很大一个数组可以预先设置数组大小来提高效率， eg: List list = new ArrayList(1000);<br>2、（备注：后来查看ArrayList和LinkedList的代码后发现size()方法只直接return size字段的值，所以两种方法应该效率没差别）<br>    通过循环遍历List时，如果没有add、remove操作改变数组大小，不用每次都读取数组大小,eg:</p>
+<pre><code><span class="keyword">for</span> (int <span class="built_in">i</span> = <span class="number">0</span>; <span class="built_in">i</span> &lt; vector.<span class="built_in">size</span> (); <span class="built_in">i</span>++) 
+改为 
+<span class="keyword">for</span> (int <span class="built_in">i</span> = <span class="number">0</span>,n=list.<span class="built_in">size</span> (); <span class="built_in">i</span> &lt; n; <span class="built_in">i</span>++) 
+</code></pre><p>3、ArrayList用get遍历，用iterator遍历也可以<br>       LinkedList应避免用get遍历(随机存取效率低)，尽量用iterator</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/java/">java</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/09/09/java-collection/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/09/java-collection/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/09/07/stateless-service/" title="服务器无状态" itemprop="url">服务器无状态</a>
   </h1>
   <p class="article-author">By
@@ -730,72 +797,6 @@ OK
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/08/31/java-RTTI/" title="Java RTTI学习" itemprop="url">Java RTTI学习</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
-		
-  <p class="article-time">
-    <time datetime="2015-08-31T15:46:53.000Z" itemprop="datePublished"> 发表于 2015-08-31</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>一、什么是RTTI<br>RTTI就是Run-Time Type Information的缩写，Java使用Class对象来实现RTTI。</p>
-<p>二、如何实现RTTI<br>每当编写并且编译一个新类时，就会产生一个Class对象（保存在同名的.class文件中），获取Class对象有以下几种方式：</p>
-<p>1、Class.forName(“className”);<br>2、类字面常量：eg: User.class;<br>不光可用于普通类，也可用于接口、数字、基本数据类型。<br>特殊的，基本数据类型的类字面常亮等价于对应包装类的TYPE字段（eg:int.class和Integer.TYPE等价）；<br>3、如果已经有了一个对象的引用（非Class对象），可以通过调用该对象的.getClass()方法获取；</p>
-<p>使用类的准备工作实际包括3个步骤：<br>1、加载：这是由类加载器执行的，该步骤将查找字节码（通常在classpath所指定的路径中查找，但这并非必须的），并从这些字节码中创建一个Class对象；<br>2、链接：在链接阶段将验证类中的字节码，为静态域分配存储空间，并且如果必需的话，将创建这个类对其他类的所有引用；<br>3、初始化：如果该类具有超类，则对其初始化，执行静态初始化器和静态初始化块；</p>
-<p>通过Class.forName(“className”)方式创建Class对象的引用时会初始化Class对象，而.class方式不会初始化Class对象，具体什么时候初始化可参考：<a href="http://climbran.github.io/2015/05/29/static-block/" target="_blank" rel="external">satic块</a></p>
-<p>三、Class对象的常用方法<br>getName    获取全限定名（即带包名的类名）<br>getSimpleName()    获取不含包名的类名<br>getCononicalName()    获取全限定名<br>getInterfaces() 返回Class对象，他们表示表示调用该方法的Class对象中的全部接口<br>isInterface() 告诉你这个Class对象是否表示某个接口<br>newInstance() 实例化一个对象</p>
-<p>调用newInstance时，如果使用泛型时，用？通配、super通配或不使用泛型将返回Object类型的值，如果用extends通配或指定具体类型能返回具体类型的值，例如:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">.....</span><br><span class="line">  	Class c1 = User.class;</span><br><span class="line">  	Class&lt;?&gt; c2 = User.class;</span><br><span class="line">  	Class&lt;? <span class="keyword">super</span> User&gt; c3 = User.class; <span class="comment">//super通配父类，但不知道是具体哪个父类，所以向上转型到Object</span></span><br><span class="line">  	Class&lt;User&gt; c4 = User.class;</span><br><span class="line">  	Class&lt;? extends User&gt; c5 = User.class;</span><br><span class="line">   <span class="keyword">try</span> &#123;</span><br><span class="line">       User nu1 = (User)c1.newInstance();	<span class="comment">//返回值为Object类型，需要强制类型转换</span></span><br><span class="line">       User nu2 = (User)c2.newInstance();</span><br><span class="line">       User nu3 = (User)c3.newInstance(); <span class="comment">//直接返回User类型，不需要强制类型转换</span></span><br><span class="line">       User nu4 = c4.newInstance();</span><br><span class="line">       User nu5 = c5.newInstance();</span><br><span class="line">   &#125; <span class="keyword">catch</span> (InstantiationException e) &#123;</span><br><span class="line">       e.printStackTrace();</span><br><span class="line">   &#125; <span class="keyword">catch</span> (IllegalAccessException e) &#123;</span><br><span class="line">       e.printStackTrace();</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
-<p>四、instanceof<br>两种方式直接上示例：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span></span>&#123;&#125;</span><br><span class="line">	</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Administrator</span> <span class="title">exnteds</span> <span class="title">User</span></span>&#123;&#125;</span><br><span class="line">	</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">		Administrator admin = <span class="keyword">new</span> Administrator();</span><br><span class="line">		</span><br><span class="line">		<span class="comment">//方式一</span></span><br><span class="line">		<span class="keyword">if</span>(admn <span class="keyword">instanceof</span> User)</span><br><span class="line">			System.out.println(<span class="string">"admin is instance of User"</span>);		</span><br><span class="line">		<span class="comment">//方式二</span></span><br><span class="line">		Class c = User.class;</span><br><span class="line">		<span class="keyword">if</span>(c.isInstanceof(admin))</span><br><span class="line">			System.out.println(<span class="string">"admin is also instance of User"</span>);</span><br><span class="line">	&#125;	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>注意instanceof不仅可用于类，还可以用于接口，当对象为null时返回false</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/java/">java</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/08/31/java-RTTI/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/08/31/java-RTTI/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <a class="extend prev" rel="prev" href="/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/">Next<span></span></a>
@@ -832,7 +833,7 @@ OK
 			
 		
 			
-				<li><a href="/tags/web/" title="web">web<sup>3</sup></a></li>
+				<li><a href="/tags/web/" title="web">web<sup>4</sup></a></li>
 			
 		
 			
