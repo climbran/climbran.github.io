@@ -81,6 +81,121 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/05/17/the-gibberish-issue-in-Spring-MVC/" title="Spring MVC中文乱码问题" itemprop="url">Spring MVC中文乱码问题</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
+		
+  <p class="article-time">
+    <time datetime="2015-05-17T05:26:27.000Z" itemprop="datePublished"> 发表于 2015-05-17</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>Spring MVC请求时经常出现中文乱码，查看配置文件，web.xml中已配置：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">filter</span>&gt;</span>  </span><br><span class="line">	<span class="tag">&lt;<span class="title">filter-name</span>&gt;</span>CharacterEncodingFilter<span class="tag">&lt;/<span class="title">filter-name</span>&gt;</span>  </span><br><span class="line">    <span class="tag">&lt;<span class="title">filter-class</span>&gt;</span>org.springframework.web.filter.CharacterEncodingFilter<span class="tag">&lt;/<span class="title">filter-class</span>&gt;</span>  </span><br><span class="line">    <span class="tag">&lt;<span class="title">init-param</span>&gt;</span>  </span><br><span class="line">        <span class="tag">&lt;<span class="title">param-name</span>&gt;</span>encoding<span class="tag">&lt;/<span class="title">param-name</span>&gt;</span>  </span><br><span class="line">        <span class="tag">&lt;<span class="title">param-value</span>&gt;</span>utf-8<span class="tag">&lt;/<span class="title">param-value</span>&gt;</span>  </span><br><span class="line">    <span class="tag">&lt;/<span class="title">init-param</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">filter</span>&gt;</span> </span><br><span class="line"><span class="tag">&lt;<span class="title">filter-mapping</span>&gt;</span>  </span><br><span class="line">    <span class="tag">&lt;<span class="title">filter-name</span>&gt;</span>CharacterEncodingFilter<span class="tag">&lt;/<span class="title">filter-name</span>&gt;</span>  </span><br><span class="line">    <span class="tag">&lt;<span class="title">url-pattern</span>&gt;</span>/*<span class="tag">&lt;/<span class="title">url-pattern</span>&gt;</span>  </span><br><span class="line"><span class="tag">&lt;/<span class="title">filter-mapping</span>&gt;</span></span><br></pre></td></tr></table></figure><br>度娘后发现该配置只对post请求有效，对于get请求还要对tomcat的service.xml进行配置，具体配置如下：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">Connector</span> <span class="attribute">connectionTimeout</span>=<span class="value">"20000"</span> <span class="attribute">port</span>=<span class="value">"8080"</span> </span><br><span class="line">	<span class="attribute">protocol</span>=<span class="value">"HTTP/1.1"</span> <span class="attribute">redirectPort</span>=<span class="value">"8443"</span> <span class="attribute">useBodyEncodingForURI</span>=<span class="value">"true"</span>/&gt;</span></span><br></pre></td></tr></table></figure><br>上面配置对ajax的get请求无效，如果要同时对ajax请求有效则改为<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">Connector</span> <span class="attribute">connectionTimeout</span>=<span class="value">"20000"</span> </span><br><span class="line">	<span class="attribute">port</span>=<span class="value">"8080"</span> <span class="attribute">protocol</span>=<span class="value">"HTTP/1.1"</span> <span class="attribute">redirectPort</span>=<span class="value">"8443"</span> <span class="attribute">URIEncoding</span>=<span class="value">"UTF-8"</span>/&gt;</span></span><br></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Spring-MVC/">Spring MVC</a><a href="/tags/tomcat/">tomcat</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/05/17/the-gibberish-issue-in-Spring-MVC/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/05/17/the-gibberish-issue-in-Spring-MVC/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/05/06/spring-getbean/" title="spring中获取spring容器中的bean" itemprop="url">spring中获取spring容器中的bean</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
+		
+  <p class="article-time">
+    <time datetime="2015-05-06T15:35:26.000Z" itemprop="datePublished"> 发表于 2015-05-06</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <figure class="highlight php"><figcaption><span>SpringCtx.java</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">SpringCtx</span> </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> SpringCtx() &#123;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// Spring应用上下文环境  </span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> ApplicationContext context = <span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">"/applicationContext.xml"</span>); <span class="comment">//new FileSystemXmlApplicationContext("classpath:applicationContext.xml");</span></span><br><span class="line"> </span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; T getBean(<span class="class"><span class="keyword">Class</span>&lt;<span class="title">T</span>&gt; <span class="title">requiredType</span>) </span>&#123;</span><br><span class="line">		T t = <span class="keyword">null</span>;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			t = context.getBean(requiredType);</span><br><span class="line">		&#125; <span class="keyword">catch</span> (<span class="keyword">Exception</span> e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> t;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Spring-MVC/">Spring MVC</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/05/06/spring-getbean/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/05/06/spring-getbean/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/04/28/callback-functions-about-java/" title="java中回调函数的用法" itemprop="url">java中回调函数的用法</a>
   </h1>
   <p class="article-author">By
@@ -515,7 +630,7 @@
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/java/" title="java">java<sup>10</sup></a></li>
+				<li><a href="/tags/java/" title="java">java<sup>11</sup></a></li>
 			
 		
 			
@@ -551,7 +666,7 @@
 			
 		
 			
-				<li><a href="/tags/restful/" title="restful">restful<sup>2</sup></a></li>
+				<li><a href="/tags/并发/" title="并发">并发<sup>2</sup></a></li>
 			
 		
 			
@@ -559,7 +674,11 @@
 			
 		
 			
-				<li><a href="/tags/mybatis/" title="mybatis">mybatis<sup>1</sup></a></li>
+				<li><a href="/tags/restful/" title="restful">restful<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/postgresql/" title="postgresql">postgresql<sup>1</sup></a></li>
 			
 		
 			
@@ -575,7 +694,7 @@
 			
 		
 			
-				<li><a href="/tags/ajax/" title="ajax">ajax<sup>1</sup></a></li>
+				<li><a href="/tags/mybatis/" title="mybatis">mybatis<sup>1</sup></a></li>
 			
 		
 			
@@ -588,10 +707,6 @@
 		
 			
 				<li><a href="/tags/jsp/" title="jsp">jsp<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/AOP/" title="AOP">AOP<sup>1</sup></a></li>
 			
 		
 		</ul>

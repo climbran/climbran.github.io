@@ -81,6 +81,148 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/11/07/concurrent-strategy/" title="并发策略" itemprop="url">并发策略</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
+		
+  <p class="article-time">
+    <time datetime="2015-11-07T01:47:13.000Z" itemprop="datePublished"> 发表于 2015-11-07</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>这里说的并发策略是指并发时的线程数和任务数。<br>我们将需要并发的任务分为io密集型和计算密集型，对于两种情况要分别对待</p>
+<p>一、线程数<br>IO密集型<br>当一个线程执行io操作时，处理器核心会进行上下文切换，将该线程阻塞，执行其他就绪的线程，所以需要比处理器核心数更多的线程数，否则当线程阻塞时没有其他线程可以调用，从而浪费cpu时间。</p>
+<p>计算密集型<br>当多个线程就绪时，处理器核心会频繁切换上下文，这种切换对性能损耗较大，所以将任务拆分后所有任务都是计算密集型的，则创建处理器数相同的线程数就可以了。</p>
+<p>如果任务的阻塞时间大于执行时间（即阻塞时间大于50%）可认为是io密集型，否则是计算密集型，对于线程数有以下计算公式：</p>
+<blockquote>
+<p>线程数=CPU核心数/(1-阻塞系数)<br><br>其中，阻塞系数=阻塞时间/执行时间</p>
+</blockquote>
+<p>二、任务数<br>理想的状态是子任务数等于线程数就好了，并且我们希望任务拆分后各个子任务工作量是相等的。<br>但在实际开发中，将工作量均等分配到各个任务往往十分困难，所以一种简单粗暴的方式是使任务数比线程数更多。当任务足够多时，一个任务完成后立即切换下一个任务使所以线程一直繁忙，同时可以使用线程池来减少任务切换时线程创建和销毁的开销。</p>
+<p>三、Demo<br><figure class="highlight processing"><figcaption><span>ConcurrentDemo.java</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.climbran.base;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.*;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * Created by swe on 15/11/6.</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> class IOConcurrentDemo &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> test(<span class="keyword">final</span> <span class="built_in">int</span> partitionsNum)</span><br><span class="line">        <span class="keyword">throws</span> InterruptedException,ExecutionException&#123;</span><br><span class="line">        <span class="comment">//获取处理器核心数</span></span><br><span class="line">        <span class="keyword">final</span> <span class="built_in">int</span> numberOfCores = Runtime.getRuntime().availableProcessors();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">double</span> blockingCoefficient = <span class="number">0.99</span>; <span class="comment">//阻塞率</span></span><br><span class="line">        <span class="keyword">final</span> <span class="built_in">int</span> poolSize = (<span class="built_in">int</span>)(numberOfCores/(<span class="number">1</span>-blockingCoefficient));</span><br><span class="line"></span><br><span class="line">        System.out.<span class="built_in">println</span>(<span class="string">"Number of Cores avaliable is "</span> + numberOfCores);</span><br><span class="line">        System.out.<span class="built_in">println</span>(<span class="string">"Pool size is "</span> +  poolSize);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">long</span> start = System.nanoTime();</span><br><span class="line">        <span class="keyword">final</span> List&lt;Callable&lt;Integer&gt;&gt; partitions = <span class="keyword">new</span> ArrayList&lt;Callable&lt;Integer&gt;&gt;();</span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">1</span>; i&lt;= partitionsNum;i++)&#123;</span><br><span class="line">            <span class="keyword">final</span> <span class="built_in">int</span> tmp = i;</span><br><span class="line">            partitions.<span class="built_in">add</span>(<span class="keyword">new</span> Callable&lt;Integer&gt;() &#123;</span><br><span class="line">                <span class="keyword">public</span> Integer call() <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">                    <span class="comment">//并发任务,这里用Thread.sleep(2000)代替</span></span><br><span class="line">                    Thread.sleep(<span class="number">2000</span>);</span><br><span class="line">                    <span class="keyword">return</span> Integer.valueOf(tmp);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">final</span> ExecutorService executorPool = Executors.newFixedThreadPool(poolSize);</span><br><span class="line">        <span class="keyword">final</span> List&lt;Future&lt;Integer&gt;&gt; valueOfStocks = executorPool.invokeAll(partitions, <span class="number">10000</span>, TimeUnit.SECONDS);</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">long</span> end = System.nanoTime();</span><br><span class="line">        <span class="built_in">int</span> sumValue = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">final</span> Future&lt;Integer&gt; valueOfStock : valueOfStocks)</span><br><span class="line">            sumValue +=valueOfStock.<span class="built_in">get</span>();</span><br><span class="line">        executorPool.shutdown();</span><br><span class="line">        System.out.<span class="built_in">println</span>(<span class="string">"value:"</span>+sumValue);</span><br><span class="line">        System.out.<span class="built_in">println</span>(<span class="string">"Time (seconds) taken is "</span> + (end - start)/<span class="number">1.0e9</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> main(<span class="keyword">final</span> <span class="keyword">String</span>[] args)</span><br><span class="line">            <span class="keyword">throws</span> ExecutionException, InterruptedException, IOException &#123;</span><br><span class="line">        <span class="keyword">new</span> IOConcurrentDemo().test(<span class="number">1000</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这是一个简单的io密集型任务，运行后输出：</p>
+<pre><code>Number <span class="keyword">of</span> Cores avaliable <span class="keyword">is</span> <span class="number">4</span>
+Pool size <span class="keyword">is</span> <span class="number">399</span>
+<span class="keyword">value</span>:<span class="number">500500</span>
+Time (seconds) taken <span class="keyword">is</span> <span class="number">6.0</span><span class="number">57576742</span>
+</code></pre><p>输出的500500说明所有线程都有正确执行到，可以将其中的延时函数替换为网页访问、文件读取等操作，有兴趣的朋友也可以测试以下顺序访问结果…<br>对于计算密集型可能还需要一个拆分任务数作为参数，在实现拆分策略时使用，具体就不在这展示了。</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/并发/">并发</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/11/07/concurrent-strategy/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/07/concurrent-strategy/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/11/06/memory-barrier-and-volatile/" title="内存栅栏(Memory Barrier)和volatile" itemprop="url">内存栅栏(Memory Barrier)和volatile</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
+		
+  <p class="article-time">
+    <time datetime="2015-11-06T15:32:06.000Z" itemprop="datePublished"> 发表于 2015-11-06</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>内存栅栏是指本地或者工作内存到主存间的拷贝动作。在程序运行过程中。所有变更会先在线程的寄存器或本地cache中完成，然后才会拷贝到主存以跨越内存栅栏。理解内存栅栏先看下面代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RaceCondition</span></span>&#123;</span><br><span class="line"> 	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">boolean</span> done;</span><br><span class="line"> 	</span><br><span class="line"> 	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(<span class="keyword">final</span> String[] args)</span> <span class="keyword">throws</span> InterruptedException</span>&#123;</span><br><span class="line"> 		<span class="keyword">new</span> Thread(</span><br><span class="line"> 			<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line"> 				<span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line"> 				<span class="keyword">while</span>(!done)&#123; i++ ; &#125;</span><br><span class="line"> 				System.out.println(<span class="string">"Done!"</span>);</span><br><span class="line"> 			&#125;</span><br><span class="line"> 		).start();</span><br><span class="line"> 		System.out.println(<span class="string">"OS:"</span> + System.getProperty(<span class="string">"os.name"</span>));</span><br><span class="line"> 		Thread.sleep(<span class="number">2000</span>);</span><br><span class="line"> 		done = <span class="keyword">true</span>;</span><br><span class="line"> 		System.out.println(<span class="string">"flag done set to true"</span>);</span><br><span class="line"> 	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>如果在win7上运行</p>
+<pre><code><span class="title">java</span> RaceCondition
+</code></pre><p>可能输出以下结果：</p>
+<blockquote>
+<p>OS: Windows 7<br><br>flag done set to true<br><br>Done!</p>
+</blockquote>
+<p>而在Mac上运行同样命令，则可能是：</p>
+<blockquote>
+<p>OS: Mac OS X<br><br>flag done set to true<br></p>
+</blockquote>
+<p>这是由于windows平台执行java 命令默认是以server模式，而Mac下默认是以client模式运行。<br>在server模式下，JIT编译器会对代码新线程里的while循环进行优化，新线程会从寄存器或本地cache中读取done的拷贝值，而不会去速度相对较慢的内存里读取。由于以上原因，主线程中对于done的变更在新线程中不可见。</p>
+<p>为解决这个问题，可以使用<strong>volatile</strong>关键字，其作用是告知JIT编译器改变量可能被某个线程更改，不要对其进行优化。volatile可使对变量的每次读写都忽略本地cache直接对内存操作，但正是这样会使得每次访问变量都要跨越内存栅栏导致程序性能下降。</p>
+<p>由于每个线程对volatile字段的访问都是独立处理的，所以volatile关键字无法保证读写操作的原子性，为解决这个问题，可以使用<strong>synchronized</strong>关键字标注的setter和getter方法，synchronized可使同步区块内跨越内存栅栏。</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/java/">java</a><a href="/tags/并发/">并发</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/11/06/memory-barrier-and-volatile/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/06/memory-barrier-and-volatile/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/11/04/sitemesh3/" title="Sitemesh配置和使用" itemprop="url">Sitemesh配置和使用</a>
   </h1>
   <p class="article-author">By
@@ -624,133 +766,6 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/09/10/singleton-pattern/" title="单例模式及懒汉式的同步优化" itemprop="url">单例模式及懒汉式的同步优化</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
-		
-  <p class="article-time">
-    <time datetime="2015-09-10T09:37:16.000Z" itemprop="datePublished"> 发表于 2015-09-10</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>单例模式分为饿汉式和懒汉式，饿汉式写起来简单，且不用考虑初始化时的同步问题；懒汉式的优点在于一开始不用初始化，可以节约内存，但需要为初始化操作进行同步。</p>
-<p>一直不理解为了这一点内存给一个方法加锁值得吗？影响并发，可能是做的项目还不够多，没有遇到需要大量内存的情况？</p>
-<p>不过昨天发现了一个比较好的方法可以在节省内存的同时减少阻塞，同样的逻辑也可以用在其他需要同步的情况下，特此记录下</p>
-<p>饿汉式标准版：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span></span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Singleton instance = <span class="keyword">new</span> Singleton();</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">private</span>	<span class="title">Singleton</span><span class="params">()</span></span>&#123;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">return</span> instance;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//other method</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>懒汉标准版：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span></span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> Singleton instance = <span class="keyword">null</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">private</span>	<span class="title">Singleton</span><span class="params">()</span></span>&#123;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">synchronized</span>(Singleton.class)&#123;</span><br><span class="line">			<span class="keyword">return</span> instance==<span class="keyword">null</span>?<span class="keyword">new</span> Singleton:instance;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//other method</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>懒汉优化版：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span></span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> Singleton instance = <span class="keyword">null</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">private</span>	<span class="title">Singleton</span><span class="params">()</span></span>&#123;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">if</span>(instance==<span class="keyword">null</span>)&#123;</span><br><span class="line">			<span class="keyword">synchronized</span>(Singleton.class)&#123;</span><br><span class="line">				<span class="keyword">if</span>(instance==<span class="keyword">null</span>)</span><br><span class="line">					<span class="keyword">return</span> <span class="keyword">new</span> Singleton();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> instance</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//other method</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>优化后，只有未初始化时才会加锁，初始化后instance不为null，直接返回单例对象，不需要再次进入同步块。</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/设计模式/">设计模式</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/09/10/singleton-pattern/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/10/singleton-pattern/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/09/10/synchronized/" title="synchronized的对象锁和类锁" itemprop="url">synchronized的对象锁和类锁</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
-		
-  <p class="article-time">
-    <time datetime="2015-09-10T06:52:33.000Z" itemprop="datePublished"> 发表于 2015-09-10</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>很多人都知道synchronized可以用来加锁，但对于synchronized(Object o)里的参数不太了解。</p>
-<p>java的每个对象隐含一个内部锁，这个内部锁对不同线程是互斥的。synchronized(object){}的本质就是对{}区域中的代码加上object对象的对象锁，只有获取了object的对象锁才能执行该代码块。</p>
-<p>如果有：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Object o1 = <span class="keyword">new</span> Object();</span><br><span class="line">Object o2 = <span class="keyword">new</span> Object();</span><br><span class="line"></span><br><span class="line"><span class="keyword">synchronized</span>(o1)&#123;</span><br><span class="line">	<span class="comment">//block1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">synchronized</span>(o1)&#123;</span><br><span class="line">	<span class="comment">//block2</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">synchronized</span>(o2)&#123;</span><br><span class="line">	<span class="comment">//block3</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>当有一个线程1在执行block1时，线程2想要执行block2同样会被阻塞，应为o1的对象锁已经被线程1获取；而此时线程3想执行block3则不受影响。</p>
-<p>对于类锁，其实就是Class实例的对象锁。因为一个类只有一个Class对象，所以同一个类的所有对象共享同一个类锁。</p>
-<p>还有对于方法锁：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SynchronizedDemo</span></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="keyword">synchronized</span> <span class="title">method1</span><span class="params">()</span>	</span>&#123;<span class="comment">//TODO&#125; </span></span><br><span class="line">			</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method2</span><span class="params">()</span>	</span>&#123;synchronized1(<span class="keyword">this</span>)&#123;<span class="comment">//TODO&#125; &#125;</span></span><br><span class="line">	<span class="comment">//method1效果等价于method2</span></span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="keyword">synchronized</span> <span class="title">method3</span><span class="params">()</span></span>&#123;<span class="comment">//TODO&#125; </span></span><br><span class="line">		</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">method4</span><span class="params">()</span></span>&#123;<span class="keyword">synchronized</span>(SynchronizedDemo.class)&#123;<span class="comment">//TODO&#125; &#125;</span></span><br><span class="line">	<span class="comment">//method3效果等价于method4</span></span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>总结：<br>大多数情况下同步代码块比同步方法要好，因为一个同步方法被执行完之前，该对象的所有同步方法都会被阻塞，而同步代码块可以通过加不同的对象锁来减少阻塞。</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/java/">java</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/09/10/synchronized/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/10/synchronized/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
@@ -771,7 +786,7 @@
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/java/" title="java">java<sup>10</sup></a></li>
+				<li><a href="/tags/java/" title="java">java<sup>11</sup></a></li>
 			
 		
 			
@@ -807,7 +822,7 @@
 			
 		
 			
-				<li><a href="/tags/restful/" title="restful">restful<sup>2</sup></a></li>
+				<li><a href="/tags/并发/" title="并发">并发<sup>2</sup></a></li>
 			
 		
 			
@@ -815,7 +830,11 @@
 			
 		
 			
-				<li><a href="/tags/mybatis/" title="mybatis">mybatis<sup>1</sup></a></li>
+				<li><a href="/tags/restful/" title="restful">restful<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/postgresql/" title="postgresql">postgresql<sup>1</sup></a></li>
 			
 		
 			
@@ -831,7 +850,7 @@
 			
 		
 			
-				<li><a href="/tags/ajax/" title="ajax">ajax<sup>1</sup></a></li>
+				<li><a href="/tags/mybatis/" title="mybatis">mybatis<sup>1</sup></a></li>
 			
 		
 			
@@ -844,10 +863,6 @@
 		
 			
 				<li><a href="/tags/jsp/" title="jsp">jsp<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/AOP/" title="AOP">AOP<sup>1</sup></a></li>
 			
 		
 		</ul>

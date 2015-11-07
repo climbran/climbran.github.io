@@ -81,6 +81,123 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/08/10/parameter-pre-deal/" title="通过ModelAttribute对请求参数进行预处理" itemprop="url">通过ModelAttribute对请求参数进行预处理</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
+		
+  <p class="article-time">
+    <time datetime="2015-08-10T09:42:42.000Z" itemprop="datePublished"> 发表于 2015-08-10</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <figure class="highlight openscad"><figcaption><span>UserController.java</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">package org.springside.examples.showcase.web;</span><br><span class="line"></span><br><span class="line"><span class="built_in">import</span> java.util.List;</span><br><span class="line">......</span><br><span class="line"></span><br><span class="line"><span class="built_in">import</span> com.google.common.collect.Maps;</span><br><span class="line"></span><br><span class="line">@Controller</span><br><span class="line">@RequestMapping<span class="params">(value = <span class="string">"/account/user"</span>)</span></span><br><span class="line">public class UserController &#123;</span><br><span class="line">	</span><br><span class="line">	......</span><br><span class="line">	</span><br><span class="line">	@RequestMapping<span class="params">(value = <span class="string">"update"</span>, method = RequestMethod.POST)</span></span><br><span class="line">	public String update<span class="params">(@Valid @ModelAttribute<span class="params">(<span class="string">"user"</span>)</span> User user,</span><br><span class="line">			@RequestParam<span class="params">(value = <span class="string">"roleList"</span>)</span> List&lt;Long&gt; checkedRoleList, RedirectAttributes redirectAttributes)</span> &#123;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// bind roleList</span></span><br><span class="line">		user.getRoleList<span class="params">()</span>.clear<span class="params">()</span>;</span><br><span class="line">		<span class="keyword">for</span> <span class="params">(Long roleId : checkedRoleList)</span> &#123;</span><br><span class="line">			Role role = new Role<span class="params">(roleId)</span>;</span><br><span class="line">			user.getRoleList<span class="params">()</span>.add<span class="params">(role)</span>;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		accountService.saveUser<span class="params">(user)</span>;</span><br><span class="line"></span><br><span class="line">		redirectAttributes.addFlashAttribute<span class="params">(<span class="string">"message"</span>, <span class="string">"保存用户成功"</span>)</span>;</span><br><span class="line">		return <span class="string">"redirect:/account/user"</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span><br><span class="line">	 * 所有RequestMapping方法调用前的Model准备方法, 实现Struts2 Preparable二次部分绑定的效果,先根据form的id从数据库查出User对象,再把Form提交的内容绑定到该对象上。</span><br><span class="line">	 * 因为仅update()方法的form中有id属性，因此仅在update时实际执行.</span><br><span class="line">	 */</span></span><br><span class="line">	@ModelAttribute</span><br><span class="line">	public void getUser<span class="params">(@RequestParam<span class="params">(value = <span class="string">"id"</span>, defaultValue = <span class="string">"-1"</span>)</span> Long id, Model model)</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> <span class="params">(id != -<span class="number">1</span>)</span> &#123;</span><br><span class="line">			model.addAttribute<span class="params">(<span class="string">"user"</span>, accountService.getUser<span class="params">(id)</span>)</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span><br><span class="line">	 * User类中有roleList,不自动绑定对象中的roleList属性，另行处理。</span><br><span class="line">	 */</span></span><br><span class="line">	@InitBinder</span><br><span class="line">	protected void initBinder<span class="params">(WebDataBinder binder)</span> &#123;</span><br><span class="line">		binder.setDisallowedFields<span class="params">(<span class="string">"roleList"</span>)</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中getUser方法可写成<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@ModelAttribute</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> User <span class="title">getUser</span><span class="params">(@RequestParam(value = <span class="string">"id"</span>, defaultValue = <span class="string">"-1"</span>)</span> Long id, Model model) </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (id != -<span class="number">1</span>) </span><br><span class="line">		<span class="keyword">return</span> accountService.getUser(id);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这种情况，函数隐含Model类型的参数，会调用addAttribute方法，addAttribute的key没有指定，它由返回类型隐含表示，如这个方法返回User类型，那么这个key是user，value为返回对象，其中key值也可以通过@ModelAttribute注解的value参数指定（eg:@ModelAttribute(“user”)）。<br><br><br><br>update方法如果没有标注@SessionAttributes(“user”)，那么scope为request，如果标注了，那么scope为session。</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Spring-MVC/">Spring MVC</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/08/10/parameter-pre-deal/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/08/10/parameter-pre-deal/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/08/01/a-iterator-achieved/" title="Iterator的实现" itemprop="url">Iterator的实现</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
+		
+  <p class="article-time">
+    <time datetime="2015-08-01T09:26:08.000Z" itemprop="datePublished"> 发表于 2015-08-01</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Iterator</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">boolean</span> <span class="title">end</span><span class="params">()</span></span>;</span><br><span class="line">	<span class="function">Object <span class="title">current</span><span class="params">()</span></span>;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">next</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Sequence</span></span>&#123;</span><br><span class="line">	<span class="keyword">private</span> Object[] items;</span><br><span class="line">	<span class="keyword">private</span> next = <span class="number">0</span>;</span><br><span class="line">		</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">Sequence</span><span class="params">(<span class="keyword">int</span> size)</span></span>&#123;</span><br><span class="line">		items = <span class="keyword">new</span> Objec[size];</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(Object x)</span></span>&#123;</span><br><span class="line">		<span class="keyword">if</span>(next&amp;ltitems.length)</span><br><span class="line">			items[next++] = x;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">SequenceIterator</span> <span class="keyword">implements</span> <span class="title">Iterator</span></span>&#123;</span><br><span class="line">		<span class="keyword">private</span> <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">end</span><span class="params">()</span></span>&#123;</span><br><span class="line">			<span class="keyword">return</span> i == items.length;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="function"><span class="keyword">public</span> Object <span class="title">current</span><span class="params">()</span></span>&#123;</span><br><span class="line">			<span class="keyword">return</span> items[i];</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">next</span><span class="params">()</span></span>&#123;</span><br><span class="line">			<span class="keyword">if</span>(i&amp;ltitems.length)</span><br><span class="line">				i++;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function">pubic Iterator <span class="title">iterator</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> SequenceIterator();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/java/">java</a><a href="/tags/设计模式/">设计模式</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/08/01/a-iterator-achieved/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/08/01/a-iterator-achieved/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/07/30/about-domain-object/" title="关于领域模型（贫血模型，充血模型）" itemprop="url">关于领域模型（贫血模型，充血模型）</a>
   </h1>
   <p class="article-author">By
@@ -583,121 +700,6 @@ DELETE <span class="regexp">/collection/</span>resource：返回一个空文档
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/05/17/the-gibberish-issue-in-Spring-MVC/" title="Spring MVC中文乱码问题" itemprop="url">Spring MVC中文乱码问题</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
-		
-  <p class="article-time">
-    <time datetime="2015-05-17T05:26:27.000Z" itemprop="datePublished"> 发表于 2015-05-17</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>Spring MVC请求时经常出现中文乱码，查看配置文件，web.xml中已配置：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">filter</span>&gt;</span>  </span><br><span class="line">	<span class="tag">&lt;<span class="title">filter-name</span>&gt;</span>CharacterEncodingFilter<span class="tag">&lt;/<span class="title">filter-name</span>&gt;</span>  </span><br><span class="line">    <span class="tag">&lt;<span class="title">filter-class</span>&gt;</span>org.springframework.web.filter.CharacterEncodingFilter<span class="tag">&lt;/<span class="title">filter-class</span>&gt;</span>  </span><br><span class="line">    <span class="tag">&lt;<span class="title">init-param</span>&gt;</span>  </span><br><span class="line">        <span class="tag">&lt;<span class="title">param-name</span>&gt;</span>encoding<span class="tag">&lt;/<span class="title">param-name</span>&gt;</span>  </span><br><span class="line">        <span class="tag">&lt;<span class="title">param-value</span>&gt;</span>utf-8<span class="tag">&lt;/<span class="title">param-value</span>&gt;</span>  </span><br><span class="line">    <span class="tag">&lt;/<span class="title">init-param</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">filter</span>&gt;</span> </span><br><span class="line"><span class="tag">&lt;<span class="title">filter-mapping</span>&gt;</span>  </span><br><span class="line">    <span class="tag">&lt;<span class="title">filter-name</span>&gt;</span>CharacterEncodingFilter<span class="tag">&lt;/<span class="title">filter-name</span>&gt;</span>  </span><br><span class="line">    <span class="tag">&lt;<span class="title">url-pattern</span>&gt;</span>/*<span class="tag">&lt;/<span class="title">url-pattern</span>&gt;</span>  </span><br><span class="line"><span class="tag">&lt;/<span class="title">filter-mapping</span>&gt;</span></span><br></pre></td></tr></table></figure><br>度娘后发现该配置只对post请求有效，对于get请求还要对tomcat的service.xml进行配置，具体配置如下：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">Connector</span> <span class="attribute">connectionTimeout</span>=<span class="value">"20000"</span> <span class="attribute">port</span>=<span class="value">"8080"</span> </span><br><span class="line">	<span class="attribute">protocol</span>=<span class="value">"HTTP/1.1"</span> <span class="attribute">redirectPort</span>=<span class="value">"8443"</span> <span class="attribute">useBodyEncodingForURI</span>=<span class="value">"true"</span>/&gt;</span></span><br></pre></td></tr></table></figure><br>上面配置对ajax的get请求无效，如果要同时对ajax请求有效则改为<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">Connector</span> <span class="attribute">connectionTimeout</span>=<span class="value">"20000"</span> </span><br><span class="line">	<span class="attribute">port</span>=<span class="value">"8080"</span> <span class="attribute">protocol</span>=<span class="value">"HTTP/1.1"</span> <span class="attribute">redirectPort</span>=<span class="value">"8443"</span> <span class="attribute">URIEncoding</span>=<span class="value">"UTF-8"</span>/&gt;</span></span><br></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Spring-MVC/">Spring MVC</a><a href="/tags/tomcat/">tomcat</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/05/17/the-gibberish-issue-in-Spring-MVC/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/05/17/the-gibberish-issue-in-Spring-MVC/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/05/06/spring-getbean/" title="spring中获取spring容器中的bean" itemprop="url">spring中获取spring容器中的bean</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
-		
-  <p class="article-time">
-    <time datetime="2015-05-06T15:35:26.000Z" itemprop="datePublished"> 发表于 2015-05-06</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <figure class="highlight php"><figcaption><span>SpringCtx.java</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">SpringCtx</span> </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> SpringCtx() &#123;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// Spring应用上下文环境  </span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> ApplicationContext context = <span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">"/applicationContext.xml"</span>); <span class="comment">//new FileSystemXmlApplicationContext("classpath:applicationContext.xml");</span></span><br><span class="line"> </span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; T getBean(<span class="class"><span class="keyword">Class</span>&lt;<span class="title">T</span>&gt; <span class="title">requiredType</span>) </span>&#123;</span><br><span class="line">		T t = <span class="keyword">null</span>;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			t = context.getBean(requiredType);</span><br><span class="line">		&#125; <span class="keyword">catch</span> (<span class="keyword">Exception</span> e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> t;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Spring-MVC/">Spring MVC</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/05/06/spring-getbean/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/05/06/spring-getbean/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <a class="extend prev" rel="prev" href="/page/3/"><span></span>Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/5/">Next<span></span></a>
@@ -718,7 +720,7 @@ DELETE <span class="regexp">/collection/</span>resource：返回一个空文档
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/java/" title="java">java<sup>10</sup></a></li>
+				<li><a href="/tags/java/" title="java">java<sup>11</sup></a></li>
 			
 		
 			
@@ -754,7 +756,7 @@ DELETE <span class="regexp">/collection/</span>resource：返回一个空文档
 			
 		
 			
-				<li><a href="/tags/restful/" title="restful">restful<sup>2</sup></a></li>
+				<li><a href="/tags/并发/" title="并发">并发<sup>2</sup></a></li>
 			
 		
 			
@@ -762,7 +764,11 @@ DELETE <span class="regexp">/collection/</span>resource：返回一个空文档
 			
 		
 			
-				<li><a href="/tags/mybatis/" title="mybatis">mybatis<sup>1</sup></a></li>
+				<li><a href="/tags/restful/" title="restful">restful<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/postgresql/" title="postgresql">postgresql<sup>1</sup></a></li>
 			
 		
 			
@@ -778,7 +784,7 @@ DELETE <span class="regexp">/collection/</span>resource：返回一个空文档
 			
 		
 			
-				<li><a href="/tags/ajax/" title="ajax">ajax<sup>1</sup></a></li>
+				<li><a href="/tags/mybatis/" title="mybatis">mybatis<sup>1</sup></a></li>
 			
 		
 			
@@ -791,10 +797,6 @@ DELETE <span class="regexp">/collection/</span>resource：返回一个空文档
 		
 			
 				<li><a href="/tags/jsp/" title="jsp">jsp<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/AOP/" title="AOP">AOP<sup>1</sup></a></li>
 			
 		
 		</ul>
