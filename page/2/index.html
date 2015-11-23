@@ -81,6 +81,77 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/09/11/spring-jms/" title="spring集成JMS(ActiveMQ)" itemprop="url">spring集成JMS(ActiveMQ)</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
+		
+  <p class="article-time">
+    <time datetime="2015-09-11T09:59:10.000Z" itemprop="datePublished"> 发表于 2015-09-11</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>一、下载与安装ActiveMQ<br>    <a href="http://activemq.apache.org/download.html" target="_blank" rel="external">http://activemq.apache.org/download.html</a><br>    我下载的是最新的5.12.0版，解压后安装目录下运行bin/activemq start </p>
+<p>二、配置POM文件<br>    看包括springside在内的很多demo的时候看到都是配置的active-core的依赖，而官网5.12.0下面推荐的配置是activemq-all,没太弄明白，后来突然发现页面有一行小字:</p>
+<blockquote>
+<p>If you need more fine grained control of your dependencies (activemq-all is an uber jar) pick and choose from the various components activemq-client, activemq-broker, activemq-xx-store etc.</p>
+</blockquote>
+<p>英文不好惹的祸啊，如果是中文早就看到了…往前几个版本的文档看了下，从5.8就开始用activemq-client + activemq-broker替代activemq-core了，大概看了一下active-all,把几个不同版本的active-xx-store包含进去了。</p>
+<p>最后我的配置：<br><figure class="highlight xml"><figcaption><span>pom.xml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">activemq.version</span>&gt;</span>5.12.0<span class="tag">&lt;/<span class="title">activemq.version</span>&gt;</span></span><br><span class="line">	</span><br><span class="line">	......</span><br><span class="line"> </span><br><span class="line">      <span class="tag">&lt;<span class="title">dependency</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>spring-jms<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 我配置了slf4j和logback,所以把log4j的依赖exclusion --&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="title">dependency</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.apache.activemq<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>activemq-client<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="title">version</span>&gt;</span>$&#123;activemq.version&#125;<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="title">exclusions</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span></span><br><span class="line">                  <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.slf4j<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">                  <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>slf4j-log4j12<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span></span><br><span class="line">                  <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.slf4j<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">                  <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>slf4j-api<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;/<span class="title">exclusions</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">      <span class="tag">&lt;<span class="title">dependency</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.apache.activemq<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>activemq-broker<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="title">version</span>&gt;</span>$&#123;activemq.version&#125;<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="title">exclusions</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span></span><br><span class="line">                  <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.slf4j<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">                  <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>slf4j-log4j12<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;/<span class="title">exclusions</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span></span><br><span class="line">      </span><br><span class="line">      <span class="tag">&lt;<span class="title">dependency</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.apache.activemq<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>activemq-jdbc-store<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="title">version</span>&gt;</span>$&#123;activemq.version&#125;<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span></span><br><span class="line">      </span><br><span class="line">      ......</span><br></pre></td></tr></table></figure></p>
+<p>接下来要实现Producer和Consumer</p>
+<p>首先是Producer,可以实现MessageProducer接口，但接口中有很多方法不需要实现，所以没有继承该接口：<br><figure class="highlight java"><figcaption><span>Producer.java</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.climbran.jms;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.jms.Destination;</span><br><span class="line"><span class="keyword">import</span> org.springframework.jms.core.JmsTemplate;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * JMS消息生产者.</span><br><span class="line"> * <span class="doctag">@author</span> swe</span><br><span class="line"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Producer</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> JmsTemplate jmsTemplate;</span><br><span class="line">	<span class="keyword">private</span> Destination notifyQueue;</span><br><span class="line">	<span class="keyword">private</span> Destination notifyTopic;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sendQueue</span><span class="params">(<span class="keyword">final</span> String message)</span> </span>&#123;</span><br><span class="line">		sendMessage(message, notifyQueue);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sendTopic</span><span class="params">(<span class="keyword">final</span> String message)</span> </span>&#123;</span><br><span class="line">		sendMessage(message, notifyTopic);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">sendMessage</span><span class="params">(String message, Destination destination)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">		jmsTemplate.convertAndSend(destination, message);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setJmsTemplate</span><span class="params">(JmsTemplate jmsTemplate)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.jmsTemplate = jmsTemplate;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setNotifyQueue</span><span class="params">(Destination notifyQueue)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.notifyQueue = notifyQueue;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setNotifyTopic</span><span class="params">(Destination nodifyTopic)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.notifyTopic = nodifyTopic;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>接下来实现消费者(Consumer),Spring通过DefaultMessageListenerContainer内部初始化一个taskExecutor来执行监听的任务，这里实现监听器就好了：</p>
+<figure class="highlight aspectj"><figcaption><span>MyMessageListener.java</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.climbran.jms;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.jms.MapMessage;</span><br><span class="line"><span class="keyword">import</span> javax.jms.Message;</span><br><span class="line"><span class="keyword">import</span> javax.jms.MessageListener;</span><br><span class="line"><span class="keyword">import</span> javax.jms.TextMessage;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.slf4j.Logger;</span><br><span class="line"><span class="keyword">import</span> org.slf4j.LoggerFactory;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * 消息的异步被动接收者.</span><br><span class="line"> * <span class="doctag">@author</span> swe</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyMessageListener</span> <span class="keyword">implements</span> <span class="title">MessageListener</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> Logger logger = LoggerFactory.getLogger(NotifyMessageListener.class);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span><br><span class="line">	 * MessageListener回调函数.</span><br><span class="line">	 */</span></span><br><span class="line">	<span class="annotation">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">onMessage</span><span class="params">(Message message)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">		</span><br><span class="line">			TextMessage textMessage = (TextMessage) message;</span><br><span class="line">			<span class="comment">// 打印消息详情</span></span><br><span class="line">			logger.info(<span class="string">""</span>+textMessage.getText());</span><br><span class="line"></span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			logger.<span class="keyword">error</span>(<span class="string">"处理消息时发生异常."</span>, e);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接下来就是配置文件，配置了1个生产者，3个消费者，其中一个监听queue，两个监听topic：<br><figure class="highlight xml"><figcaption><span>applicationContext-jms.xml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">beans</span> <span class="attribute">xmlns</span>=<span class="value">"http://www.springframework.org/schema/beans"</span> <span class="attribute">xmlns:xsi</span>=<span class="value">"http://www.w3.org/2001/XMLSchema-instance"</span></span><br><span class="line">       <span class="attribute">xsi:schemaLocation</span>=<span class="value">"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">description</span>&gt;</span>JMS配置<span class="tag">&lt;/<span class="title">description</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- ActiveMQ 连接工厂 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">bean</span> <span class="attribute">id</span>=<span class="value">"connectionFactory"</span> <span class="attribute">class</span>=<span class="value">"org.apache.activemq.ActiveMQConnectionFactory"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"brokerURL"</span> <span class="attribute">value</span>=<span class="value">"tcp://localhost:61616"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">bean</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- Spring Caching 连接工厂 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">bean</span> <span class="attribute">id</span>=<span class="value">"cachingConnectionFactory"</span> <span class="attribute">class</span>=<span class="value">"org.springframework.jms.connection.CachingConnectionFactory"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"targetConnectionFactory"</span> <span class="attribute">ref</span>=<span class="value">"connectionFactory"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"sessionCacheSize"</span> <span class="attribute">value</span>=<span class="value">"10"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">bean</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- Queue定义 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">bean</span> <span class="attribute">id</span>=<span class="value">"notifyQueue"</span> <span class="attribute">class</span>=<span class="value">"org.apache.activemq.command.ActiveMQQueue"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">constructor-arg</span> <span class="attribute">value</span>=<span class="value">"q.notify"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">bean</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- Topic定义 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">bean</span> <span class="attribute">id</span>=<span class="value">"notifyTopic"</span> <span class="attribute">class</span>=<span class="value">"org.apache.activemq.command.ActiveMQTopic"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">constructor-arg</span> <span class="attribute">value</span>=<span class="value">"t.notify"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">bean</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- Spring JMS Template --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">bean</span> <span class="attribute">id</span>=<span class="value">"jmsTemplate"</span> <span class="attribute">class</span>=<span class="value">"org.springframework.jms.core.JmsTemplate"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"connectionFactory"</span> <span class="attribute">ref</span>=<span class="value">"cachingConnectionFactory"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">bean</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- 使用Spring JmsTemplate的消息生产者 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">bean</span> <span class="attribute">id</span>=<span class="value">"notifyMessageProducer"</span> <span class="attribute">class</span>=<span class="value">"com.climbran.jms.Producer"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"jmsTemplate"</span> <span class="attribute">ref</span>=<span class="value">"jmsTemplate"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"notifyQueue"</span> <span class="attribute">ref</span>=<span class="value">"notifyQueue"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"notifyTopic"</span> <span class="attribute">ref</span>=<span class="value">"notifyTopic"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">bean</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- 异步接收Queue消息Container,DefaultMessageListenerContainer内部初始化建立的一个taskExecutor执行监听的任务--&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 相当于配置Consumer,并为Consumer设置了Listenser,同时为Consumer设置了destination--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">bean</span> <span class="attribute">id</span>=<span class="value">"queueContainer"</span> <span class="attribute">class</span>=<span class="value">"org.springframework.jms.listener.DefaultMessageListenerContainer"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"connectionFactory"</span> <span class="attribute">ref</span>=<span class="value">"connectionFactory"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"destination"</span> <span class="attribute">ref</span>=<span class="value">"notifyQueue"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"messageListener"</span> <span class="attribute">ref</span>=<span class="value">"notifyMessageListener"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"concurrentConsumers"</span> <span class="attribute">value</span>=<span class="value">"10"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">bean</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- 异步接收Topic消息Container --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">bean</span> <span class="attribute">id</span>=<span class="value">"topicContainer"</span> <span class="attribute">class</span>=<span class="value">"org.springframework.jms.listener.DefaultMessageListenerContainer"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"connectionFactory"</span> <span class="attribute">ref</span>=<span class="value">"connectionFactory"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"destination"</span> <span class="attribute">ref</span>=<span class="value">"notifyTopic"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"messageListener"</span> <span class="attribute">ref</span>=<span class="value">"notifyMessageListener"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">bean</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">bean</span> <span class="attribute">id</span>=<span class="value">"topicContainer2"</span> <span class="attribute">class</span>=<span class="value">"org.springframework.jms.listener.DefaultMessageListenerContainer"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"connectionFactory"</span> <span class="attribute">ref</span>=<span class="value">"connectionFactory"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"destination"</span> <span class="attribute">ref</span>=<span class="value">"notifyTopic"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"messageListener"</span> <span class="attribute">ref</span>=<span class="value">"notifyMessageListener"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">bean</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- 异步接收消息处理类 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">bean</span> <span class="attribute">id</span>=<span class="value">"notifyMessageListener"</span> <span class="attribute">class</span>=<span class="value">"com.climbran.jms.MyMessageListener"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">beans</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>最后业务层调用：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">producer.sendTopic(<span class="string">"a topic message"</span>);</span><br><span class="line">   producer.sendQueue(<span class="string">"a queue message"</span>);</span><br></pre></td></tr></table></figure></p>
+<p>结果打印出2条”a topic message”，1条”a queue message”</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Spring-MVC/">Spring MVC</a><a href="/tags/jms/">jms</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/09/11/spring-jms/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/11/spring-jms/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/09/11/start-jms/" title="JMS入门" itemprop="url">JMS入门</a>
   </h1>
   <p class="article-author">By
@@ -685,93 +756,9 @@ hgetall <span class="keyword">key</span>        <span class="preprocessor">#返�
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/09/02/redis-list/" title="redis数据类型-list" itemprop="url">redis数据类型-list</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
-		
-  <p class="article-time">
-    <time datetime="2015-09-02T07:31:25.000Z" itemprop="datePublished"> 发表于 2015-09-02</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>1、redis 的 list 类型其实就是一个每个子元素都是 string 类型的双向链表，所以[lr]push 和[lr]pop 命 令的算法时间复杂度都是 O(1)。<br>2、list 会记录链表的长度，所以 llen 操作也是 O(1)。<br>3、链表的最大长度是(2的32次方-1)<br>4、 list 的 pop 操作还有阻塞版本的。当我们[lr]pop 一个 list对象是,如果list是空,或者不存在,会立即返回nil。但是阻塞版本的b[lr]pop可以则可以阻塞, 当然可以加超时时间,超时后也会返回 nil。阻塞版本的pop主要是为了避免轮询。</p>
-<p>list相关命令:</p>
-<pre><code>lpush <span class="built_in">key</span> <span class="built_in">string</span>
-</code></pre><p>key 对应 list 的头部添加字符串元素,返回 1 表示成功,0 表示 key 存在且不是 list 类型</p>
-<pre><code>rpush <span class="built_in">key</span> <span class="built_in">string</span> 
-</code></pre><p>同上，在尾部添加</p>
-<pre><code><span class="title">llen</span> key
-</code></pre><p>返回 key 对应 list 的长度,key 不存在返回 0,如果 key 对应类型不是 list 返回错误</p>
-<pre><code><span class="keyword">lrange</span> key start end 
-</code></pre><p>返回指定区间内的元素,下标从 0 开始,负值表示从后面计算,-1 表示倒数第一个元素 ,key 不存在返回空列表</p>
-<pre><code>ltrim key <span class="built_in">start</span> <span class="keyword">end</span>
-</code></pre><p>￼截取 list,保留指定区间内元素,成功返回 1,key 不存在返回错误</p>
-<pre><code><span class="keyword">lset</span> key index value
-</code></pre><p>￼设置 list 中指定下标的元素值,成功返回 1,key 或者下标不存在返回错误</p>
-<pre><code>l<span class="comment">rem key count value</span>
-</code></pre><p>从 key 对应 list 中删除count个和value相同的元素。count 为 0 时候删除全部。返回被移除元素的数量</p>
-<pre><code><span class="title">lpop</span> key
-</code></pre><p>从 list 的头部删除元素,并返回删除元素。如果 key 对应 list 不存在或者是空返回 nil,如果 key 对应值不是 list 返回错误</p>
-<pre><code><span class="title">rpop</span> key
-</code></pre><p>同上,但是从尾部删除</p>
-<pre><code>blpop key1..<span class="class">.keyN</span> timeout
-</code></pre><p>从左到右扫描返回对第一个非空 list 进行 lpop 操作并返回,比如 blpop list1 list2 list3 0 ,如果 list 不存在,list2,list3 都是非空则对 list2 做 lpop 并返回从 list2 中删除的元素。如果所有的 list 都是空或不存在,则会阻塞 timeout 秒,timeout 为 0 表示一直阻塞。当阻塞时,如果有client 对 key1…keyN 中的任意 key 进行 push 操作,则第一在这个 key 上被阻塞的 client 会立即返回。如果超时发生,则返回 nil。有点像 unix 的 select 或者 poll。</p>
-<pre><code>brpop key1..<span class="class">.keyN</span> timeout
-</code></pre><p>同 blpop,一个是从头部删除一个是从尾部删除。</p>
-<pre><code><span class="title">rpoplpush</span> srckey destkey
-</code></pre><p>从 srckey 对应 list 的尾部移除元素并添加到 destkey 对应 list 的头部,最后返回被移除的元素值,整个操作是原子的.如果 srckey 是空或者不存在返回 nil。</p>
-<p>总结：<br>1、关于lpush和rpush<br>当key不存在时则创建key并添加<br>2、关于lrem<br>    count &gt; 0 : 从表头开始向表尾搜索，移除与 value 相等的元素，数量为 count 。<br>    count &lt; 0 : 从表尾开始向表头搜索，移除与 value 相等的元素，数量为 count 的绝对值。<br>    count = 0 : 移除表中所有与 value 相等的值。<br>    因为不存在的 key 被视作空表(empty list)，所以当 key 不存在时， LREM 命令总是返回 0 </p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Redis/">Redis</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/09/02/redis-list/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/02/redis-list/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
-    <a class="extend prev" rel="prev" href="/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/">Next<span></span></a>
+    <a class="extend prev" rel="prev" href="/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/3/">Next<span></span></a>
   </nav>
 
 </div>
@@ -809,11 +796,11 @@ hgetall <span class="keyword">key</span>        <span class="preprocessor">#返�
 			
 		
 			
-				<li><a href="/tags/并发/" title="并发">并发<sup>3</sup></a></li>
+				<li><a href="/tags/mac-os/" title="mac os">mac os<sup>3</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/mac-os/" title="mac os">mac os<sup>2</sup></a></li>
+				<li><a href="/tags/并发/" title="并发">并发<sup>3</sup></a></li>
 			
 		
 			
@@ -829,11 +816,11 @@ hgetall <span class="keyword">key</span>        <span class="preprocessor">#返�
 			
 		
 			
-				<li><a href="/tags/jms/" title="jms">jms<sup>2</sup></a></li>
+				<li><a href="/tags/restful/" title="restful">restful<sup>2</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/restful/" title="restful">restful<sup>2</sup></a></li>
+				<li><a href="/tags/jms/" title="jms">jms<sup>2</sup></a></li>
 			
 		
 			
@@ -841,7 +828,11 @@ hgetall <span class="keyword">key</span>        <span class="preprocessor">#返�
 			
 		
 			
-				<li><a href="/tags/thirdparty/" title="thirdparty">thirdparty<sup>1</sup></a></li>
+				<li><a href="/tags/mybatis/" title="mybatis">mybatis<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/intelliJ/" title="intelliJ">intelliJ<sup>1</sup></a></li>
 			
 		
 			
@@ -853,11 +844,7 @@ hgetall <span class="keyword">key</span>        <span class="preprocessor">#返�
 			
 		
 			
-				<li><a href="/tags/mybatis/" title="mybatis">mybatis<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/intelliJ/" title="intelliJ">intelliJ<sup>1</sup></a></li>
+				<li><a href="/tags/ajax/" title="ajax">ajax<sup>1</sup></a></li>
 			
 		
 			

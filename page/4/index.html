@@ -81,6 +81,64 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/08/27/start-intellij/" title="intelliJ创建spring项目" itemprop="url">intelliJ创建spring项目</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
+		
+  <p class="article-time">
+    <time datetime="2015-08-27T06:06:35.000Z" itemprop="datePublished"> 发表于 2015-08-27</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>今天下载了个intelliJ试着用下。官网有30天试用的Ultimate版本和免费的Community版本，先下载了Community Editor，结果发现没有application service功能，无法使用tomcat，果断换Ultimate Editor，找了个激活码激活。<br><br>下载链接:<a href="http://www.jetbrains.com/idea/" target="_blank" rel="external">http://www.jetbrains.com/idea/</a><br><br><br>下载安装打开，界面风格类似rubyMine，自从用过rubyMine之后一直嫌弃eclipse的界面,看着这个感觉爽多了。<br><br><br>接下来开始试着创建Spring项目，先新建一个new project,左边选择spring,右边勾选spring mvc:<br><img width="500" src="/img/start-intellij/1.png"><br><br>点击next,依次按提示完成创建<br><br><br>在项目上右键，选择open modules setting,参照以前eclipse下的spring项目建立以下目录结构：<br><br><img width="500" src="/img/start-intellij/2.png"><br><br><br>然后根据个人习惯修改配置，我的配置如下：<br><figure class="highlight xml"><figcaption><span>web.xml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">web-app</span> <span class="attribute">xmlns</span>=<span class="value">"http://java.sun.com/xml/ns/javaee"</span></span><br><span class="line">	<span class="attribute">xmlns:xsi</span>=<span class="value">"http://www.w3.org/2001/XMLSchema-instance"</span>  </span><br><span class="line">	<span class="attribute">xsi:schemaLocation</span>=<span class="value">"http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"</span></span><br><span class="line">	<span class="attribute">xmlns:web</span>=<span class="value">"http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"</span></span><br><span class="line">	<span class="attribute">version</span>=<span class="value">"2.5"</span>&gt;</span></span><br><span class="line">  </span><br><span class="line"> 	<span class="tag">&lt;<span class="title">display-name</span>&gt;</span>spring-web<span class="tag">&lt;/<span class="title">display-name</span>&gt;</span></span><br><span class="line">  </span><br><span class="line">  	<span class="tag">&lt;<span class="title">context-param</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">param-name</span>&gt;</span>contextConfigLocation<span class="tag">&lt;/<span class="title">param-name</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">param-value</span>&gt;</span></span><br><span class="line">			classpath*:/applicationContext.xml</span><br><span class="line">		<span class="tag">&lt;/<span class="title">param-value</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">context-param</span>&gt;</span></span><br><span class="line">	</span><br><span class="line">	<span class="tag">&lt;<span class="title">listener</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">listener-class</span>&gt;</span></span><br><span class="line">			org.springframework.web.context.ContextLoaderListener</span><br><span class="line">		<span class="tag">&lt;/<span class="title">listener-class</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">listener</span>&gt;</span></span><br><span class="line">  	</span><br><span class="line">  	<span class="tag">&lt;<span class="title">servlet</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">servlet-name</span>&gt;</span>springServlet<span class="tag">&lt;/<span class="title">servlet-name</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;<span class="title">servlet-class</span>&gt;</span>org.springframework.web.servlet.DispatcherServlet<span class="tag">&lt;/<span class="title">servlet-class</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">init-param</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">param-name</span>&gt;</span>contextConfigLocation<span class="tag">&lt;/<span class="title">param-name</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">param-value</span>&gt;</span>/WEB-INF/spring-mvc.xml<span class="tag">&lt;/<span class="title">param-value</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="title">init-param</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">load-on-startup</span>&gt;</span>1<span class="tag">&lt;/<span class="title">load-on-startup</span>&gt;</span> </span><br><span class="line">	<span class="tag">&lt;/<span class="title">servlet</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">servlet-mapping</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">servlet-name</span>&gt;</span>springServlet<span class="tag">&lt;/<span class="title">servlet-name</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">url-pattern</span>&gt;</span>/<span class="tag">&lt;/<span class="title">url-pattern</span>&gt;</span>	</span><br><span class="line">	<span class="tag">&lt;/<span class="title">servlet-mapping</span>&gt;</span>	</span><br><span class="line"><span class="tag">&lt;/<span class="title">web-app</span>&gt;</span></span><br></pre></td></tr></table></figure><br><br><br>web.xml配置了applicationContext.xml和spring-mvc.xml两个文件,在src/main/resources目录下新建applicationContext.xml：<br><figure class="highlight xml"><figcaption><span>applicationContext.xml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">beans</span> <span class="attribute">xmlns</span>=<span class="value">"http://www.springframework.org/schema/beans"</span></span><br><span class="line">       <span class="attribute">xmlns:xsi</span>=<span class="value">"http://www.w3.org/2001/XMLSchema-instance"</span></span><br><span class="line">       <span class="attribute">xmlns:context</span>=<span class="value">"http://www.springframework.org/schema/context"</span></span><br><span class="line">       <span class="attribute">xmlns:jee</span>=<span class="value">"http://www.springframework.org/schema/jee"</span></span><br><span class="line">       <span class="attribute">xmlns:tx</span>=<span class="value">"http://www.springframework.org/schema/tx"</span></span><br><span class="line">       <span class="attribute">xmlns:aop</span>=<span class="value">"http://www.springframework.org/schema/aop"</span></span><br><span class="line">       <span class="attribute">xsi:schemaLocation</span>=<span class="value">"</span><br><span class="line">		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd</span><br><span class="line">		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd</span><br><span class="line">		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd</span><br><span class="line">		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd</span><br><span class="line">		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd  "</span></span><br><span class="line">       <span class="attribute">default-lazy-init</span>=<span class="value">"true"</span>&gt;</span></span><br><span class="line">	//your setting</span><br><span class="line"><span class="tag">&lt;/<span class="title">beans</span>&gt;</span></span><br></pre></td></tr></table></figure><br><br><br><br>将src/main/webapp/WEB-INF目录下除web.xml的另一个xml文件rename为spring-mvc.xml（对应web.xml中DispatcherServlet的配置，不填默认为[servelet-name]-servlet.xml）:<br><figure class="highlight xml"><figcaption><span>spring-mvc.xml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">beans</span> <span class="attribute">xmlns</span>=<span class="value">"http://www.springframework.org/schema/beans"</span></span><br><span class="line">       <span class="attribute">xmlns:xsi</span>=<span class="value">"http://www.w3.org/2001/XMLSchema-instance"</span></span><br><span class="line">       <span class="attribute">xmlns:context</span>=<span class="value">"http://www.springframework.org/schema/context"</span></span><br><span class="line">       <span class="attribute">xmlns:mvc</span>=<span class="value">"http://www.springframework.org/schema/mvc"</span></span><br><span class="line">       <span class="attribute">xsi:schemaLocation</span>=<span class="value">"</span><br><span class="line">        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd</span><br><span class="line">        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd</span><br><span class="line">        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd"</span>&gt;</span>   </span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="title">context:component-scan</span> <span class="attribute">base-package</span>=<span class="value">"com.climbran.webdemo.spring"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">mvc:default-servlet-handler</span>/&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="title">bean</span> <span class="attribute">id</span>=<span class="value">"viewResolver"</span> <span class="attribute">class</span>=<span class="value">"org.springframework.web.servlet.view.InternalResourceViewResolver"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"prefix"</span> <span class="attribute">value</span>=<span class="value">"/WEB-INF/views/"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"suffix"</span> <span class="attribute">value</span>=<span class="value">".jsp"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">bean</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="title">mvc:annotation-driven</span>/&gt;</span></span><br><span class="line">    </span><br><span class="line"><span class="tag">&lt;/<span class="title">beans</span>&gt;</span></span><br></pre></td></tr></table></figure><br><br><br><br>再src/main/webapp/WEB-INF目录下新建pages文件夹rename为view（对应spring-mvc.xml文件中的配置）</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/intelliJ/">intelliJ</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/08/27/start-intellij/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/08/27/start-intellij/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/08/16/start-hexo/" title="开始使用hexo" itemprop="url">开始使用hexo</a>
   </h1>
   <p class="article-author">By
@@ -643,67 +701,9 @@ DELETE <span class="regexp">/collection/</span>resource：返回一个空文档
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/18/remove-element-in-foreach/" title="在foreach循环中移除元素的方法" itemprop="url">在foreach循环中移除元素的方法</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-18T03:18:18.000Z" itemprop="datePublished"> 发表于 2015-06-18</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>foreach循环中无法直接对Iterable中的元素进行remove，可以通过下面方式实现:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(String s : <span class="keyword">new</span> ArrayList&lt;String&gt;().addAll(list))&#123; <span class="comment">//list为一个List&lt;String&gt;</span></span><br><span class="line">	<span class="keyword">if</span>(s.equals(<span class="string">"need remove"</span>))</span><br><span class="line">		list.remove(s);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/java/">java</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/18/remove-element-in-foreach/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/18/remove-element-in-foreach/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
-    <a class="extend prev" rel="prev" href="/page/3/"><span></span>Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/5/">Next<span></span></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><span></span>Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/5/">Next<span></span></a>
   </nav>
 
 </div>
@@ -741,11 +741,11 @@ DELETE <span class="regexp">/collection/</span>resource：返回一个空文档
 			
 		
 			
-				<li><a href="/tags/并发/" title="并发">并发<sup>3</sup></a></li>
+				<li><a href="/tags/mac-os/" title="mac os">mac os<sup>3</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/mac-os/" title="mac os">mac os<sup>2</sup></a></li>
+				<li><a href="/tags/并发/" title="并发">并发<sup>3</sup></a></li>
 			
 		
 			
@@ -761,11 +761,11 @@ DELETE <span class="regexp">/collection/</span>resource：返回一个空文档
 			
 		
 			
-				<li><a href="/tags/jms/" title="jms">jms<sup>2</sup></a></li>
+				<li><a href="/tags/restful/" title="restful">restful<sup>2</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/restful/" title="restful">restful<sup>2</sup></a></li>
+				<li><a href="/tags/jms/" title="jms">jms<sup>2</sup></a></li>
 			
 		
 			
@@ -773,7 +773,11 @@ DELETE <span class="regexp">/collection/</span>resource：返回一个空文档
 			
 		
 			
-				<li><a href="/tags/thirdparty/" title="thirdparty">thirdparty<sup>1</sup></a></li>
+				<li><a href="/tags/mybatis/" title="mybatis">mybatis<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/intelliJ/" title="intelliJ">intelliJ<sup>1</sup></a></li>
 			
 		
 			
@@ -785,11 +789,7 @@ DELETE <span class="regexp">/collection/</span>resource：返回一个空文档
 			
 		
 			
-				<li><a href="/tags/mybatis/" title="mybatis">mybatis<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/intelliJ/" title="intelliJ">intelliJ<sup>1</sup></a></li>
+				<li><a href="/tags/ajax/" title="ajax">ajax<sup>1</sup></a></li>
 			
 		
 			
