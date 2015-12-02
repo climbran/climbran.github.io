@@ -81,6 +81,65 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/03/20/filter-get-cost-time/" title="利用Filter统计时间开销" itemprop="url">利用Filter统计时间开销</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
+		
+  <p class="article-time">
+    <time datetime="2015-03-20T07:50:55.000Z" itemprop="datePublished"> 发表于 2015-03-20</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>项目需要在日志中记录每个请求花费的时间开销，算是开始web开发的第一个任务，度娘到Filter这个东西，做出以下是实现：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.servlet.Filter;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.FilterChain;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.FilterConfig;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletException;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletRequest;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletResponse;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletRequest;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.slf4j.Logger;</span><br><span class="line"><span class="keyword">import</span> org.slf4j.LoggerFactory;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RequestLogFilter</span> <span class="keyword">implements</span> <span class="title">Filter</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	Logger logger = LoggerFactory.getLogger(<span class="string">"@@@Monitor@@@"</span>);</span><br><span class="line"></span><br><span class="line">	<span class="annotation">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">(FilterConfig filterConfig)</span> <span class="keyword">throws</span> ServletException </span>&#123;</span><br><span class="line">		<span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="annotation">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doFilter</span><span class="params">(ServletRequest request, ServletResponse response,</span><br><span class="line">			FilterChain chain)</span> <span class="keyword">throws</span> IOException, ServletException </span>&#123;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">long</span> startTime = System.currentTimeMillis();</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			chain.doFilter(request, response);</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			<span class="keyword">throw</span> e;</span><br><span class="line">		&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">			<span class="keyword">long</span> stopTime = System.currentTimeMillis();</span><br><span class="line">			<span class="keyword">long</span> costTime = stopTime - startTime;</span><br><span class="line">			String requestURL = ((HttpServletRequest) request).getRequestURI();</span><br><span class="line">			</span><br><span class="line">			<span class="keyword">if</span> (costTime &gt; <span class="number">200</span>) &#123;</span><br><span class="line">				logger.warn(<span class="string">"start[&#123;&#125;] time[&#123;&#125;] tag[&#123;&#125;] message[]"</span>, startTime,</span><br><span class="line">						costTime, requestURL);</span><br><span class="line">			&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">				logger.debug(<span class="string">"start[&#123;&#125;] time[&#123;&#125;] tag[&#123;&#125;] message[]"</span>, startTime,</span><br><span class="line">						costTime, requestURL);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="annotation">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">destroy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在web.xml中增加配置:<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="attribute">filter</span>&gt;</span><br><span class="line">	&lt;<span class="attribute">filter</span>-name&gt;RequestLogFilter&lt;/<span class="attribute">filter</span>-name&gt;</span><br><span class="line">	&lt;<span class="attribute">filter</span>-class&gt;com<span class="class">.lemon</span><span class="class">.web</span><span class="class">.filter</span><span class="class">.RequestLogFilter</span>&lt;/<span class="attribute">filter</span>-class&gt;</span><br><span class="line">&lt;/<span class="attribute">filter</span>&gt;</span><br><span class="line">&lt;<span class="attribute">filter</span>-mapping&gt;</span><br><span class="line">	&lt;<span class="attribute">filter</span>-name&gt;RequestLogFilter&lt;/<span class="attribute">filter</span>-name&gt;</span><br><span class="line">	&lt;url-pattern&gt;<span class="comment">/*&lt;/url-pattern&gt;</span><br><span class="line">&lt;/filter-mapping&gt;</span></span><br></pre></td></tr></table></figure><br>此处得注意filterChain的顺序，filterChain根据filter在web.xml中的顺序从上往下，在一个栈中执行。</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Spring-MVC/">Spring MVC</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/03/20/filter-get-cost-time/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/03/20/filter-get-cost-time/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/03/20/brew-install/" title="brew安装" itemprop="url">brew安装</a>
   </h1>
   <p class="article-author">By
@@ -247,11 +306,11 @@
 			
 		
 			
-				<li><a href="/tags/tomcat/" title="tomcat">tomcat<sup>2</sup></a></li>
+				<li><a href="/tags/linux/" title="linux">linux<sup>2</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/restful/" title="restful">restful<sup>2</sup></a></li>
+				<li><a href="/tags/tomcat/" title="tomcat">tomcat<sup>2</sup></a></li>
 			
 		
 			
@@ -259,11 +318,11 @@
 			
 		
 			
-				<li><a href="/tags/postgresql/" title="postgresql">postgresql<sup>1</sup></a></li>
+				<li><a href="/tags/restful/" title="restful">restful<sup>2</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/mybatis/" title="mybatis">mybatis<sup>1</sup></a></li>
+				<li><a href="/tags/postgresql/" title="postgresql">postgresql<sup>1</sup></a></li>
 			
 		
 			
@@ -271,7 +330,7 @@
 			
 		
 			
-				<li><a href="/tags/linux/" title="linux">linux<sup>1</sup></a></li>
+				<li><a href="/tags/mybatis/" title="mybatis">mybatis<sup>1</sup></a></li>
 			
 		
 			

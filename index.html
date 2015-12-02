@@ -81,6 +81,72 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/12/02/environment-variables/" title="bash环境变量学习" itemprop="url">bash环境变量学习</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
+		
+  <p class="article-time">
+    <time datetime="2015-12-02T04:07:04.000Z" itemprop="datePublished"> 发表于 2015-12-02</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>linux环境变量通常有<br>    /etc/profile<br>    /etc/bashrc<br>    ~/.bash_profile(或~/.bash_login、~/.profile中的一个，优先级从左到右)<br>    ~/.bashrc<br>四个文件</p>
+<p>一、profile文件登录式shell打开时执行<br>    /etc/profile 和 ~/.bash_profile 登录（即打开一个login shell）时执行一次。<br>    /etc/profile先执行，对全部用户和所有类型的shell(如bash、csh、zch等)都有效，而~/.bash_profile只有当前用户的bash会去读，当没有时会依次尝试执行~/.bash_login、 ~/.profile，执行到一个则不再尝试。</p>
+<p>二、bashrc文件非登录式shell打开时执行<br>    /etc/bashrc 和 ~/.bashrc 打开一个非登录式shell（non-login shell）会被读取，同样/etc/bashrc是对所有用户有效，~/.bashrc只对当前用户有效。</p>
+<p>三、执行顺序<br>    /etc/profile先执行，再启动用户目录下的~/.bash_profile或~/.bash_login、 ~/.profile。<br>    如果~/.bash_profile存在则一般还会执行~/.bashrc，~/.bashrc中还会执行/etc/bashrc。 </p>
+<p>四、登录式与非登录式shell<br>1、登录式（login shell）<br>    某用户由/bin/login登陆进系统后启动的shell，跟这个用户绑定。这个shell是用户登陆后启动的第一个进程。当bash以login shell启动时，它会执行/etc/profile中的命令，然后/etc/profile调用/etc/profile.d目录下的所有脚本；然后执行~/.bash_profile，~/.bash_profile调用~/.bashrc，最后~/.bashrc又调用/etc/bashrc。<br>2、非登录式shell(non-login shell)<br>    不需login而由某些程序启动的shell。还以Bash为例，当以非login方式启动时，它会调用~/.bashrc，随后~/.bashrc中调用/etc/bashrc，最后/etc/bashrc调用所有/etc/profile.d目录下的脚本。这个有兴趣的可以打开这些文件看一看。<br>    非login的shell主要包括以”#su”,”#su USERNAME”启动的shell，和图形终端（例如Ubuntu的Terminal），执行的脚本等等。<br>3、识别登录式与非登录式<br>    登录式shell在进程启动时传递的第0个参数是 “-shell name”,而非登录式shell时传递的是“shell name”。<br>    以bash为例，执行#echo $0,如果是login shell会输出 “-bash”;如果是non-login shell则会输出 “bash”。</p>
+<p>五、Mac OS<br>    在Mac OS中，启动一个新的终端窗口就是打开了一个交互式shell,在我的电脑上测试，没有修改配置的情况下，/etc/profile中有：</p>
+<pre><code><span class="bullet">. </span>/etc/bashrc
+</code></pre><p>执行了/etc/bashrc</p>
+<p>六、export命令<br>    export命令设置的环境变量只是保存在内存中，当shell关闭后就失效了，下次启动会重新读取配置文件中的信息，unset命令同理。</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/linux/">linux</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/12/02/environment-variables/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/12/02/environment-variables/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/11/24/jetty-run-arrayIndexOutOfBoundsException/" title="jetty启动时ArrayIndexOutOfBoundsException:48188" itemprop="url">jetty启动时ArrayIndexOutOfBoundsException:48188</a>
   </h1>
   <p class="article-author">By
@@ -661,71 +727,6 @@ Time (seconds) taken <span class="keyword">is</span> <span class="number">6.0</s
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/09/22/dynamic-proxy-and-aop/" title="动态代理及简单的AOP框架的实现" itemprop="url">动态代理及简单的AOP框架的实现</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
-		
-  <p class="article-time">
-    <time datetime="2015-09-22T06:43:37.000Z" itemprop="datePublished"> 发表于 2015-09-22</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>面向切面编程（AOP = Aspect Oriented Programming）核心就是动态代理机制。动态代理在实现阶段不需要关系代理哪一个类，不用实现具体某个类的代理类。本文通过AOP框架的实现来学习动态代理。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.climbran.designPatterns.proxy;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * Created by swe on 15/9/22.</span><br><span class="line"> * 业务接口</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Subject</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">(String str)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.climbran.designPatterns.proxy;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * Created by swe on 15/9/22.</span><br><span class="line"> * 被代理类</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RealSubject</span> <span class="keyword">implements</span> <span class="title">Subject</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//实际业务</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">(String str)</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"do something: "</span> +str);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.climbran.designPatterns.proxy;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.InvocationHandler;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Method;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * Created by swe on 15/9/22.</span><br><span class="line"> * 业务处理类，对被代理对象操作进行处理</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DynamicProxyHandle</span> <span class="keyword">implements</span> <span class="title">InvocationHandler</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Object targer = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">DynamicProxyHandle</span><span class="params">(Object obj)</span></span>&#123;</span><br><span class="line">        targer = obj;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span> <span class="keyword">throws</span> Throwable</span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(method.getName().equalsIgnoreCase(<span class="string">"doSomething"</span>)) <span class="comment">//设置point cut</span></span><br><span class="line">            <span class="keyword">new</span> BeforeAdvice().exec();      <span class="comment">//执行前置通知(advie)</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> method.invoke(targer, args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.climbran.designPatterns.proxy;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.InvocationHandler;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Proxy;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * Created by ywq on 15/9/22.</span><br><span class="line"> * 代理类</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DynamicProxy</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">T <span class="title">newProxyInstance</span><span class="params">(ClassLoader loader, Class&lt;?&gt;[] interfaces, InvocationHandler handler)</span></span>&#123;</span><br><span class="line">        <span class="comment">//这里也可以设置一个aspect(aspect = point cut + advice)</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//根据传入的loader和interfaces生成代理对象的方法,并且生成的方法通过handler的invoke函数处理,返回代理对象</span></span><br><span class="line">        <span class="keyword">return</span> (T) Proxy.newProxyInstance(loader, interfaces, handler);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.climbran.designPatterns.proxy;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * Created by ywq on 15/9/22.</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IAdvice</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">exec</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.climbran.designPatterns.proxy;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * Created by ywq on 15/9/22.</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BeforeAdvice</span> <span class="keyword">implements</span> <span class="title">IAdvice</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">exec</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"do before advice"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>最后客户端进行调用：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.climbran.designPatterns.proxy;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.InvocationHandler;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * Created by swe on 15/9/22.</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        Subject subject = <span class="keyword">new</span> RealSubject();</span><br><span class="line"></span><br><span class="line">        InvocationHandler handler = <span class="keyword">new</span> DynamicProxyHandle(subject);</span><br><span class="line"></span><br><span class="line">        Class&lt;?&gt; cla = subject.getClass();</span><br><span class="line">        Subject proxy = DynamicProxy.newProxyInstance(cla.getClassLoader(), cla.getInterfaces(),handler);</span><br><span class="line"></span><br><span class="line">        proxy.doSomething(<span class="string">"test"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/AOP/">AOP</a><a href="/tags/设计模式/">设计模式</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/09/22/dynamic-proxy-and-aop/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/22/dynamic-proxy-and-aop/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
@@ -782,11 +783,11 @@ Time (seconds) taken <span class="keyword">is</span> <span class="number">6.0</s
 			
 		
 			
-				<li><a href="/tags/tomcat/" title="tomcat">tomcat<sup>2</sup></a></li>
+				<li><a href="/tags/linux/" title="linux">linux<sup>2</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/restful/" title="restful">restful<sup>2</sup></a></li>
+				<li><a href="/tags/tomcat/" title="tomcat">tomcat<sup>2</sup></a></li>
 			
 		
 			
@@ -794,11 +795,11 @@ Time (seconds) taken <span class="keyword">is</span> <span class="number">6.0</s
 			
 		
 			
-				<li><a href="/tags/postgresql/" title="postgresql">postgresql<sup>1</sup></a></li>
+				<li><a href="/tags/restful/" title="restful">restful<sup>2</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/mybatis/" title="mybatis">mybatis<sup>1</sup></a></li>
+				<li><a href="/tags/postgresql/" title="postgresql">postgresql<sup>1</sup></a></li>
 			
 		
 			
@@ -806,7 +807,7 @@ Time (seconds) taken <span class="keyword">is</span> <span class="number">6.0</s
 			
 		
 			
-				<li><a href="/tags/linux/" title="linux">linux<sup>1</sup></a></li>
+				<li><a href="/tags/mybatis/" title="mybatis">mybatis<sup>1</sup></a></li>
 			
 		
 			

@@ -4,26 +4,26 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>关于领域模型（贫血模型，充血模型） | CLIMBRAN</title>
+    <title>bash环境变量学习 | CLIMBRAN</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="swe">
     
 
     
-    <meta name="description" content="领域模型(domain object)分为4类:失血模型贫血模型 service –&amp;gt; dao –&amp;gt; entity 充血模型 service –&amp;gt; entity &amp;lt;–&amp;gt; dao 胀血模型
-简单来说，失血模型就是纯数据POJO，业务逻辑完全与entity分离；贫血模型domain object中含有与持久化无关的逻辑，不依赖于dao层；充血模型把domain objec">
+    <meta name="description" content="linux环境变量通常有    /etc/profile    /etc/bashrc    ~/.bash_profile(或~/.bash_login、~/.profile中的一个，优先级从左到右)    ~/.bashrc四个文件
+一、profile文件登录式shell打开时执行    /etc/profile 和 ~/.bash_profile 登录（即打开一个login shell）时执">
 <meta property="og:type" content="article">
-<meta property="og:title" content="关于领域模型（贫血模型，充血模型）">
-<meta property="og:url" content="http://yoursite.com/2015/07/30/about-domain-object/index.html">
+<meta property="og:title" content="bash环境变量学习">
+<meta property="og:url" content="http://yoursite.com/2015/12/02/environment-variables/index.html">
 <meta property="og:site_name" content="CLIMBRAN">
-<meta property="og:description" content="领域模型(domain object)分为4类:失血模型贫血模型 service –&amp;gt; dao –&amp;gt; entity 充血模型 service –&amp;gt; entity &amp;lt;–&amp;gt; dao 胀血模型
-简单来说，失血模型就是纯数据POJO，业务逻辑完全与entity分离；贫血模型domain object中含有与持久化无关的逻辑，不依赖于dao层；充血模型把domain objec">
-<meta property="og:updated_time" content="2015-08-16T17:21:41.000Z">
+<meta property="og:description" content="linux环境变量通常有    /etc/profile    /etc/bashrc    ~/.bash_profile(或~/.bash_login、~/.profile中的一个，优先级从左到右)    ~/.bashrc四个文件
+一、profile文件登录式shell打开时执行    /etc/profile 和 ~/.bash_profile 登录（即打开一个login shell）时执">
+<meta property="og:updated_time" content="2015-12-02T06:22:54.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="关于领域模型（贫血模型，充血模型）">
-<meta name="twitter:description" content="领域模型(domain object)分为4类:失血模型贫血模型 service –&amp;gt; dao –&amp;gt; entity 充血模型 service –&amp;gt; entity &amp;lt;–&amp;gt; dao 胀血模型
-简单来说，失血模型就是纯数据POJO，业务逻辑完全与entity分离；贫血模型domain object中含有与持久化无关的逻辑，不依赖于dao层；充血模型把domain objec">
+<meta name="twitter:title" content="bash环境变量学习">
+<meta name="twitter:description" content="linux环境变量通常有    /etc/profile    /etc/bashrc    ~/.bash_profile(或~/.bash_login、~/.profile中的一个，优先级从左到右)    ~/.bashrc四个文件
+一、profile文件登录式shell打开时执行    /etc/profile 和 ~/.bash_profile 登录（即打开一个login shell）时执">
 
     
     <link rel="alternative" href="/atom.xml" title="CLIMBRAN" type="application/atom+xml">
@@ -83,27 +83,28 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/07/30/about-domain-object/" title="关于领域模型（贫血模型，充血模型）" itemprop="url">关于领域模型（贫血模型，充血模型）</a>
+      <a href="/2015/12/02/environment-variables/" title="bash环境变量学习" itemprop="url">bash环境变量学习</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
 		
   <p class="article-time">
-    <time datetime="2015-07-30T11:31:51.000Z" itemprop="datePublished"> 发表于 2015-07-30</time>
+    <time datetime="2015-12-02T04:07:04.000Z" itemprop="datePublished"> 发表于 2015-12-02</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
-		<p>领域模型(domain object)分为4类:<br><br>失血模型<br><br>贫血模型 service –&gt; dao –&gt; entity <br><br>充血模型 service –&gt; entity &lt;–&gt; dao <br><br>胀血模型<br></p>
-<p>简单来说，失血模型就是纯数据POJO，业务逻辑完全与entity分离；贫血模型domain object中含有与持久化无关的逻辑，不依赖于dao层；充血模型把domain object和business object合二为一，service层不依赖dao层，而entity层与dao层形成双向依赖；胀血模型直接取消service层，只剩下entity层与dao层。</p>
-<p>由于今年才开始做web开发，之前对各种模型完全没有了解，项目中的模型是由自己瞎摸索出来的。现在总结来看，应该属于贫血模型，但是把大量service层的业务逻辑推到controller层实现，这种方式前期开发相当迅速，但是后期发现严重影响代码重用，不同controller里存在大量重复代码，导致需求更改时需要修改多个controller，影响项目维护。</p>
-<p>我感觉目前使用的模型适合小项目的快速开发，但对于大点的项目还是传统的贫血模型更合适。</p>
-<p>附：不同模型的优缺点<br><br>一、贫血模型<br><br>优点：<br><br>1、各层单向依赖，结构清楚，易于实现和维护<br><br>2、设计简单易行，底层模型非常稳定<br><br>3、非常适合于软件外包和大规模软件团队的协作。每个编程个体只需要负责单一职责的小对象模块编写，不会互相影响。<br><br>缺点：<br><br>1、domain object的部分比较紧密依赖的持久化domain logic被分离到Service层，显得不够OO<br><br>2、Service层过于厚重<br><br>3、可复用的颗粒度比较 小，代码量膨胀的很厉害，最重要的是业务逻辑的描述能力比较差，一个稍微复杂的业务逻辑，就需要太多类和太多代码去表达<br><br>4、对象协作依赖于外部容器的组装，因此裸写代码是不可能的了，必须借助于外部的IoC容器。<br></p>
-<p>二、充血模型<br><br>优点：<br><br>1、更加符合OO的原则。<br>2、对象自洽程度很高，表达能力很强，因此非常适合于复杂的企业业务逻辑的实现，以及可复用程度比较高。<br><br>3、Service层很薄，只充当Facade的角色，不和DAO打交道。<br><br>4、不必依赖外部容器的组装，所以RoR没有IoC的概念。<br><br>缺点：<br><br>1、DAO和domain object形成了双向依赖，复杂的双向依赖会导致很多潜在的问题。<br><br>2、如何划分Service层逻辑和domain层逻辑是非常含混的，在实际项目中，由于设计和开发人员的水平差异，可能导致整个结构的混乱无序。<br><br>3、考虑到Service层的事务封装特性，Service层必须对所有的domain object的逻辑提供相应的事务封装方法，其结果就是Service完全重定义一遍所有的domain logic，非常烦琐，而且Service的事务化封装其意义就等于把OO的domain logic转换为过程的Service TransactionScript。该充血模型辛辛苦苦在domain层实现的OO在Service层又变成了过程式，对于Web层程序员的角度来看，和贫血模型没有什么区别了。<br><br>4、对象高度自洽的结果是不利于大规模团队分工协作。一个编程个体至少要完成一个完整业务逻辑的功能。对于单个完整业务逻辑，无法再细分下去了。<br></p>
-<p>三、胀血模型<br><br>优点：<br><br>1、简化了分层<br><br>2、也算符合OO<br><br>缺点：<br><br>1、很多不是domain logic的service逻辑也被强行放入domain object ，引起了domain ojbect模型的不稳定<br><br>2、domain object暴露给web层过多的信息，可能引起意想不到的副作用。<br></p>
-<p>参考：<br><br><a href="http://www.cnblogs.com/magiccode1023/archive/2012/11/06/2756234.html" target="_blank" rel="external">关于架构设计的“贫血模型”与“充血模型”</a><br><br><a href="http://www.oschina.net/question/54100_10400" target="_blank" rel="external">［转帖］贫血、充血模型的解释以及一些经验</a></p>
+		<p>linux环境变量通常有<br>    /etc/profile<br>    /etc/bashrc<br>    ~/.bash_profile(或~/.bash_login、~/.profile中的一个，优先级从左到右)<br>    ~/.bashrc<br>四个文件</p>
+<p>一、profile文件登录式shell打开时执行<br>    /etc/profile 和 ~/.bash_profile 登录（即打开一个login shell）时执行一次。<br>    /etc/profile先执行，对全部用户和所有类型的shell(如bash、csh、zch等)都有效，而~/.bash_profile只有当前用户的bash会去读，当没有时会依次尝试执行~/.bash_login、 ~/.profile，执行到一个则不再尝试。</p>
+<p>二、bashrc文件非登录式shell打开时执行<br>    /etc/bashrc 和 ~/.bashrc 打开一个非登录式shell（non-login shell）会被读取，同样/etc/bashrc是对所有用户有效，~/.bashrc只对当前用户有效。</p>
+<p>三、执行顺序<br>    /etc/profile先执行，再启动用户目录下的~/.bash_profile或~/.bash_login、 ~/.profile。<br>    如果~/.bash_profile存在则一般还会执行~/.bashrc，~/.bashrc中还会执行/etc/bashrc。 </p>
+<p>四、登录式与非登录式shell<br>1、登录式（login shell）<br>    某用户由/bin/login登陆进系统后启动的shell，跟这个用户绑定。这个shell是用户登陆后启动的第一个进程。当bash以login shell启动时，它会执行/etc/profile中的命令，然后/etc/profile调用/etc/profile.d目录下的所有脚本；然后执行~/.bash_profile，~/.bash_profile调用~/.bashrc，最后~/.bashrc又调用/etc/bashrc。<br>2、非登录式shell(non-login shell)<br>    不需login而由某些程序启动的shell。还以Bash为例，当以非login方式启动时，它会调用~/.bashrc，随后~/.bashrc中调用/etc/bashrc，最后/etc/bashrc调用所有/etc/profile.d目录下的脚本。这个有兴趣的可以打开这些文件看一看。<br>    非login的shell主要包括以”#su”,”#su USERNAME”启动的shell，和图形终端（例如Ubuntu的Terminal），执行的脚本等等。<br>3、识别登录式与非登录式<br>    登录式shell在进程启动时传递的第0个参数是 “-shell name”,而非登录式shell时传递的是“shell name”。<br>    以bash为例，执行#echo $0,如果是login shell会输出 “-bash”;如果是non-login shell则会输出 “bash”。</p>
+<p>五、Mac OS<br>    在Mac OS中，启动一个新的终端窗口就是打开了一个交互式shell,在我的电脑上测试，没有修改配置的情况下，/etc/profile中有：</p>
+<pre><code><span class="bullet">. </span>/etc/bashrc
+</code></pre><p>执行了/etc/bashrc</p>
+<p>六、export命令<br>    export命令设置的环境变量只是保存在内存中，当shell关闭后就失效了，下次启动会重新读取配置文件中的信息，unset命令同理。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -112,7 +113,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/web/">web</a>
+  <span></span> <a href="/tags/linux/">linux</a>
   </div>
 
 </div>
@@ -121,7 +122,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/07/30/about-domain-object/" data-title="关于领域模型（贫血模型，充血模型） | CLIMBRAN" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/12/02/environment-variables/" data-title="bash环境变量学习 | CLIMBRAN" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -134,19 +135,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/08/01/a-iterator-achieved/" title="Iterator的实现">
-  <strong>上一篇：</strong><br/>
-  <span>
-  Iterator的实现</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/07/29/java-exception-performance/"  title="Java异常开销问题">
+<a href="/2015/11/24/jetty-run-arrayIndexOutOfBoundsException/"  title="jetty启动时ArrayIndexOutOfBoundsException:48188">
  <strong>下一篇：</strong><br/> 
- <span>Java异常开销问题
+ <span>jetty启动时ArrayIndexOutOfBoundsException:48188
 </span>
 </a>
 </div>
@@ -155,7 +148,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/07/30/about-domain-object/" data-title="关于领域模型（贫血模型，充血模型）" data-url="http://yoursite.com/2015/07/30/about-domain-object/"></div>
+	<div class="ds-thread" data-thread-key="2015/12/02/environment-variables/" data-title="bash环境变量学习" data-url="http://yoursite.com/2015/12/02/environment-variables/"></div>
 </section>
 
 
