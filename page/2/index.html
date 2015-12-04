@@ -81,6 +81,69 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/10/26/html-cross-domain/" title="ajax跨域请求html" itemprop="url">ajax跨域请求html</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
+		
+  <p class="article-time">
+    <time datetime="2015-10-26T05:06:01.000Z" itemprop="datePublished"> 发表于 2015-10-26</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>上周接到一个需求，需要在页面中获取另一个html页面后嵌入当前页面，由于直接用iframe直接请求会多出一些乱起八糟的标签并且不方便编辑样式，于是选择使用ajax。</p>
+<p>最初直接通过ajax请求，firefox中查看返回的状态码是200，但一直静入ajax的error分支，通过firebug查看发现是跨域问题，如果是跨域请求json用jsonp处理就好，可以跨域请求html还没有遇到过。</p>
+<p>百度后了解到需要通过后台来使跨域请求变成同域，但没找到具体实施方案，于是先尝试直接后台redirect目标页面，再ajax请求后台，结果ajax接收302状态码，进入error分支，接着把ajax换成用complete接收，接收到一个object对象，打印出来是一堆js，便放弃这一方案，不知道有没变法通过ajax正确处理302？</p>
+<p>最后是通过HttpClient请求页面，再通过response.getWriter获取PrintWriter输出到前段（没有使用Spring框架），在Spring中对应的实现如下<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.climbran.spring.controller;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.http.HttpEntity;</span><br><span class="line"><span class="keyword">import</span> org.apache.http.HttpResponse;</span><br><span class="line"><span class="keyword">import</span> org.apache.http.client.methods.HttpGet;</span><br><span class="line"><span class="keyword">import</span> org.apache.http.impl.client.DefaultHttpClient;</span><br><span class="line"><span class="keyword">import</span> org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;</span><br><span class="line"><span class="keyword">import</span> org.apache.http.util.EntityUtils;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Controller;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.ResponseBody;</span><br><span class="line"><span class="keyword">import</span> org.apache.http.client.HttpClient;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletResponse;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * Created by swe on 15/10/26.</span><br><span class="line"> */</span></span><br><span class="line"><span class="annotation">@Controller</span></span><br><span class="line"><span class="annotation">@RequestMapping</span>(<span class="string">"ajax"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AjaxTestController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@RequestMapping</span>(<span class="string">"getHTML"</span>)</span><br><span class="line">    <span class="annotation">@ResponseBody</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getHTML</span><span class="params">(HttpServletResponse response)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        HttpClient httpclient = <span class="keyword">new</span> DefaultHttpClient(<span class="keyword">new</span> ThreadSafeClientConnManager());<span class="comment">//创建一个客户端，类似打开一个浏览器</span></span><br><span class="line">        HttpGet httpGet = <span class="keyword">new</span> HttpGet(<span class="string">"http://404.58.com/"</span>);</span><br><span class="line">        String html = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            HttpResponse res = httpclient.execute(httpGet);</span><br><span class="line">            HttpEntity entity = res.getEntity();</span><br><span class="line">            html = EntityUtils.toString(entity);</span><br><span class="line">            System.out.println(res.getStatusLine().getStatusCode());</span><br><span class="line">            System.out.println(html);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        response.setContentType(<span class="string">"text/html;charset=UTF-8"</span>);</span><br><span class="line">        <span class="keyword">return</span> html;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>前端代码如下：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">%@</span> <span class="attribute">page</span> <span class="attribute">contentType</span>=<span class="value">"text/html;charset=UTF-8"</span> <span class="attribute">language</span>=<span class="value">"java"</span> %&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span> <span class="attribute">src</span>=<span class="value">"http://localhost:8080/static/js/jquery-1.8.3.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="title">title</span>&gt;</span>Test<span class="tag">&lt;/<span class="title">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"dd"</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span>&gt;</span><span class="javascript"></span><br><span class="line"></span><br><span class="line">  $.ajax(&#123;</span><br><span class="line">    type : <span class="string">'get'</span>,</span><br><span class="line">    url : <span class="string">'/ajax/getHTML'</span>,</span><br><span class="line">    dataType : <span class="string">'html'</span>,</span><br><span class="line">    data:&#123;</span><br><span class="line">    &#125;,</span><br><span class="line">    success : <span class="function"><span class="keyword">function</span>(<span class="params">data</span>) </span>&#123;</span><br><span class="line">      $(<span class="string">".dd"</span>).html(data);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>HttpClient依赖如下：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.apache.httpcomponents<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>httpclient<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">version</span>&gt;</span>4.5.1<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/ajax/">ajax</a><a href="/tags/web/">web</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/10/26/html-cross-domain/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/26/html-cross-domain/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/09/22/dynamic-proxy-and-aop/" title="动态代理及简单的AOP框架的实现" itemprop="url">动态代理及简单的AOP框架的实现</a>
   </h1>
   <p class="article-author">By
@@ -687,88 +750,6 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/09/02/redis-hash/" title="redis数据类型-hash" itemprop="url">redis数据类型-hash</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
-		
-  <p class="article-time">
-    <time datetime="2015-09-02T08:28:34.000Z" itemprop="datePublished"> 发表于 2015-09-02</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>1、redishash是一个string类型的field和value的映射表。<br>2、hash特别适合用于存储对象。相较于将对象的每个字段存成单个 string 类型。将一个对象存储在hash类 型中会占用更少的内存,并且可以更方便的存取整个对象。<br>3、新建一个 hash 对象时开始是用 zipmap(又称为 small hash)来存储的。<br>4、如果 field 或者 value 的大小超出一定限制后,redis会在内部自动将zipmap替换成正常的 hash 实现. 这个限制可以在配置文件中指定：</p>
-<pre><code>hash-max-zipmap-entries <span class="number">64</span> <span class="preprocessor">#配置字段最多 <span class="number">64</span> 个</span>
-hash-max-zipmap-value <span class="number">512</span> <span class="preprocessor">#配置 value 最大为 <span class="number">512</span> 字节</span>
-</code></pre><p>下面介绍 hash 相关命令：</p>
-<pre><code>hset <span class="keyword">key</span> field value    <span class="preprocessor">#设置 hash field 为指定值,如果 key 不存在,则先创建</span>
-
-hget <span class="keyword">key</span> field        <span class="preprocessor">#获取指定的 hash field</span>
-
-hmget <span class="keyword">key</span> filed1....fieldN        <span class="preprocessor">#获取全部指定的 hash filed</span>
-
-hmset <span class="keyword">key</span> filed1 value1 ... filedN valueN        <span class="preprocessor">#同时设置 hash 的多个 field</span>
-
-hincrby <span class="keyword">key</span> field <span class="built_in">integer</span>        <span class="preprocessor">#将指定的 hash filed 加上给定值</span>
-
-hexists <span class="keyword">key</span> field        <span class="preprocessor">#测试指定 field 是否存在</span>
-
-hdel <span class="keyword">key</span> field        <span class="preprocessor">#删除指定的 hash field</span>
-
-hlen <span class="keyword">key</span>    <span class="preprocessor">#返回指定 hash 的 field 数量</span>
-
-hkeys <span class="keyword">key</span>    <span class="preprocessor">#返回 hash 的所有 field</span>
-
-hvals <span class="keyword">key</span>    <span class="preprocessor">#返回 hash 的所有 value</span>
-
-hgetall <span class="keyword">key</span>        <span class="preprocessor">#返回 hash 的所有 filed 和 value</span>
-</code></pre>
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Redis/">Redis</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/09/02/redis-hash/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/02/redis-hash/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <a class="extend prev" rel="prev" href="/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/3/">Next<span></span></a>
@@ -789,7 +770,7 @@ hgetall <span class="keyword">key</span>        <span class="preprocessor">#返�
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/java/" title="java">java<sup>11</sup></a></li>
+				<li><a href="/tags/java/" title="java">java<sup>12</sup></a></li>
 			
 		
 			
@@ -801,15 +782,15 @@ hgetall <span class="keyword">key</span>        <span class="preprocessor">#返�
 			
 		
 			
+				<li><a href="/tags/设计模式/" title="设计模式">设计模式<sup>5</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/web/" title="web">web<sup>5</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/设计模式/" title="设计模式">设计模式<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/mac-os/" title="mac os">mac os<sup>3</sup></a></li>
+				<li><a href="/tags/mac-os/" title="mac os">mac os<sup>4</sup></a></li>
 			
 		
 			
@@ -817,19 +798,7 @@ hgetall <span class="keyword">key</span>        <span class="preprocessor">#返�
 			
 		
 			
-				<li><a href="/tags/hexo/" title="hexo">hexo<sup>2</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/数据库/" title="数据库">数据库<sup>2</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/linux/" title="linux">linux<sup>2</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/tomcat/" title="tomcat">tomcat<sup>2</sup></a></li>
 			
 		
 			
@@ -837,7 +806,19 @@ hgetall <span class="keyword">key</span>        <span class="preprocessor">#返�
 			
 		
 			
+				<li><a href="/tags/tomcat/" title="tomcat">tomcat<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/restful/" title="restful">restful<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/hexo/" title="hexo">hexo<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/linux/" title="linux">linux<sup>2</sup></a></li>
 			
 		
 			

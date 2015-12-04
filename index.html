@@ -81,6 +81,67 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/12/04/java-singleton-trap/" title="java单例模式中的陷阱(反射、序列化、clone)" itemprop="url">java单例模式中的陷阱(反射、序列化、clone)</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
+		
+  <p class="article-time">
+    <time datetime="2015-12-04T03:32:23.000Z" itemprop="datePublished"> 发表于 2015-12-04</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>Java的单例模式希望始终获得的是一个实力，有以下几种情况可能破坏单例模式</p>
+<p>一、反射<br>    即使将构造器设为私有仍可以用反射机制访问构造器，因此应在构造器中判断是否instance == null,不为null时直接返回。<br>    eg:<br><figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public class Singleton&#123;</span><br><span class="line"><span class="keyword">	private</span><span class="keyword"> static</span><span class="keyword"> final</span> Singleton<span class="instruction"> instance </span>=<span class="instruction"> new </span>Singleton(<span class="function">)</span>;</span><br><span class="line">		</span><br><span class="line"><span class="keyword">	private</span>	Singleton(<span class="function">)</span>&#123;</span><br><span class="line">		if(instance != null<span class="function">)</span></span><br><span class="line">		<span class="instruction">	return </span>instance;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line"><span class="keyword">	public</span><span class="keyword"> static</span> Singleton<span class="function"> getInstance(</span><span class="function">)</span>&#123;</span><br><span class="line">	<span class="instruction">	return </span>instance;		</span><br><span class="line">	&#125;	</span><br><span class="line">	//other method</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>二、序列化<br>    序列化过程中静态变量都是transient的，不会被保存，在反序列化的过程中会重新生成实例，从而破坏单例，可以通过readResolve方法解决。<br>    eg:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> <span class="keyword">implements</span> <span class="title">Serializable</span></span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Singleton instance = <span class="keyword">new</span> Singleton();</span><br><span class="line">		</span><br><span class="line">	<span class="function"><span class="keyword">private</span>	<span class="title">Singleton</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">if</span>(instance != <span class="keyword">null</span>)</span><br><span class="line">			<span class="keyword">return</span> instance;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">return</span> instance;		</span><br><span class="line">	&#125;	</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">private</span> Object <span class="title">readResolve</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment">//other method</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>三、clone<br>    所有类都继承自Object类，所以都有clone方法，为了防止clone方法破坏单例，可以override它的clone方法，让它抛出异常。</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/java/">java</a><a href="/tags/设计模式/">设计模式</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/12/04/java-singleton-trap/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/12/04/java-singleton-trap/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/12/02/environment-variables/" title="bash环境变量学习" itemprop="url">bash环境变量学习</a>
   </h1>
   <p class="article-author">By
@@ -116,7 +177,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/linux/">linux</a>
+  <span></span> <a href="/tags/linux/">linux</a><a href="/tags/mac-os/">mac os</a>
   </div>
 
 </div>
@@ -664,69 +725,6 @@ Time (seconds) taken <span class="keyword">is</span> <span class="number">6.0</s
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/10/26/html-cross-domain/" title="ajax跨域请求html" itemprop="url">ajax跨域请求html</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="swe" target="_blank" itemprop="author">swe</a>
-		
-  <p class="article-time">
-    <time datetime="2015-10-26T05:06:01.000Z" itemprop="datePublished"> 发表于 2015-10-26</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>上周接到一个需求，需要在页面中获取另一个html页面后嵌入当前页面，由于直接用iframe直接请求会多出一些乱起八糟的标签并且不方便编辑样式，于是选择使用ajax。</p>
-<p>最初直接通过ajax请求，firefox中查看返回的状态码是200，但一直静入ajax的error分支，通过firebug查看发现是跨域问题，如果是跨域请求json用jsonp处理就好，可以跨域请求html还没有遇到过。</p>
-<p>百度后了解到需要通过后台来使跨域请求变成同域，但没找到具体实施方案，于是先尝试直接后台redirect目标页面，再ajax请求后台，结果ajax接收302状态码，进入error分支，接着把ajax换成用complete接收，接收到一个object对象，打印出来是一堆js，便放弃这一方案，不知道有没变法通过ajax正确处理302？</p>
-<p>最后是通过HttpClient请求页面，再通过response.getWriter获取PrintWriter输出到前段（没有使用Spring框架），在Spring中对应的实现如下<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.climbran.spring.controller;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.http.HttpEntity;</span><br><span class="line"><span class="keyword">import</span> org.apache.http.HttpResponse;</span><br><span class="line"><span class="keyword">import</span> org.apache.http.client.methods.HttpGet;</span><br><span class="line"><span class="keyword">import</span> org.apache.http.impl.client.DefaultHttpClient;</span><br><span class="line"><span class="keyword">import</span> org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;</span><br><span class="line"><span class="keyword">import</span> org.apache.http.util.EntityUtils;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Controller;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.ResponseBody;</span><br><span class="line"><span class="keyword">import</span> org.apache.http.client.HttpClient;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletResponse;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * Created by swe on 15/10/26.</span><br><span class="line"> */</span></span><br><span class="line"><span class="annotation">@Controller</span></span><br><span class="line"><span class="annotation">@RequestMapping</span>(<span class="string">"ajax"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AjaxTestController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@RequestMapping</span>(<span class="string">"getHTML"</span>)</span><br><span class="line">    <span class="annotation">@ResponseBody</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getHTML</span><span class="params">(HttpServletResponse response)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        HttpClient httpclient = <span class="keyword">new</span> DefaultHttpClient(<span class="keyword">new</span> ThreadSafeClientConnManager());<span class="comment">//创建一个客户端，类似打开一个浏览器</span></span><br><span class="line">        HttpGet httpGet = <span class="keyword">new</span> HttpGet(<span class="string">"http://404.58.com/"</span>);</span><br><span class="line">        String html = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            HttpResponse res = httpclient.execute(httpGet);</span><br><span class="line">            HttpEntity entity = res.getEntity();</span><br><span class="line">            html = EntityUtils.toString(entity);</span><br><span class="line">            System.out.println(res.getStatusLine().getStatusCode());</span><br><span class="line">            System.out.println(html);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        response.setContentType(<span class="string">"text/html;charset=UTF-8"</span>);</span><br><span class="line">        <span class="keyword">return</span> html;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>前端代码如下：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">%@</span> <span class="attribute">page</span> <span class="attribute">contentType</span>=<span class="value">"text/html;charset=UTF-8"</span> <span class="attribute">language</span>=<span class="value">"java"</span> %&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span> <span class="attribute">src</span>=<span class="value">"http://localhost:8080/static/js/jquery-1.8.3.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="title">title</span>&gt;</span>Test<span class="tag">&lt;/<span class="title">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"dd"</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span>&gt;</span><span class="javascript"></span><br><span class="line"></span><br><span class="line">  $.ajax(&#123;</span><br><span class="line">    type : <span class="string">'get'</span>,</span><br><span class="line">    url : <span class="string">'/ajax/getHTML'</span>,</span><br><span class="line">    dataType : <span class="string">'html'</span>,</span><br><span class="line">    data:&#123;</span><br><span class="line">    &#125;,</span><br><span class="line">    success : <span class="function"><span class="keyword">function</span>(<span class="params">data</span>) </span>&#123;</span><br><span class="line">      $(<span class="string">".dd"</span>).html(data);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>HttpClient依赖如下：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.apache.httpcomponents<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>httpclient<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">version</span>&gt;</span>4.5.1<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/ajax/">ajax</a><a href="/tags/web/">web</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/10/26/html-cross-domain/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/26/html-cross-domain/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
@@ -747,7 +745,7 @@ Time (seconds) taken <span class="keyword">is</span> <span class="number">6.0</s
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/java/" title="java">java<sup>11</sup></a></li>
+				<li><a href="/tags/java/" title="java">java<sup>12</sup></a></li>
 			
 		
 			
@@ -759,15 +757,15 @@ Time (seconds) taken <span class="keyword">is</span> <span class="number">6.0</s
 			
 		
 			
+				<li><a href="/tags/设计模式/" title="设计模式">设计模式<sup>5</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/web/" title="web">web<sup>5</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/设计模式/" title="设计模式">设计模式<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/mac-os/" title="mac os">mac os<sup>3</sup></a></li>
+				<li><a href="/tags/mac-os/" title="mac os">mac os<sup>4</sup></a></li>
 			
 		
 			
@@ -775,19 +773,7 @@ Time (seconds) taken <span class="keyword">is</span> <span class="number">6.0</s
 			
 		
 			
-				<li><a href="/tags/hexo/" title="hexo">hexo<sup>2</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/数据库/" title="数据库">数据库<sup>2</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/linux/" title="linux">linux<sup>2</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/tomcat/" title="tomcat">tomcat<sup>2</sup></a></li>
 			
 		
 			
@@ -795,7 +781,19 @@ Time (seconds) taken <span class="keyword">is</span> <span class="number">6.0</s
 			
 		
 			
+				<li><a href="/tags/tomcat/" title="tomcat">tomcat<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/restful/" title="restful">restful<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/hexo/" title="hexo">hexo<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/linux/" title="linux">linux<sup>2</sup></a></li>
 			
 		
 			
